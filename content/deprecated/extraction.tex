@@ -1,0 +1,65 @@
+\chapter{Dataset Extraction and Organization}
+
+\label{Extraction}
+
+
+\section{Crowdsourced Video Annotation Tool}
+
+While the annotation was done by only by the author himself, the open source subtitle editor Aegisub\footnote{http://www.aegisub.org/downloads/} was used for annotation of different sounds in videos downloaded from youtube with the python script youtube_dl\footnote{https://rg3.github.io/youtube-dl/}.
+Information from the subtitle files was exported into csv with the pythons script, which in turn was used to extract short audio or video sequences for each event.
+To train the network 
+
+As the dataset grew, using a subtitle editor turned out to be inefficient, for the lack of versioning a mergeability of the generated advanced sub-station alpha files.
+ 
+To solve this problem, the author created a web application, executable in a modern web browser.
+Its user interface is similar to the subtitle editor, but through the distributed architecture the system is open to scaling.
+The data is stored with the relational database management system PostgreSQL, which also guarantees locking and concurrency.
+The backend is written in Python utilizing the Flask micro-framework\footnote{http://flask.pocoo.org/} for web application development.
+Compared to the popular Python framework Django, Flask includes less functionality, but on the other hand brings a slighter memory footprint, less startup time and a flatter learning curve. 
+Instead of an ORM the database abstraction layer XXX guarantees portability and back-end flexibility. 
+The integration for HTML abstraction through HAML is still in beta phase and was abandoned for this project after testing.
+
+
+%Todo: Add architecture diagram
+
+
+
+\section{The Dataset}
+
+\subsection{Creation of a training set}
+
+Most of the video was extracted from a youtube channel named "Bad Drivers of Southern California"\footnote{https://www.youtube.com/user/abedmamoore}. 
+The annotation of 61 videos extracted 12345 instances, 12 were primary, 34 were secondary horns. 
+
+\subsection{Classification and Overlap}
+A common problem in the audio classification research is the lack of a common taxonomy. NYU addressed this issue by creation of an urban sound dataset, which had meta groups and inheritance. Since this is a much broader dataset, not just tailored to road noises, this taxonomy obviously is not suitable for a classificaiton in the context of self driving car hazard detection.
+
+
+Sonyc paper has some insights into this.
+
+\section{Feature Learning}
+proposed feature learning and classification approach is comprised
+of three main processing blocks: preprocessing, feature learning
+and classification
+
+The generated data was randomly split into into a training set, consisting of 50\%, a validation set consisting of 20\%, and a test set that contained 30\% of all generated events.
+This ratio was chosen because of %TODO Add previous research and interesting papers or some other random stuff that no one is gonna read anyways
+
+\subsection{Preprocessing}
+\subsection{Feature extraction}
+The first approach consisted of extracting the common features of %TODO
+with OpenSmile. An extraction of the SONYC dataset can be found in Appendix ?
+\subsubsection{OpenSMILE}
+\subsubsection{LibRosa}
+\subsection{Training}
+\subsection{Classification}
+\subsection{Validation}
+
+Annotation
+
+EXAMPLES: VIDEO SCREENSHOTS, AUDIO FEATURES
+
+Use of these with an random forest classifier 
+
+
+Better prediction on the dataset with kNN

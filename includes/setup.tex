@@ -1,0 +1,124 @@
+% fonts and formatting
+
+\usepackage[defaultsans]{lato}
+
+% spell checking
+
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+
+% bibliography
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage[square]{natbib}
+\usepackage{har2nat}
+\bibliographystyle{agsm}
+\setcitestyle{aysep={,}}
+\renewcommand{\bibsection}{\chapter{\bibname}}
+
+% page setup
+
+\usepackage[a4paper]{geometry}
+\usepackage{fancyhdr, blindtext}
+\pagestyle{fancy}
+\renewcommand{\headrule}{{\color{grey}\hrule width\headwidth height\headrulewidth \vskip-\headrulewidth}}
+\fancyhf{}
+\fancyhead[L]{\headerfont\color{grey} \MakeUppercase{\leftmark}}
+\fancyfoot[C]{\thepage}
+\fancypagestyle{plain}{%
+	\fancyhf{}%
+	\fancyfoot[C]{\thepage}%
+	\renewcommand{\headrulewidth}{0pt}%
+}
+
+\newcommand{\headerfont}{
+	\fontsize{10}{11}\selectfont
+}
+
+% paragraphs and formatting
+
+\parindent0mm
+\setlength{\parskip}{.5\baselineskip}
+\usepackage{multicol}
+\setlength{\columnsep}{1cm}
+\setlength{\columnseprule}{1pt}
+\def\columnseprulecolor{\color{grey}}
+
+% graphics and figures
+
+\usepackage{scrhack}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{graphicx}
+\usepackage{newfloat}
+\usepackage[font=small]{caption}
+\usepackage{subcaption}
+
+% colors
+
+\usepackage[table]{xcolor}
+\definecolor{red}{HTML}{F44336}
+\definecolor{pink}{HTML}{E91E63}
+\definecolor{purple}{HTML}{9C27B0}
+\definecolor{deeppurple}{HTML}{673AB7}
+\definecolor{indigo}{HTML}{3F51B5}
+\definecolor{blue}{HTML}{2196F3}
+\definecolor{lightblue}{HTML}{03A9F4}
+\definecolor{cyan}{HTML}{00BCD4}
+\definecolor{teal}{HTML}{009688}
+\definecolor{green}{HTML}{4CAF50}
+\definecolor{lightgreen}{HTML}{8BC34A}
+\definecolor{lime}{HTML}{CDDC39}
+\definecolor{yellow}{HTML}{FFEB3B}
+\definecolor{amber}{HTML}{FFC107}
+\definecolor{orange}{HTML}{FF9800}
+\definecolor{deeporange}{HTML}{FF5722}
+\definecolor{brown}{HTML}{795548}
+\definecolor{grey}{HTML}{9E9E9E}
+\definecolor{bluegrey}{HTML}{607D8B}
+\definecolor{black}{HTML}{000000}
+\definecolor{white}{HTML}{FFFFFF}
+
+% titles
+
+\usepackage{titlesec}
+\titleformat{\chapter}[hang]{\Huge\sffamily\bfseries}{\textcolor{blue}{\thechapter}\hspace{20pt}\textcolor{grey}{\mdseries|}\hspace{20pt}}{0pt}{\Huge\mdseries\sffamily}
+
+
+% code and listings
+
+\usepackage{listings}
+
+% formulas and math
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{textcomp}
+
+% ebnf
+
+\usepackage[rounded]{syntax}
+\renewcommand{\grammarlabel}[2]{\hfill\synt{#1}\quad#2}
+\renewcommand{\syntleft}{\color{variable}$\langle$\normalfont\itshape}
+\renewcommand{\syntright}{$\rangle$}
+\renewcommand{\litleft}{\color{string}``\bgroup\ulitleft}
+\renewcommand{\litright}{\ulitright\egroup''}
+
+% tables
+
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{tabto}
+\colorlet{tablestripe}{bluegrey!20}
+
+% additional packages
+
+\usepackage[normalem]{ulem}
+\usepackage[nodayofweek]{datetime}
+\usepackage[inline]{enumitem}
+\setlist*[enumerate,1]{%
+  label=(\arabic*),
+}

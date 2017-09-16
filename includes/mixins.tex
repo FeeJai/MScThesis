@@ -1,0 +1,46 @@
+% structure and indexing
+
+\def\sectionname{Section}
+\newcommand{\addchapterline}[1]{
+    \newpage
+    \addtocounter{chapter}{1}
+    \addcontentsline{toc}{chapter}{\protect\numberline{\thechapter}{#1}}
+}
+
+\newcommand{\titleref}[2]{{#1} \ref{#2} \textit{``\nameref{#2}''}}
+\newcommand{\titlerefp}[2]{\titleref{#1}{#2} on page \pageref{#2}}
+\newcommand{\chapterref}[1]{\titleref{\chaptername}{#1}}
+\newcommand{\sectionref}[1]{\titleref{\sectionname}{#1}}
+\newcommand{\chapterrefp}[1]{\titlerefp{\chaptername}{#1}}
+\newcommand{\sectionrefp}[1]{\titlerefp{\sectionname}{#1}}
+
+% LTL and CTL operators
+
+\def\globally{\ensuremath{\mathbf{G}\;}}
+\def\finally{\ensuremath{\mathbf{F}\;}}
+\def\next{\ensuremath{\mathbf{X}\;}}
+\def\until{\ensuremath{\;\mathbf{U}\;}}
+\def\wuntil{\ensuremath{\;\mathbf{W}\;}}
+\def\release{\ensuremath{\;\mathbf{R}\;}}
+\def\ctlall{\mathbf{A}}
+\def\ctlexists{\mathbf{E}}
+\def\inconclusive{\ensuremath{\mbox{?}}}
+
+% Special Format
+
+\newcommand{\tool}[1]{\mbox{\textsc{#1}}}
+\newcommand{\strong}[1]{\textsf{\textbf{#1}}}
+\def\usec{\textmu{}s}
+
+% Programming languages
+
+\def\Java{Java}
+\def\CPP{{C\nolinebreak[4]\hspace{-.05em}\raisebox{.3ex}{\scalebox{0.75}{\bf +\kern-0.4ex+}}}}
+\newcommand{\Csharp}{{\settoheight{\dimen0}{C}C\kern-.05em \resizebox{!}{\dimen0}{\raisebox{\depth}{\#}}}}
+
+% Static Runtime Verification
+
+\def\theconcept{SRV}
+\def\thefullconcept{Static Runtime Verification}
+\def\thetoolname{StaticRV}
+\def\thetool{\tool{\thetoolname}}

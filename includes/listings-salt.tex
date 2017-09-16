@@ -1,0 +1,17 @@
+\lstdefinelanguage{SALT}{
+	morekeywords={
+		assert,
+		not, and, or, implies, equals,
+		if, then, else,
+		until, weak, releases, always, eventually, next, never,
+		required, optional, inclusive, exclusive,
+		before, upto, after, from, between,
+		any, some, in, have,
+		accepton, rejecton,
+	},
+	morecomment=[l][\color{comment}]{\#},
+	morestring=[b]',
+	morestring=[b]",
+}
+
+\newcommand{\saltcode}[1]{\lstinline[language=SALT,style=inline]#1}

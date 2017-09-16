@@ -1,0 +1,18 @@
+\lstdefinelanguage{CC}{
+	language=C++,
+	morecomment=[l][\color{secondary}]{\#},
+	moredelim=[is][\color{red}\uwave]{@@}{@@},
+	literate=
+		{!!}{{\kern-0.1em\raisebox{-.6em}{\textcolor{orange}{$\blacktriangle$}}\kern-.6em}}{-1}    % inline
+		{\^\^}{{\kern-0.1em\raisebox{-.6em}{\textcolor{orange}{$\blacktriangle$}}\kern-.6em\ }}{-1} % all others
+		{`}{\ }1
+		,
+	moredelim=**[is][]{^_}{_^},
+	morekeywords={
+		nullptr,
+		alignof,
+		constexpr,
+	},
+}
+
+\newcommand{\ccode}[1]{\lstinline[language=CC,style=inline]#1}

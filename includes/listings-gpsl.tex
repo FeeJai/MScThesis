@@ -1,0 +1,31 @@
+\lstdefinelanguage{GPSL}{
+	sensitive=false,
+	morekeywords={
+		check,
+		forall,
+		in,
+		after,
+		before,
+		always,
+		never,
+		some,
+		and,
+		or,
+		warn,
+		line,
+		last,
+		with,
+		context,
+	},
+%	classoffset=1,
+	morekeywords={
+		record,
+		as,
+		of,
+		monitor,
+	},
+	morecomment=[n]{(*}{*)]},
+	morestring=[b]",
+}
+
+\newcommand{\gpslcode}[1]{\lstinline[language=GPSL,style=inline]#1}

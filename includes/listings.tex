@@ -1,0 +1,34 @@
+\colorlet{code}{black}
+\colorlet{comment}{grey}
+\colorlet{string}{green}
+\colorlet{number}{purple}
+\colorlet{primary}{blue}
+\colorlet{secondary}{orange}
+\colorlet{variable}{bluegrey}
+\colorlet{error}{red}
+
+\lstset{
+	frame=none,
+	tabsize=3,
+	breaklines=true,
+	showspaces=false,
+	showstringspaces=false,
+	basewidth={0.53em,0.5em},
+	basicstyle=\footnotesize\ttfamily\color{code},
+	numberstyle=\color{grey},
+	commentstyle=\color{comment},
+	stringstyle=\color{string},
+	keywordstyle=\color{primary},
+	classoffset=1,
+	keywordstyle=\color{secondary},
+	classoffset=0,
+}
+
+\lstdefinestyle{inline}{
+	basicstyle=\normalsize\ttfamily\color{code},
+}
+
+\lstdefinestyle{numbered}{
+	numbers=left,
+	xleftmargin=2.5em,
+}

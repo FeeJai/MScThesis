@@ -1,0 +1,55 @@
+\newcommand{\finaldate}[3]{
+    \def\finaldateformatted{\formatdate{#1}{#2}{#3}}
+}
+
+\renewcommand{\maketitle}{%
+	\hypersetup{
+		pdftitle={\pdftitle},
+		pdfauthor={\author},
+		pdfcreator={LaTeX},
+		pdfproducer={},
+		pdfkeywords={}
+	}
+    \newgeometry{bottom=0cm,left=0cm,right=0cm}
+    \begin{titlepage}
+        \centering
+        \includegraphics[height=3cm]{./images/logos/se} \\
+
+        \vspace{5cm}
+        {\sffamily\fontsize{28pt}{34pt}\selectfont \title\par}
+
+        \vspace{4.5cm}
+        {\Large\sffamily Master's Thesis}
+
+        {\Large\sffamily\bfseries \author}
+
+        \vspace{2cm}
+        \finaldateformatted \\
+        \vspace{5mm}
+        \parbox{4.7cm}{
+	    	\begin{flushleft}
+	        \textbf{\sffamily Reviewers} \\
+			{\profa} \\ {\profb}
+	    	\end{flushleft}
+		}
+		\qquad
+        \parbox{4cm}{
+	    	\begin{flushleft}
+	        \textbf{\sffamily Supervisors} \\
+			{\advisora} \\ {\advisorb}
+	    	\end{flushleft}
+		}
+
+        \vspace{0.5cm}
+        \includegraphics[height=1.5cm]{./images/logos/enb} \hspace{1.5cm}
+        \includegraphics[height=1.5cm]{./images/logos/augsburg} \hspace{1.5cm}
+        \includegraphics[height=1.5cm]{./images/logos/tum} \hspace{1.5cm}
+        \includegraphics[height=1.5cm]{./images/logos/lmu}
+
+%        \vspace{5mm}
+%        \textbf{Institute for Software \& Systems Engineering} \\
+%        Universitätsstraße 6a \hspace{0.25cm} 86135 Augsburg \hspace{0.25cm} Germany
+
+    \end{titlepage}
+    \restoregeometry
+}
