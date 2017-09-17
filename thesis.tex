@@ -126,7 +126,20 @@ Similar to the sigmoid function, [wtd explain tanh]
 	
 \subsubsection{Scaled Exponential Linear Unit}
 [wtd describe selu activation, include math, include special initialization required]
-	
+
+
+{\centering
+	{\text{selu}(x) = \lambda\ \begin{cases}
+    x,& \text{if } x > 0\\
+    \alpha e^{x} - \alpha,& \text{if } x\leq 0\\
+	\end{cases}}
+	\par
+}}
+
+
+The paper (\cite{DBLP:journals/corr/KlambauerUMH17}) 
+
+
 \subsubsection{Softmax}
 The softmax activation function transforms a set of probabilities 
 
@@ -151,6 +164,17 @@ While CNNS solve the problem of dimensionality in terms of spatial relationships
 
 \subsubsection{LSTMs}
 
+\begin{figure}[h]
+    \centering
+	\includegraphics[width=.8\textwidth]{./images/illustrations/LSTM3}
+    \caption{The repeating module in an LSTM contains four interacting layers.\footnote{Source: http://colah.github.io/posts/2015-08-Understanding-LSTMs/. Reproduced with permission}}
+    \label{fig:mesh1}
+\end{figure}
+
+	
+
+
+
 One of the pitfalls of recurrent neural networks is their inability to model [wtd describe lstms]
 
 [wtd describe lstms and include graphs]
@@ -158,6 +182,15 @@ One of the pitfalls of recurrent neural networks is their inability to model [wt
 [wtd describe what problems lstms solve aka able to capture longer sequences, and downfalls]
 
 \subsubsection{GRUs}
+
+\begin{figure}[h]
+    \centering
+	\includegraphics[width=.8\textwidth]{./images/illustrations/GRU}
+    \caption{A GRU, as defined by Cho, et al. (2014).\footnote{Source: http://colah.github.io/posts/2015-08-Understanding-LSTMs/. Reproduced with permission}}
+    \label{fig:mesh1}
+\end{figure}
+
+	
 
 [wtd describe GRUs and include graphs]
 
