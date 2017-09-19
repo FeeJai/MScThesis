@@ -46,7 +46,19 @@ The purpose of this thesis is to apply state-of-the-art neural network architect
 \chapter{Background and Related Work}
 \label{Background and Related Work}
 
-\section{Machine Learning and Audio Processing Tasks}
+\section{Machine Learning for Audio}
+
+Although there have been some recent breakthroughs in the field by Google's Deep Mind project (\cite{DBLP:journals/corr/OordDZSVGKSK16}) raw audio is rarely used  with machine learning algorithms directly. This is because one minute of mono channel audio, sampled with the very common AD conversion rate of 44.1 kHz, produces the amount of 2.646.000 data points alone. The data points ar
+
+
+ a much higher amount of data than for example the common 28x28 greyscale image in the MNIST image recognition dataset. %TODO : cite
+
+Therefor we rely on feature extraction through signal processing algorithms.
+
+mel-spectrograms, specturm, etc
+
+For the purpose of this thesis, I have evaluated the ESSENTIA audio analysis library \cite{bogdanov:Essentia:ACMMULTIMEDIA13} via its Python bindings and librosa \cite{BMcFee:librosa}, a native python implementation.
+
 
 [wtd list and describe various audio processing task such as sound classification and speech recognition]
 
@@ -214,9 +226,39 @@ Even more recently, work has been done in the area of self-normalizing networks 
 
 \chapter{Dataset}
 
-\section{Description}
+\section{Creation}
+
+The UrbanSounds8K dataset used for this research is based on \cite{Salamon:UrbanSound:ACMMM:14}. It contains audio recording from the Freesound API, initially comprised 1302 recordings with the total length of 27 hours of audio and was manually labelled according to the Urban Sound Taxonomy created and introduced with the same paper. Labels span over 10 low-level classes in this taxonomy and offer an additional salience (foreground or background) classification.
+
+The final audio samples have been provided by the authors publicly in the form of slices up to 4s long. Those were created by a 4s sliding window algorithm with a hop size of 2s and a limit of maximum 1000 slices per class. This results in a total of 8732 labeled slices or 8.75 hours of audio.
+
+It is necessary to point out that the sliding window intentionally creates overlaps which result in the same audio information being present in up to two different slices. Additionally, due to the characteristics of urban sound, slices originating from the same original recording can have identifiable background or foreground sounds and other characteristics that can unintentionally be learned by the algorithm. %TODO: improve language
+
+ This does not constitute a potenital for error, as long as 
+  slices from the same source are not diverted across training and validation set. The authors provide for that by splitting the data into 10 distinct folds intended for k-fold cross validation as a means of model verification.
+
+%TODO: Overlap -> overfit
 
 We use the urban sound dataset SONYC, which is... [wtd put felix description of dataset here]. [wtd explain advantages of this dataset, explain pitfalls, dicusss other datasets and attempt to collect youtube horn dataset].  [wtd describe how it was created]
+
+\section{Content}
+
+As mentioned above, the dataset is labeled according to the Urban Sound Taxonomy(\cite{Salamon:UrbanSound:ACMMM:14}). The ten low-label classes present are air conditioner, car horn, children playing, dog bark, drilling, engine idling, gunshot, jackhammer, siren, and street music.
+
+Unfortunately the occurences are unevenly distributed along the dataset, as shown in table \ref{tbl:urbansound8kdistribution}. 
+
+\begin{table}[h]
+\begin{tabular}{ll}
+\hline
+label & count \\
+\hline
+dog_bark & 1000 \\children_playing & 1000 \\car_horn & 429 \\air_conditioner & 1000 \\street_music & 1000 \\gun_shot & 374 \\siren & 929 \\engine_idling & 1000 \\jackhammer & 1000 \\drilling & 1000
+\end{tabular}
+\caption{Amount of occurences per class in the UrbanSound8K dataset.}
+\label{tbl:urbansound8kdistribution}
+\end{table}
+
+
 
 \section{Feature Extraction}
 
