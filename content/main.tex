@@ -1,13 +1,47 @@
 \chapter{Introduction}
 \label{Introduction}
 
-Audio processing has been of interest since the [wtd since when has audio processing been of interest?].  Mainly, audio processing was used in [wtd what was audio processing used in].  Before computers, audio processing was handled via discrete circuits [wtd or whatever the history of audio processing was].  Audio processing consists of several different areas [wtd list areas that audio processing consists of, for example audio classification is one of them].
+Audio processing, more precisely named audio signal processing, has been of interest since radio broadcasting and telephone systems capable of sound transmission started to replace the morse code\cite{spanias2006audio}. In it's simplest form, as used in the original telegraph, morse code is created by repeatedly opening an electrical circuit manually with a switch so that a visualisation device like a light bulb or an electric bell is turned on and off intermittedly. This discrete signal is transmitted over distance by extending the electrical circuit with long wires to a different physical location, so that the switch operator can transmit a message by morse encoding to the recipient who will have to use the same codebook for decoding.
 
-One of the more interesting areas of audio processing is audio classification.  Given an audio sample, choose the best-fit class for that sample from a finite set of classes.  For example, in music genre classification, the task is to choose which genre a music sample belongs to.  In our paper, we specifically look at urban sound classification: given an audio sample, choose which class, for example, shouting, car horns, or other sounds that occur in natural urban environments, the sample belongs to.  This problem has several applications such as [wtd include audio classification applications].
+\begin{figure}[h]
+    \centering
+	\includegraphics[width=.45\textwidth]{./images/illustrations/morse-chart}
+    \caption{A codebook for the international morse code, where black means transmit}
+    \label{fig:morse}
+\end{figure}
 
-Machine learning can be of great use in the field of audio processing.  Previously, however, machine learning has only seen popularity in the audio processing task of speech recognition.  While there have been many advances in this area, there has been less work in other audio processing tasks, for example, in the detection of urban sounds and audio classification in general.  Until recently, these tasks have been approached using sophisticated, hand-crafted features and algorithms that have existed since the sixties or earlier.  These algorithms were optimized to take advantage of analog hardware.  As hardware advanced, more modern algorithms and techniques were able to be used such as gradient boosting and neural networks.  These approaches represent the current state-of-the-art as it applies to audio classification.
+The same purpose can be achieved wirelessly by repeatedly turning a radio transmitter on and off, which can be considered the simplest form of frequency modulation. However, things are more complex for the real- or near-time transmission of speech without manual en- and decoding. Since most harmonics of the human voice occur in the range of 500 Hz to 2 kHz according to the Nyquist–Shannon sampling theorem a sampling rate of at least 4 kHz is required for transmission\footnote{To verify this empirically I have downsampled a recording of both my voice and of the song Tom's Diner to 4kHz. While both the voice and the lyrics were still understandable, the melody perished and the sounds F and S were nearly indistiguishable. This is most like the reason why the common G.711 speech encoding standard uses a sampling rate of 8 kHz}. When radio transmission was invented in the late 19th century, it was not feasible to encode this information in a digital form (such as morse code). Instead different forms of modulation had to be developed, which was the birth of audio signal processing.
 
-The purpose of this thesis is to apply state-of-the-art neural network architectures and feature extraction to the task of urban sound classification using the dataset SONYC [wtd cite and use the correct name].  In this regard, we discuss several popular neural network architectures, such as CNNs, LSTMs, and attention mechanisms, and their performance in regards to audio classification.  We specifically explore the use of LSTMs in urban sound classification, both with and without attention mechanisms.  Furthermore, we explore and compare this to the use of gradient boosting against the same dataset.
+\begin{figure}[h]
+    \centering
+	\includegraphics[width=.9\textwidth]{./images/illustrations/am}
+    \caption{Amplitude modulation. Created by Ivan Akira. Source: CC-BY-SA; Wikipedia}
+    \label{fig:am}
+\end{figure}
+
+ From the early 20th century onwards it started to transcended it's original use while still being required for every form telecommunication. The grammophone necessisated frequency alterations for more natural sound and the development of cinemas lead to improvements in speaker technology, separation of tweeter and woofer and required the invention of crossover networks\cite{spanias2006audio}.
+ Today it is widely used for purposes such as entertainment (iPod), medical devices (ultrasound systems), magnetic storage of information (audio cassette, hard disks). 
+ 
+ 
+  Before computers enabled digital signal processing, audio was handled via discrete analog circuits. An equalizer for example was constructed by using resonant circuits (consisting of an inductor and a capacitor) as a frequency filter to allow independent gain control with separate amplifiers for different bands. Audio processing consists of several different areas such as sound effects, modulation and demodulation, compression and quality enhancements like noise reduction.
+
+An interesting area of audio processing is audio classification.  Given an audio sample, choose the best-fit class for that sample from a finite set of classes.  A common usage is music genre classification where the task is to find the genre a music sample belongs to. In this thesis my specifically focus is on urban sound classification: given an audio sample, choose which class, for example, shouting, car horns, or other sounds that occur in natural urban environments, the sample belongs to. This problem has several applications such as increasing the safety of self driving cars by detecting the existence and direction of car sirens before the car itself becomes visible or measuring the health impact of different forms of noise on the population.
+
+The first project goal was to assist MIT AgeLab's human factors research in the traffic safety impact of self driving cars. This lab has a long history of detecting different forms of driver frustration with monitoring equipment in cars. They have also published research on the automatic detection of these factors through machine learning on video and audio\cite{Abdic:2016:DFD:3060621.3060809} instead of manual annotation.
+
+
+\begin{figure}[h]
+    \centering
+	\includegraphics[width=.65\textwidth]{./images/illustrations/driver-frustration}
+    \caption{Different examples of concentration and frustration while interacting with an in-car voice control system as shown in \cite{Abdic:2016:DFD:3060621.3060809}.}
+    \label{fig:am}
+\end{figure}
+
+During this project software was created to automatically detect different sounds, most important the Tesla Autopilot's 'immediate takeover alarm`. I also attempted to use the developed detection of car horns to create a geogrpahic dataset of areas with high driver frustration and see if that could be correlated with accident statistics. However the available dataset of recorded traffic audio with position information turned out to be insufficient for this task.
+
+Machine learning is especially interesting as an addition in the field of audio processing. Previously this has only seen popularity in the audio processing task of speech recognition. While there have been many advances in this area, there has been less work in other audio processing tasks, for example, in the detection of urban sounds and audio classification in general. Until recently, these tasks have been approached using sophisticated, hand-crafted features and algorithms that have existed since the sixties or earlier.  These algorithms were optimized to take advantage of analog hardware. As hardware advanced, more modern algorithms and techniques were able to be used such as gradient boosting and neural networks. These approaches represent the current state-of-the-art as it applies to audio classification.
+
+The purpose of this thesis is to apply state-of-the-art neural network architectures and feature extraction to the task of urban sound classification using the UrbanSound8K dataset created by J. Salamon, C. Jacoby and J. P. Bello for the Sounds of New York City project \cite{Salamon:UrbanSound:ACMMM:14}. In this regard, I discuss several popular neural network architectures, such as CNNs, LSTMs, and attention mechanisms, and their performance in regards to audio classification. Specifically this thesis explores the use of LSTMs in urban sound classification, both with and without attention mechanisms. Furthermore, the results are compared to the use of gradient boosting and other existing algorithms against the same dataset.
 
 \chapter{Background and Related Work}
 \label{Background and Related Work}
