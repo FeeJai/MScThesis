@@ -46,31 +46,68 @@ The purpose of this thesis is to apply state-of-the-art neural network architect
 \chapter{Background and Related Work}
 \label{Background and Related Work}
 
-\section{Machine Learning for Audio}
-
-Although there have been some recent breakthroughs in the field by Google's Deep Mind project (\cite{DBLP:journals/corr/OordDZSVGKSK16}) raw audio is rarely used  with machine learning algorithms directly. This is because one minute of mono channel audio, sampled with the very common AD conversion rate of 44.1 kHz, produces the amount of 2.646.000 data points alone. The data points ar
+Although there have been some recent breakthroughs in the field by Google's Deep Mind project (\cite{DBLP:journals/corr/OordDZSVGKSK16}) raw audio is rarely used  with machine learning algorithms directly. This is because one minute of mono channel audio, sampled with the very common AD conversion rate of 44.1 kHz, produces the amount of 2.646.000 data points alone. The data points are usually 16 bit integers indicating the amplitude of the audio wave at the present moment.
 
 
- a much higher amount of data than for example the common 28x28 greyscale image in the MNIST image recognition dataset. %TODO : cite
+\begin{figure}[h]
+    \centering
+	\includegraphics[width=.9\textwidth]{./images/illustrations/audio-signal}
+    \caption{Common wave-plot representation of a 4s dog bark audio file and a zoom into seven 23ms frames consisting of 3549 data points}
+    \label{fig:audio}
+\end{figure}
 
-Therefor we rely on feature extraction through signal processing algorithms.
 
-mel-spectrograms, specturm, etc
+This is in stark contrast to the amount of data in other machine learning tasks, such as the common 28x28 greyscale image in the MNIST image recognition dataset, where each image is represented by only $28*28*8 = 6.272$ bits \cite{lecun1998mnist}.
 
-For the purpose of this thesis, I have evaluated the ESSENTIA audio analysis library \cite{bogdanov:Essentia:ACMMULTIMEDIA13} via its Python bindings and librosa \cite{BMcFee:librosa}, a native python implementation.
+Therefor we rely on feature extraction through signal processing algorithms, that transforms the raw audio signal into meaningful information without removing the 
 
+
+\section{Machine Learning for Audio through Feature Extraction}
+
+For the purpose of this thesis, I have evaluated the ESSENTIA audio analysis library \cite{bogdanov:Essentia:ACMMULTIMEDIA13} via its Python bindings and librosa \cite{BMcFee:librosa}, a native python implementation. 
+These have been selected as they seem to be the only actively-maintained open-source packages for audio signal processing with sufficient background literature and documentation. 
 
 [wtd list and describe various audio processing task such as sound classification and speech recognition]
 
 [wtd describe historical approaches to audio classification and audio processing tasks]
 
-\section{Linear and Logistic Regression}
+\subsection{Spectrograms}
+
+
+\begin{figure}[h]
+    \centering
+	\includegraphics[width=.9\textwidth]{./images/illustrations/spectrogram}
+    \caption{The spectral distribution of the dog bark audio}
+    \label{fig:spef}
+\end{figure}
+
+
+
+\subsection{MFCC}
+
+The most commonly used feature in speech recognition tasks are the Mel-frequency cep- stral coefficients (MFCCs)\cite{ganchev2005comparative}, a transformation that is inspired by the inner workings of the cochlea, including the sensory organ of hearing inside the human ear, the Organ of Cortil. The method has become extremely popular as it provides a separation between voice pitch and the formants \cite{noll67}. This is important in Indo- European languages where a change of the pitch usually does not alter a spoken word’s meaning \cite{auditoryneuroscience} and information is encoded by filtering the sound while passing the vocal tract, including the pharynx and the tongue causing changes in the envelope of the short time power spectrum.
+
+
+\begin{figure}[h]
+    \centering
+	\includegraphics[width=.7\textwidth]{./images/illustrations/Gray921}
+    \caption{Location and principle of the cochlea inside the inner ear. - Henry Gray, 1918, copyright expired}
+    \label{fig:gray}
+\end{figure}
+sThe first step in its calculation is the slicing into short frames through a window function, mimicking inertia in the organ. Different sound frequencies create resonance in different areas of the cochlea’s narrowing spiral tube, where the wobbling of sensory hair called the stereocilia create nervous impulses. To identify the different frequencies, the next step is the calculation of a power spectrum through Fourier transformation. This result is a power spectrum on a linear frequency scale, which does not correlate well with the perception of different frequencies in humans \cite{mel}. While low frequencies below 20 Hz can hardly be detected, the effect becomes especially predominant with frequencies over 1 kHz. The transformation from the Hertz- onto the Mel-scale is used as the next step to map the spectrum onto the percieved frequencies. The linear scale is mapped into discrete bins through a triangular activation functions within the human hearing range as well in this step. Like most human senses in accordance to Fechner’s law \cite{fechner1860} the relationship between stimulus and perception is logarithmic, wich means a quadrupling of the acoustic pressure causes the perceived intensity (loudness) of sound to double. A similar effect can be achieved by taking the logarithms of the power spectrum. To decorrelate the energies of the overlapping filterbanks, in order to separate pitch, modulation (added by the vocal in human speech) and noise, the discrete cosine transformation is performed on the log mel powers. The resulting coefficient 2-13 form the MFCCs.
+
+
+\section{Traditional machine learning approaches}
+\subsection{Linear and Logistic Regression}
 
 [wtd explain what it is, advantages such as linearly separable data, disadvatnages]
 
 The primary downfall of linear/logistic regression is the inability to model non-linear relationships. [wtd explain this further]
 
-\section{SVMs}
+\subsection{SVMs}
+
+Support Vector Machine are among the most popular supervised machine learning methods. In its simplest form a model is created out of training data, with each instance belonging to one of two categories and the categories are linearly separable. The biggest improvement in SVMs over more traditional machine learning methods is, that it finds on optimal solution, and is not affected by local minima. Support vectors is the subset of data points that lie closest to the decision surface. These specify the decision function entirely by themselves. The SVM optimizes the margin around the separating hyper- plane (a line in 2 dimensional space) to be maximum. By using a kernel function, they can be extended onto categories that are not linearly separable. They can be used for classification as well as for regression.
+
 
 Support vector machines (SVM) are... [wtd explain how support vector machines work].  SVMs have shown great success in the classification of high-dimensional data.
 
@@ -78,7 +115,7 @@ Support vector machines (SVM) are... [wtd explain how support vector machines wo
 
 [wtd, explain the what the pitfalls of SVMs are, such as choosing a kernel, citations needed]
 
-\section{Random Forests}
+\subsection{Random Forests}
 
 [wtd explain how random forests work, include some math figures]
 
@@ -152,7 +189,7 @@ The paper (\cite{DBLP:journals/corr/KlambauerUMH17})
 The softmax activation function transforms a set of probabilities
 
 {\centering
-	$\sigma (\mathbf {z} )_{j}={\frac {e^{z_{j}}}{\sum _{k=1}^{K}e^{z_{k}}}}$
+	$\displaystyle \sigma (\mathbf {z} )_{j}={\frac {e^{z_{j}}}{\sum _{k=1}^{K}e^{z_{k}}}}$
 	\par
 }
 
@@ -248,6 +285,7 @@ As mentioned above, the dataset is labeled according to the Urban Sound Taxonomy
 Unfortunately the occurences are unevenly distributed along the dataset, as shown in table \ref{tbl:urbansound8kdistribution}. 
 
 \begin{table}[h]
+\centering
 \begin{tabular}{ll}
 \hline
 label & count \\
@@ -256,11 +294,31 @@ dog_bark & 1000 \\children_playing & 1000 \\car_horn & 429 \\air_conditioner 
 \end{tabular}
 \caption{Amount of occurences per class in the UrbanSound8K dataset.}
 \label{tbl:urbansound8kdistribution}
+\par
 \end{table}
 
+The relatively low amount of car horns caused a problem, since the detection of various car horns was one of the AgeLab's main motivation.
 
 
 \section{Feature Extraction}
+
+As mentioned in the introduction, a raw audio signal consists of a high-dimensionality huge amount of data and is therefor not suitable as input for a learning algorithm without previous feature extraction.
+
+
+% As noted in [13], the raw audio signal is not suitable as direct input to a classifier due to its extremely high dimensionality and the fact that it would be unlikely for perceptually similar sounds to be neighbours in vector space
+
+% Thus, a popular approach for feature learning from audio is to convert the signal into a time-frequency representation, a common choice being the mel-spectrogram. We extract log-scaled mel-spectrograms with 40 components (bands) covering the audible frequency range (0-22050 Hz), using a window size of 23 ms (1024 samples at 44.1 kHz) and a hop size of the same duration. We alsoexperimented with a larger numbers of bands (128), but this did not improve performance and hence we stuck to the lower (and faster to process) resolution of 40 bands. To extract the mel-spectrograms we use the Essentia audio analysis library [20] via its Python bindings. Whilst we could use the resulting log-mel-spectrograms directly as input for the feature learning, it has been shown that the learned features can be significantly improved by decorrelating the input dimensions using e.g. ZCA or PCA whitening [18].
+
+\subsection{Spectrogram}
+
+\subsection{MFCC}
+
+\subsection{Chroma}
+
+\subsection{Quality improvements}
+While usually not being succesful with neural networks, there has been moderate success in the classification of bird songs and acoustic scenes using more traditional classification methods like the spherical k-means algorithm in the past. To improve classification accuracy, \cite{Coates2012} has shown that dimensionality reduction with PCA whitening over scaled features has significatnly increased accuracy. 
+This indicates that extracted features of a mel spectrogram are still heavily correlated.
+
 
 [wtd describe what features are typically used in audio classification task]
 
