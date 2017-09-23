@@ -25,7 +25,7 @@ The same purpose can be achieved wirelessly by repeatedly turning a radio transm
  
   Before computers enabled digital signal processing, audio was handled via discrete analog circuits. An equalizer for example was constructed by using resonant circuits (consisting of an inductor and a capacitor) as a frequency filter to allow independent gain control with separate amplifiers for different bands. Audio processing consists of several different areas such as sound effects, modulation and demodulation, compression and quality enhancements like noise reduction.
 
-An interesting area of audio processing is audio classification.  Given an audio sample, choose the best-fit class for that sample from a finite set of classes.  A common usage is music genre classification where the task is to find the genre a music sample belongs to. In this thesis my specifically focus is on urban sound classification: given an audio sample, choose which class, for example, shouting, car horns, or other sounds that occur in natural urban environments, the sample belongs to. This problem has several applications such as increasing the safety of self driving cars by detecting the existence and direction of car sirens before the car itself becomes visible or measuring the health impact of different forms of noise on the population.
+An interesting area of audio processing is audio classification.  Given an audio sample, choose the best-fit class for that sample from a finite set of classes.  A common usage is music genre classification where the task is to find the genre a music sample belongs to. In this thesis my specifical focus is on urban sound classification: given an audio sample, choose which class, for example, shouting, car horns, or other sounds that occur in natural urban environments, the sample belongs to. This problem has several applications such as increasing the safety of self driving cars by detecting the existence and direction of car sirens before the car itself becomes visible or measuring the health impact of different forms of noise on the population.
 
 The first project goal was to assist MIT AgeLab's human factors research in the traffic safety impact of self driving cars. This lab has a long history of detecting different forms of driver frustration with monitoring equipment in cars. They have also published research on the automatic detection of these factors through machine learning on video and audio\cite{Abdic:2016:DFD:3060621.3060809} instead of manual annotation.
 
@@ -37,11 +37,12 @@ The first project goal was to assist MIT AgeLab's human factors research in the 
     \label{fig:am}
 \end{figure}
 
-During this project software was created to automatically detect different sounds, most important the Tesla Autopilot's 'immediate takeover alarm`. I also attempted to use the developed detection of car horns to create a geogrpahic dataset of areas with high driver frustration and see if that could be correlated with accident statistics. However the available dataset of recorded traffic audio with position information turned out to be insufficient for this task.
 
 Machine learning is especially interesting as an addition in the field of audio processing. Previously this has only seen popularity in the audio processing task of speech recognition. While there have been many advances in this area, there has been less work in other audio processing tasks, for example, in the detection of urban sounds and audio classification in general. Until recently, these tasks have been approached using sophisticated, hand-crafted features and algorithms that have existed since the sixties or earlier.  These algorithms were optimized to take advantage of analog hardware. As hardware advanced, more modern algorithms and techniques were able to be used such as gradient boosting and neural networks. These approaches represent the current state-of-the-art as it applies to audio classification.
 
-The purpose of this thesis is to apply state-of-the-art neural network architectures and feature extraction to the task of urban sound classification using the UrbanSound8K dataset created by J. Salamon, C. Jacoby and J. P. Bello for the Sounds of New York City project \cite{Salamon:UrbanSound:ACMMM:14}. In this regard, I discuss several popular neural network architectures, such as CNNs, LSTMs, and attention mechanisms, and their performance in regards to audio classification. Specifically this thesis explores the use of LSTMs in urban sound classification, both with and without attention mechanisms. Furthermore, the results are compared to the use of gradient boosting and other existing algorithms against the same dataset.
+During this project software was created to automatically detect different sounds, most important the Tesla Autopilot's 'immediate takeover alarm`. I also attempted to use the developed detection of car horns to create a geogrpahic dataset of areas with high driver frustration and see if that could be correlated with accident statistics. However the available dataset of recorded traffic audio with position information turned out to be insufficient for this task.
+
+The main purpose of this thesis then was to apply state-of-the-art neural network architectures and feature extraction to the task of urban sound classification using the UrbanSound8K dataset created by J. Salamon, C. Jacoby and J. P. Bello for the Sounds of New York City project \cite{Salamon:UrbanSound:ACMMM:14}. In this regard, I discuss several popular neural network architectures, such as CNNs, LSTMs, and attention mechanisms, and their performance in regards to audio classification. Specifically this thesis explores the use of LSTMs in urban sound classification, both with and without attention mechanisms. Furthermore, the results are compared to the use of gradient boosting and other existing algorithms against the same dataset.
 
 \chapter{Background and Related Work}
 \label{Background and Related Work}
@@ -67,12 +68,18 @@ Therefor we rely on feature extraction through signal processing algorithms, tha
 For the purpose of this thesis, I have evaluated the ESSENTIA audio analysis library \cite{bogdanov:Essentia:ACMMULTIMEDIA13} via its Python bindings and librosa \cite{BMcFee:librosa}, a native python implementation. 
 These have been selected as they seem to be the only actively-maintained open-source packages for audio signal processing with sufficient background literature and documentation. 
 
+Later, my supervisor suggested to compare the results to OpenSMILE, which is promoted as the "Munich Open-source Multimedia Feature Extractor" \cite{Eyben:2013:RDO:2502081.2502224}.
+OpenSMILE is extremely easy to use through its command line tool "SMILEextract". A simple demo script that that extracts some basic features can be created by invoking "SMILExtract -cfgFileTemplate -configDflt cWaveSource,cFramer,cEnergy" %todo: cite manual
+The resulting csv can be read with python csv script and directly be used for machine learning applications. 
+
+
 [wtd list and describe various audio processing task such as sound classification and speech recognition]
 
 [wtd describe historical approaches to audio classification and audio processing tasks]
 
 \subsection{Spectrograms}
 
+Probably the best-known feature extractor is the Fourier Transformation. In 1822, while studying heat transfer, Joseph Fourier proved that certain functions could be written as a sum of a finite number of harmonics \cite{fourier1878}. This led the way onto the development of the Fourier transform, the decomposition of a signal into the different sine frequenices which make it up. As input, the Fourier transform requires a periodic and infinite signal. In real-world scenarios, where recorded instead of generated input is used, the signal is cut into short slices and the transformation is done individually with the assumption that the slice is repeating indefinitely on each one as a workaround \cite{Smith97}.
 
 \begin{figure}[h]
     \centering
@@ -80,6 +87,9 @@ These have been selected as they seem to be the only actively-maintained open-so
     \caption{The spectral distribution of the dog bark audio}
     \label{fig:spef}
 \end{figure}
+
+The advance of digital signal processing has made it possible to utilize the Fourier transform to create a visual representation of the different frequencies in a signal such as sound. The most common format of display is a a two-dimensional diagram, where the abscissa represents the time dimension and the ordinate the different frequency ranges. The intensity can either be displayed through brightness or intensity of different colors. To increase verboseness and to prevent noise, individual slices can be created overlapping through the use of window functions. The intensity of each spectrum can be calculated by applying the fourier transform onto the individual chunks.
+
 
 
 
@@ -98,6 +108,15 @@ sThe first step in its calculation is the slicing into short frames through a w
 
 
 \section{Traditional machine learning approaches}
+
+
+Machine learning has once more become popular in the last few years as the recent advancements supplied sufficient computational power for training deep neural networks with huge amounts of data.
+It can mathematically be described as a system that receives existing data and generates a function that can be used to predict properties of future data.
+The quality is measured as the generalization performance, i.e. the accuracy on data used not for training.
+
+There are multiple different machine learning algorithms useable with audio information recognition.
+
+
 \subsection{Linear and Logistic Regression}
 
 [wtd explain what it is, advantages such as linearly separable data, disadvatnages]
@@ -117,11 +136,34 @@ Support vector machines (SVM) are... [wtd explain how support vector machines wo
 
 \subsection{Random Forests}
 
+
+
+Random forest classification was introduced with \cite{Breiman2001} . They were originally used for ...,  but they are extremely useful for audio because of
+
+
+
 [wtd explain how random forests work, include some math figures]
 
 [wtd explain advantages of random forests, such as speed of training, higher accuracy on smaller dimensional data or datasets]
 
 [wtd explain pitfalls of random forests]
+
+
+The random forest classifier is a predictive model consisting of multiple decision trees.
+It has multiple advantages over other classification methods like SVM.
+The risk of overfitting the model to the available data, but not generalising well to new data is significantly reduced by learning multiple models over different subsamples of the training set and casting a majority vote at prediction time. \cite{statisticallearning}
+Training effort scales linearly with the number of trees, which leads to fast iterations.
+Evaluation can be parallelized, which makes it very efficient on big amounts of data.
+
+
+An oob error estimate is almost identical to that obtained by N-fold crossvalidation
+
+
+estimators to features
+
+overfitting
+
+
 
 \subsection{Gradient Boosting}
 
@@ -136,6 +178,23 @@ Gradient boosting is an supervised ensemble learning method that combines many "
 \section{Neural Networks}
 
 Contrary to the previously discussed approaches to machine learning, neural networks have existed for much longer [wtd cite Pitts and McCulloch the first neural network paper].  Neural networks have had a fickle history as well, with an ebb-and-flow of popularity, last peaking in the 90s [wtd cite some papers about NNs from Bengio, etc.].  Due to advances in computational power, parallel processing paradigms, and neural network architectures in the past several years, neural networks are seeing great successes across many machine learning tasks.  For example, in [wtd example task like MNIST or anything that had breakthrough results cite paper] neural networks were able to perform at a level previously thought not possible.  [wtd explain what neural networks are, put graphs, explain advantages such as ability to deal with curse of dimonsionality and ability to deal with non-linear relationships, explain pitfalls]. [wtd explain stochastic gradient descent and optimizers ADAM, Adadelta, momentum, etc.]
+
+
+The newest branch in machine learning attempting high level abstactions is so called deep learning. 
+
+Tensorflow is a library published by Google in 2014 in an effort to open-source their internal deep-learning functionalities into a universal library. While in the beginning it lacked distributed computing functionality and the support for GPGPU was poor, 
+
+
+After a longer experience with Tensorflow, the browser based Convnet.js was evaluated to see if it could be used as a viable alternative for the tasks in this thesis.
+While it being a java script implementation, due to the characteristics of any scripted language its performance naturally is unable to match the GPGPU accelerated TensorFlow implementation, where Python only serves as high-level bindings in order to simplify the API interface and its implementation in real world use cases.tens
+
+It's strength primarily 
+
+
+Hacker's guide to Neural Networks: http://karpathy.github.io/neuralnets/
+
+GOOGLE CLOUD BIG DATA AND MACHINE LEARNING BLOG - Learn TensorFlow and deep learning, without a Ph.D.: https://cloud.google.com/blog/big-data/2017/01/learn-tensorflow-and-deep-learning-without-a-phd
+
 
 \subsection{Activation Functions}
 
@@ -195,6 +254,27 @@ The softmax activation function transforms a set of probabilities
 
 \subsection{Convolutional Neural Networks}
 
+One of the more recent improvements in the reserach of Neural Networks has been the invetion of convolutional layers, where the same form of connections between each cell of two neighouring layers is established, like a filter in a traditional programming. 
+
+The connectivity pattern of sharing the same connectivity weights between each neurons in neighbouring layers is inspired by the visual cortex in the mammalian brain.
+Mathematically, the operation can be approximated by a convolution operation, which gave the network architecture its name. 
+
+Efforts to train the network with know filters, like the sobel image filter have been largely successful by adding before and after images.  
+
+A special network architecture, that has proven to generate best results in image recognition is the Convolutional Neural Network \cite{Lecun98gradient-basedlearning}.
+Its difference is the existence of a convolutional layer as the core building block.
+Instead of having weighted connections between all the neurons in neighbouring layers the network uses a self-taught filterkernel as parameter.
+
+
+Even in CNNs eventually the high level reasoning is done in a fully connected layer at the end.
+
+AlexNet, a famous example with 500,000 neurons in five convolutional layers \cite{AlexNet} was a major breakthrough in the field of computer vision, submitted to the "Large Scale Visual Recognition Challenge 2012", which is commonly referred to as the annual olympics of computer vision.
+In this competition, AlexNet achieved a top-5 test error rate of 15.4\% on the 1.2 million images in 1,000 categories, while the second best entry only achieved an error of more than 26\% \cite{ILSVRC15}. 
+The network consists of five convolutional layers, includes dropout layers and employes three fully connected layers in front of the output layer. Instead of the conventional tanh activation function, ReLU makes training more efficient.
+Another innovation was the parallelization happening in the training. The authors split the networks layers into separate chunks that were trained on two independent graphic cards. The training still lasted six days, even though they were using two GTX 580 GPUs, that were the most powerful solution on the market at that time.
+
+
+
 Convolutional neural networks refers to any neural network with a convolutional layer.  These networks have achieved state-of-the-art results on many computer vision-related tasks, primarily because of their ability to "downsample" inputs while minimizing information loss.  It is because of this "downsampling" that these network are feasible to train, as opposed to a fully-connected network which has significantly more weights to train.  A convolutional layer is one that attempts to discover spatial relationships, aka filters, across neuronal inputs. [wtd describe + show graphs of convolutional layers].  This layer contains a set of filters, or weight matrices, that are convolved across the neuronal inputs, resulting in an output matrix called a feature map.  The weights of the filters are learned during training.  Typically these networks involve other spatial layers, such as max pooling layers, which directly downsample the neuronal inputs.
 
 \subsection{Recurrent Neural Networks}
@@ -206,6 +286,26 @@ Convolutional neural networks refers to any neural network with a convolutional 
 [wtd explain exactly the problem that RNNs solve (sequence and removing the need to include historical data in the inputs similar to how CNNs solve the problem of needing so many weights for the spatial input)]
 
 While CNNS solve the problem of dimensionality in terms of spatial relationships, RNNs do so in terms of sequential, or temporal relationships.  Typically, to represent a temporal or sequential relationship, inputs are stacked in a windowed-fashion.  However, this greatly increases the number of weights required at the input layer.  Therefore, RNNs reduce the amount weights by allowing sequences to be passed in without requiring weights be connected to these input features.
+
+
+% http://colah.github.io/posts/2015-08-Understanding-LSTMs/
+
+While most animals have a at least one form of memory and what happened in the past is always taken into consideration, after completion of the training phase in NNs the past traditionally has no impact onto the result. 
+In contrast, Recurrent Neural Network (RNNs) extend the idea by not only allowing feed-forward propagation but adding connections between units that form a directed cycle (loops), therefor allowing information to persist. 
+Adding this kind of internal memory has proven to be especially useful for tasks like speech recognition \cite{sak2014long}, where due to the grammatical nature of human languages the meaning of heterograph such as to, too and two can almost always be determined by context.
+
+While there are many different RNN architectures I have found the so called Long-Short Term Memory (LSTM) to be the most useful for the detection of driver frustration. % why?
+These are especially well suited to remembering information for a long period of time, where other RNNs like the traditional single tanh layer as a repeating module very often struggle \cite{Hochreiter:1997:LSM:1246443.1246450}.
+
+
+
+
+deep feed forward
+
+multi-dimensional long short-term memory 
+
+
+
 
 \subsubsection{LSTMs}
 
