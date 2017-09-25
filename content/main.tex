@@ -115,15 +115,17 @@ That is why a method has become extremely popular that provides a separation bet
 
 The first step in its calculation is the slicing into short frames through a window function, mimicking inertia in the organ. Different sound frequencies create resonance in different areas of the cochlea’s narrowing spiral tube, where the wobbling of sensory hair called the stereocilia create nervous impulses.
 
-To identify the different frequencies, the next step is the calculation of a power spectrum through Fourier transformation. This result is a power spectrum on a linear frequency scale, which does not correlate well with the perception of different frequencies in humans \cite{mel}. While low frequencies below 20 Hz can hardly be detected, the effect becomes especially predominant with frequencies over 1 kHz. The transformation from the Hertz- onto the so-called Mel-scale is used as the next step to map the spectrum onto the percieved frequencies. 
- 
+To identify the different frequencies, the next step is the calculation of a power spectrum through Fourier transformation. This result is a power spectrum on a linear frequency scale, which does not correlate well with the perception of different frequencies in humans \cite{mel}. 
+
   \begin{figure}[h]
     \centering
-	\includegraphics[width=.7\textwidth]{./images/illustrations/mfcc}
+	\includegraphics[width=.6\textwidth]{./images/illustrations/mfcc}
     \caption{Graphic representation of MFCCs of the dog bark audio file}
     \label{fig:mfcc}
 \end{figure}
  
+ 
+ While low frequencies below 20 Hz can hardly be detected, the effect becomes especially predominant with frequencies over 1 kHz. The transformation from the Hertz- onto the so-called Mel-scale is used as the next step to map the spectrum onto the percieved frequencies. 
  
  The linear scale is mapped into discrete bins through a triangular activation functions within the human hearing range as well in this step. Like most human senses in accordance to Fechner’s law \cite{fechner1860} the relationship between stimulus and perception is logarithmic, wich means a quadrupling of the acoustic pressure causes the perceived intensity (loudness) of sound to double. A similar effect can be achieved by taking the logarithms of the power spectrum.
  
@@ -134,10 +136,12 @@ To identify the different frequencies, the next step is the calculation of a pow
 
 \subsection{Chroma}
 
+The chroma feature is mainly used in music recognition. It is based on the twelve pitch classes commonly used in music theory \cite{Mller:2015:FMP:2815664}. Sounds that differ by one or more octave, i.e. ratio of frequencies occur at a ratio of $2^n : 1$ with n being an integer.
 
-\begin{figure}[h!]
+
+\begin{figure}[H]
     \centering
-	\includegraphics[width=.6\textwidth]{./images/illustrations/chroma}
+	\includegraphics[width=.5\textwidth]{./images/illustrations/chroma}
     \caption{Illustration of the Chroma feature of a C maj scale played on a piano. Created by Meinard Müller. Source: Wikipedia; CC-BY-SA}
     \label{fig:chroma}
 \end{figure}
@@ -151,66 +155,96 @@ Machine learning has once more become popular in the last few years as the recen
 It can mathematically be described as a system that receives existing data and generates a function that can be used to predict properties of future data.
 The quality is measured as the generalization performance, i.e. the accuracy on data used not for training.
 
+
 There are multiple different machine learning algorithms useable with audio information recognition.
 
 
 \subsection{Linear and Logistic Regression}
 
-[wtd explain what it is, advantages such as linearly separable data, disadvatnages]
 
-The primary downfall of linear/logistic regression is the inability to model non-linear relationships. [wtd explain this further]
+ 
+The simplest model of a relationship between an explanatory and one dependent variable is the linear regression with a dataset ${\displaystyle \{y_{i},\,x_{i}\}_{i=1}^{n}}$ of n statistical units, with Y being the dependent and x being the explanatory variable.
+The model is then calculated based on a linear predictor function where the parameters for slope and intercept are estimated by using the available data.
+ 
+The model is not restricted to a single explanatory variable, where the data set can be described as  ${\displaystyle \{y_{i},\,x_{i1},\ldots ,x_{ip}\}_{i=1}^{n}}$. When multiple explanatory variables are used, the model is referred to as multiple linear regression, where the model will take the form of ${ y_{i} +\varepsilon _{i} =\beta _{0}1+\beta _{1}x_{i1}+\cdots +\beta _{p}x_{ip}}$ with $\varepsilon$ being the error parameter sought to be minimised.
+
+There are multiple ways of estimating the parameters available, with the conditional mean being the most frequently used function, while the median and other statistical qualtiy functions are less common \cite{Yan:2009:LRA:1717831}.  $\varepsilon$ is commonly calculated over the sum of the squared euclidian distances from each Y from the predicted value.
+
+
+Although simple, multiple linear regression is used extensively for a variety of tasks in practice, for example in Germany to estimate the credit risk of consumers (Schufa) with parameters being the length of the credit histroy, the frequency of address change and the number of different credit cards and bank accounts on one customer. % TODO: Cite
+
+
+Another generalisation of this concept, where multiple dependent variables are predicted, is the extension of the process called multivariante linear regression. All dependant variables need to be correlated however \cite{Yan:2009:LRA:1717831}.
+
+
+For discrete choice or other distributions where the dependent variable is a discrete or binary category, the modified version called logistic regression was developed in \cite{cox58reg}. Instead of a linear model, the  function ${\displaystyle F(x)={\frac {1}{1+e^{-(\beta _{0}+\beta _{1}x)}}}}$ will always return a value between 0 and 1, which can be interpreted as the likelihood of a dataset falling into the binary category labeled as 1. It also allows to estimate the relationship of an explanatory variable and the likelihood of an outcome (e.g. speeding will increase the likelihood of an accident by xx\%)
+
+Parameter estimation is hereby more complicated than in linear regression and an iterative method needs to be used, such as the Newton–Raphson method.
+
+%rule of 10 ?
+
+The primary downfall of linear/logistic regression is the inability to model non-linear relationships. These are very common in nature, famous examples are the half-life of radioactive decay or the exponential growth of most biomass.
+
 
 \subsection{SVMs}
 
-Support Vector Machine are among the most popular supervised machine learning methods. In its simplest form a model is created out of training data, with each instance belonging to one of two categories and the categories are linearly separable. The biggest improvement in SVMs over more traditional machine learning methods is, that it finds on optimal solution, and is not affected by local minima. Support vectors is the subset of data points that lie closest to the decision surface. These specify the decision function entirely by themselves. The SVM optimizes the margin around the separating hyper- plane (a line in 2 dimensional space) to be maximum. By using a kernel function, they can be extended onto categories that are not linearly separable. They can be used for classification as well as for regression.
+Support Vector Machine are among the most popular supervised machine learning methods and have shown great success in the classification of high-dimensional data. In its simplest form a model is created out of training data, with each instance belonging to one of two categories and the categories are linearly separable.
 
 
-Support vector machines (SVM) are... [wtd explain how support vector machines work].  SVMs have shown great success in the classification of high-dimensional data.
+\begin{figure}[h]
+    \centering
+	\includegraphics[width=.5\textwidth]{./images/illustrations/svm}
+    \caption{Example of linear separation of two classes on maximum-margin hyperplane. Source: Wikimedia Commons; Public Domain}
+    \label{fig:svm}
+\end{figure}
 
-[wtd explain how kernel trick works]
+The biggest improvement in SVMs over more traditional machine learning methods is that it will find on optimal solution without being affected by local minima.
 
-[wtd, explain the what the pitfalls of SVMs are, such as choosing a kernel, citations needed]
+Support vectors are the subset of all data points lieing closest to the decision surface (as seen in figure \ref{fig:svm}). These specify the decision function entirely by themselves. The SVM optimizes the margin around the separating hyperplane (a line in 2 dimensional space) to be maximum.
+
+By using a kernel function, they can be extended onto categories that are not linearly separable. The kernel will transform the original input space that may be non-linear and of higher dimension into a simpler space that can be linearly separated with a hyperplane. Known kernels are available for polynomic, hyperbolic tangent and other relationships. However choosing the right kernel may not always by easy and trial and error with cross validation is sometimes necessary.
+
+They can be used for classification as well as for regression.
+
+
+%TODO: citations needed
+
+
 
 \subsection{Random Forests}
 
 
+Random forest classification was introduced with \cite{Breiman2001} and have shown success in predicting medical events, such as developing certain diseases as there are multiple advantages over other classification methods like SVM.
 
-Random forest classification was introduced with \cite{Breiman2001} . They were originally used for ...,  but they are extremely useful for audio because of
+The random forest classifier is a predictive model consisting of multiple decision trees. The risk of overfitting the model to the available data, but not generalising well to new data is significantly reduced by learning multiple models over different subsamples of the training set and casting a majority vote at prediction time. \cite{statisticallearning}.
 
+The first step in growing a forest is the creation of $n$ random subsamples of the training data, which are allowed to overlap. Each subsample is used to create an independent decision tree, where a small number of features is randomly selected that may be considered as the predictor for each split until the tree is fully developed.
 
+Like other machine learning methods, random forests can be used for regression, if instead of decision trees regression trees are computed and the majority vote is replaced with averaging the result of the trees. However, the performance of using the random forest algorithm for regression has shown to fall behind other methods and it is therefor seldomly used.
 
-[wtd explain how random forests work, include some math figures]
+A big advantage of this algorithm is that empirical data suggests that the out-of-bag error estimate is almost identical to that obtained by cross-validation, which means it is unlikely that overfitting might have skewed the results. Other advantages are that the evaluation can be parallelised very efficiently through map-reduce, as each tree can be evaluated independently. This makes it very efficient on big amounts of data. Also the training effort only scales linearly with the number of trees, which leads to fast iterations.
 
-[wtd explain advantages of random forests, such as speed of training, higher accuracy on smaller dimensional data or datasets]
+These characteristics make random forests useful for audio classification, where the available datasets are usually limited and other algorithms might overfit to certain characteristics of the recording equipment instead of the recorded data.
 
-[wtd explain pitfalls of random forests]
+%TODO: higher accuracy on smaller dimensional data or datasets
 
+%TODO: pitfalls of random forests
 
-The random forest classifier is a predictive model consisting of multiple decision trees.
-It has multiple advantages over other classification methods like SVM.
-The risk of overfitting the model to the available data, but not generalising well to new data is significantly reduced by learning multiple models over different subsamples of the training set and casting a majority vote at prediction time. \cite{statisticallearning}
-Training effort scales linearly with the number of trees, which leads to fast iterations.
-Evaluation can be parallelized, which makes it very efficient on big amounts of data.
-
-
-An oob error estimate is almost identical to that obtained by N-fold crossvalidation
-
-
-estimators to features
-
-overfitting
+%TODO: estimators to features 
 
 
 
 \subsection{Gradient Boosting}
 
-Gradient boosting is an supervised ensemble learning method that combines many "weak" learners, to form one single strong learner.  It has been proven to be a very successful machine learning method, has been applied with great success to many different Kaggle challenges (a machine learning competition).  It can be applied to both regression and classification problems.
+Gradient boosting is an supervised ensemble learning method that combines many "weak" learners, to form one single strong learner.  It has been proven to be a very successful machine learning method and has been applied with great success to many different challenges of the machine learning competition "Kaggle". Like most methods, it can be applied to both regression and classification problems.
 
-[wtd explain gradient boosting, make sure to cite XGBoost and Adaboost papers]
+The concept of Adaptive Boosting was introduced with \cite{Freund97adecision-theoretic} Freund and Schapire and has become the classic example of learning with boosting. It sequentially trains a serious of models that are able to accept a weighted collection of training points, i.e. we would add a vector of weights to our training data that indicates the importance of accurately predicting each specific data point. In each sequence the importance of incorrectly predicted data points is increased and the weight of the ones predicted correctly decreased and therefor incrementally minimizing the exponential loss.
 
-[wtd explain advantages of gradient boosting]
+An unwanted side effect of this boosting technique is that very often the weight of statistical outliers is increased continously and noise is amplified heavily. Adaboost therefor depends on high-quality. % data and experiments during this thesis have not been proven to give useful results TODO: Detail this
 
-[wtd explain disadvantages of gradient boosting]
+The library xgboost \cite{DBLP:journals/corr/ChenG16} has become the de facto standard for gradient boosting after winning Kaggle's Higgs Machine Learning Challenge in 2014 \cite{xgboost-wins}. While there are nowadays bindings for nearly any language available, only the integration into Python's scikit-learn has been evaluated for this thesis.
+
+
 
 \section{Neural Networks}
 
@@ -413,7 +447,7 @@ It is necessary to point out that the sliding window intentionally creates overl
 
 %TODO: Overlap -> overfit
 
-We use the urban sound dataset SONYC, which is... [wtd put felix description of dataset here]. [wtd explain advantages of this dataset, explain pitfalls, dicusss other datasets and attempt to collect youtube horn dataset].  [wtd describe how it was created]
+We use the urban sound dataset SONYC, which is... [wtd put my description of dataset here]. [wtd explain advantages of this dataset, explain pitfalls, dicusss other datasets and attempt to collect youtube horn dataset].  [wtd describe how it was created]
 
 \section{Content}
 
