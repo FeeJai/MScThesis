@@ -248,10 +248,40 @@ The library xgboost \cite{DBLP:journals/corr/ChenG16} has become the de facto st
 
 \section{Neural Networks}
 
-Contrary to the previously discussed approaches to machine learning, neural networks have existed for much longer [wtd cite Pitts and McCulloch the first neural network paper].  Neural networks have had a fickle history as well, with an ebb-and-flow of popularity, last peaking in the 90s [wtd cite some papers about NNs from Bengio, etc.].  Due to advances in computational power, parallel processing paradigms, and neural network architectures in the past several years, neural networks are seeing great successes across many machine learning tasks.  For example, in [wtd example task like MNIST or anything that had breakthrough results cite paper] neural networks were able to perform at a level previously thought not possible.  [wtd explain what neural networks are, put graphs, explain advantages such as ability to deal with curse of dimonsionality and ability to deal with non-linear relationships, explain pitfalls]. [wtd explain stochastic gradient descent and optimizers ADAM, Adadelta, momentum, etc.]
+Contrary to the previously discussed approaches to machine learning, neural networks have existed for much longer. Surprisingly, the idea of creating a mathematical model of an artifcial neuron has first been published in 1943 \cite{McCulloch1943} with the intent of studying whether a mammalian brain could truly evaluate computable mathematical functions.
+
+In this paper each neuron is a function with one binary output $y \epsilon \{0;1\}$ and one or multiple binary inputs $x_n \epsilon \{0;1\}$ with a specific weight $w_n \epsilon \mathbb{R}$ and a threshold value $T \epsilon \mathbb{R}$. A weighted sum of inputs is calculated with the simple arithmetic operation $\text{sum} = x_1w_1 + x_2w_2 + x_3w_3 + ...$ . The output value is dependent on the neuron's threshold
+
+{\centering
+	$y(x_1, ..., x_n) = \begin{cases}
+    0,& \text{if } \text{sum} < T\\
+    1,& \text{if } \text{sum} \geq T\\
+	\end{cases}$
+	\par
+}
+
+This allows for the modeling of boolean AND-, OR-, and NOT-relationships, making a network of McCulloug-Pitts neurons forming a full equivalent to the boolean algebra. Consequently the authors already assumed, that nearly every arithmetic function could be calculated with generalisation of this concept form binary in- and outputs to real numbers. This is done in modern neural networks, by replacing the threshold with an activation function (see \ref{activation}).
 
 
-The newest branch in machine learning attempting high level abstactions is so called deep learning. 
+\begin{figure}[h]
+    \centering
+	\includegraphics[width=.6\textwidth]{./images/illustrations/mcculloch-pitts}
+    \caption{Graphical representation of the McCulloch-Pitts model. Source: aishack.in}
+    \label{fig:mcculloch-pitts}
+\end{figure}
+
+
+ Neural networks have had a fickle history as well, with an ebb-and-flow of popularity, last peaking in the 90s \cite{Bengio91z}.  Due to advances in computational power, parallel processing paradigms, and neural network architectures in the past several years, neural networks are seeing great successes across many machine learning tasks. For example, in \cite{Silver:2016aa} neural networks were for the first time in history able to outperform a human champion in the game of Go, playing at a level previously thought not possible and still leaving many experienced players baffled.  
+
+
+ 
+% explain what neural networks are, put graphs, explain advantages such as ability to deal with curse of dimonsionality and ability to deal with non-linear relationships, explain pitfalls
+
+
+ [wtd explain stochastic gradient descent and optimizers ADAM, Adadelta, momentum, etc.]
+
+
+%The newest branch in machine learning attempting high level abstactions is so called deep learning. 
 
 Tensorflow is a library published by Google in 2014 in an effort to open-source their internal deep-learning functionalities into a universal library. While in the beginning it lacked distributed computing functionality and the support for GPGPU was poor, 
 
@@ -268,6 +298,7 @@ GOOGLE CLOUD BIG DATA AND MACHINE LEARNING BLOG - Learn TensorFlow and deep lear
 
 
 \subsection{Activation Functions}
+\label{activation}
 
 After each neuron has calculated the sum of its weighted inputs, it passes it to a (usually non-linear) "activation" function.  There are advantages and disadvantages to different activation functions.
 
