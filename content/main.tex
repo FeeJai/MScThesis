@@ -252,7 +252,16 @@ The library xgboost \cite{DBLP:journals/corr/ChenG16} has become the de facto st
 
 Contrary to the previously discussed approaches to machine learning, neural networks have existed for much longer. Surprisingly, the idea of creating a mathematical model of an artifcial neuron has first been published in 1943 \cite{McCulloch1943} with the intent of studying whether a mammalian brain could truly evaluate computable mathematical functions.
 
-In this paper each neuron is a function with one binary output $y \epsilon \{0;1\}$ and one or multiple binary inputs $x_n \epsilon \{0;1\}$ with a specific weight $w_n \epsilon \mathbb{R}$ and a threshold value $T \epsilon \mathbb{R}$. A weighted sum of inputs is calculated with the simple arithmetic operation $\text{sum} = x_1w_1 + x_2w_2 + x_3w_3 + ...$ . The output value is dependent on the neuron's threshold
+
+\begin{figure}[h]
+    \centering
+	\includegraphics[width=.6\textwidth]{./images/illustrations/mcculloch-pitts}
+    \caption{Graphical representation of the McCulloch-Pitts model. Source: aishack.in}
+    \label{fig:mcculloch-pitts}
+\end{figure}
+
+
+In this original paper each neuron is a function with one binary output $y \epsilon \{0;1\}$ and one or multiple binary inputs $x_n \epsilon \{0;1\}$ with a specific weight $w_n \epsilon \mathbb{R}$ and a threshold value $T \epsilon \mathbb{R}$. A weighted sum of inputs is calculated with the simple arithmetic operation $\text{sum} = x_1w_1 + x_2w_2 + x_3w_3 + ...$ . The output value is dependent on the neuron's threshold
 
 {\centering
 	$y(x_1, ..., x_n) = \begin{cases}
@@ -262,15 +271,7 @@ In this paper each neuron is a function with one binary output $y \epsilon \{0;1
 	\par
 }
 
-This allows for the modeling of boolean AND-, OR-, and NOT-relationships, making a network of McCulloug-Pitts neurons forming a full equivalent to the boolean algebra. Consequently the authors already assumed, that nearly every arithmetic function could be calculated with generalisation of this concept form binary in- and outputs to real numbers. This is done in modern neural networks, by replacing the threshold with an activation function (see \ref{activation}).
-
-
-\begin{figure}[h]
-    \centering
-	\includegraphics[width=.6\textwidth]{./images/illustrations/mcculloch-pitts}
-    \caption{Graphical representation of the McCulloch-Pitts model. Source: aishack.in}
-    \label{fig:mcculloch-pitts}
-\end{figure}
+This allows modeling of boolean AND-, OR-, and NOT-relationships, making a network of McCulloug-Pitts neurons a full equivalent to the boolean algebra. Consequently the authors already assumed, that nearly every arithmetic function could be calculated with generalisation of this concept form binary in- and outputs to real numbers. This is done in modern neural networks, while also replacing the threshold with an activation function (see \ref{activation}).
 
 
  Neural networks have had a fickle history as well, with an ebb-and-flow of popularity, last peaking in the 90s \cite{Bengio91z}.  Due to advances in computational power, parallel processing paradigms, and neural network architectures in the past several years, neural networks are seeing great successes across many machine learning tasks. For example, in \cite{Silver:2016aa} neural networks were for the first time in history able to outperform a human champion in the game of Go, playing at a level previously thought not possible and still leaving many experienced players baffled.  
@@ -298,6 +299,8 @@ Hacker's guide to Neural Networks: http://karpathy.github.io/neuralnets/
 
 GOOGLE CLOUD BIG DATA AND MACHINE LEARNING BLOG - Learn TensorFlow and deep learning, without a Ph.D.: https://cloud.google.com/blog/big-data/2017/01/learn-tensorflow-and-deep-learning-without-a-phd
 
+
+WEIGHT INITIALIZATION: https://medium.com/@amarbudhiraja/towards-weight-initialization-in-deep-neural-networks-908d3d9f1e02
 
 \subsection{Activation Functions}
 \label{activation}
@@ -337,7 +340,9 @@ In machine learning, sigmoid refers to a special case of the logit function also
 	$\displaystyle f(x)={\frac {L}{1+e^{-k(x-x_{0})}}}$\par
 }
 
-This function mimics a natural growth process, which generally occurs in three phases: The lag phase, in which growth begins slowly and can usually be approximated linearly, an exponential phase of rapid growth with a following stationary phase where environmental limits first slow  down and then bring the growth to a complete stop. In artificial ecosystems, such as the famous petry dish, there is usually a fourth phase called death-phase, where the lack of remaining supplies causes the population to shrink rather rapidly. This phase does not exist in the sigmoid model. 
+This function mimics a natural growth process, which generally occurs in three phases: The lag phase, in which growth begins slowly and can usually be approximated linearly, an exponential phase of rapid growth with a following stationary phase where environmental limits first slow  down and then bring the growth to a complete stop.
+
+In artificial ecosystems, such as the petry dish, there is usually a fourth phase called death-phase, where the lack of remaining supplies causes the population to shrink rather rapidly. This phase does not exist in the sigmoid model. 
 
 % WIKIPEDIA: Many natural processes, such as those of complex system learning curves, exhibit a progression from small beginnings that accelerates and approaches a climax over time. When a specific mathematical model is lacking, a sigmoid function is often used.[2]
 
@@ -345,17 +350,20 @@ This function mimics a natural growth process, which generally occurs in three p
 
 \subsubsection{TanH}
 
-Like all hyperbolic operations, the Tangens hyperbolicus is a generalization of the trigonometric function onto the complex number space so that $\text{tan}(ix) = i * \text{tanh}(x)$. Similar to the sigmoid function, the TanH-function is constrained by two horizontal asymptotes, but the range of output is $(-1; 1)$. The function can be calculated as follows:
+Like all hyperbolic operations, the Tangens hyperbolicus is a generalization of the trigonometric function onto the complex number space so that $\text{tan}(ix) = i * \text{tanh}(x)$. Similar to the  function above, the TanH-function is constrained by two horizontal asymptotes (a sigmodial or s-shaped function), but the range of output is $(-1; 1)$. The function can be calculated as follows:
 
 {\centering
 $\displaystyle \tanh x={\frac {\sinh x}{\cosh x}}={\frac {e^{x}-e^{-x}}{e^{x}+e^{-x}}}$
 \par
 }
 
-Since the lower bound is not very
+The bigger output range causes a higher derivate of the activation near  $x=0$ compared to the traditional sigmoid. This solves a common problem with back-propagation when normalized data centered around zero causes the back-propagation algorithm to develop biased gradients and getting stuck in local minima \cite{LeCun1998}.
+
 
 \subsubsection{Rectified Linear Unit}
-[wtd describe relu activation, include math]
+Random initialization on symmetric functions like TanH \cite{Hahnloser:2000aa}
+
+ allow more effective training on large datasets in deep and complex networks.  vanishing gradients \cite{Hochreiter:01book}
 
 {\centering
 	$f(x)=max(0, x)$\par
@@ -387,17 +395,16 @@ The softmax activation function transforms a set of probabilities
 
 \subsection{Convolutional Neural Networks}
 
-One of the more recent improvements in the reserach of Neural Networks has been the invetion of convolutional layers, where the same form of connections between each cell of two neighouring layers is established, like a filter in a traditional programming. 
+%One of the more recent improvements in the reserach of Neural Networks has been the invetion of convolutional layers, where the same form of connections between each cell of two neighouring layers is established, like a filter in a traditional programming. 
 
-The connectivity pattern of sharing the same connectivity weights between each neurons in neighbouring layers is inspired by the visual cortex in the mammalian brain.
-Mathematically, the operation can be approximated by a convolution operation, which gave the network architecture its name. 
-
-Efforts to train the network with know filters, like the sobel image filter have been largely successful by adding before and after images.  
+%Efforts to train the network with know filters, like the sobel image filter have been largely successful by adding before and after images.  
 
 A special network architecture, that has proven to generate best results in image recognition is the Convolutional Neural Network \cite{Lecun98gradient-basedlearning}.
 Its difference is the existence of a convolutional layer as the core building block.
-Instead of having weighted connections between all the neurons in neighbouring layers the network uses a self-taught filterkernel as parameter.
+Instead of having weighted connections between all the neurons in neighbouring layers the network uses a self-taught filterkernel as parameter. Validation efforts to train the network with know filters, like the sobel image filter by simply supplying before and after images have been largely successful.
 
+The connectivity pattern of sharing the same connectivity weights between each neurons in neighbouring layers is inspired by the visual cortex in the mammalian brain.
+Mathematically, the operation can be approximated by a convolution operation, which gave the network architecture its name. 
 
 Even in CNNs eventually the high level reasoning is done in a fully connected layer at the end.
 
@@ -407,16 +414,9 @@ The network consists of five convolutional layers, includes dropout layers and e
 Another innovation was the parallelization happening in the training. The authors split the networks layers into separate chunks that were trained on two independent graphic cards. The training still lasted six days, even though they were using two GTX 580 GPUs, that were the most powerful solution on the market at that time.
 
 
-
 Convolutional neural networks refers to any neural network with a convolutional layer.  These networks have achieved state-of-the-art results on many computer vision-related tasks, primarily because of their ability to "downsample" inputs while minimizing information loss.  It is because of this "downsampling" that these network are feasible to train, as opposed to a fully-connected network which has significantly more weights to train.  A convolutional layer is one that attempts to discover spatial relationships, aka filters, across neuronal inputs. [wtd describe + show graphs of convolutional layers].  This layer contains a set of filters, or weight matrices, that are convolved across the neuronal inputs, resulting in an output matrix called a feature map.  The weights of the filters are learned during training.  Typically these networks involve other spatial layers, such as max pooling layers, which directly downsample the neuronal inputs.
 
 \subsection{Recurrent Neural Networks}
-
-[wtd describe recurrent neural networks, cite original paper]
-
-[wtd include math and graphs of basic RNN structure]
-
-[wtd explain exactly the problem that RNNs solve (sequence and removing the need to include historical data in the inputs similar to how CNNs solve the problem of needing so many weights for the spatial input)]
 
 While CNNS solve the problem of dimensionality in terms of spatial relationships, RNNs do so in terms of sequential, or temporal relationships.  Typically, to represent a temporal or sequential relationship, inputs are stacked in a windowed-fashion.  However, this greatly increases the number of weights required at the input layer.  Therefore, RNNs reduce the amount weights by allowing sequences to be passed in without requiring weights be connected to these input features.
 
@@ -427,9 +427,8 @@ While most animals have a at least one form of memory and what happened in the p
 In contrast, Recurrent Neural Network (RNNs) extend the idea by not only allowing feed-forward propagation but adding connections between units that form a directed cycle (loops), therefor allowing information to persist. 
 Adding this kind of internal memory has proven to be especially useful for tasks like speech recognition \cite{sak2014long}, where due to the grammatical nature of human languages the meaning of heterograph such as to, too and two can almost always be determined by context.
 
-While there are many different RNN architectures I have found the so called Long-Short Term Memory (LSTM) to be the most useful for the detection of driver frustration. % why?
-These are especially well suited to remembering information for a long period of time, where other RNNs like the traditional single tanh layer as a repeating module very often struggle \cite{Hochreiter:1997:LSM:1246443.1246450}.
-
+%While there are many different RNN architectures I have found the so called Long-Short Term Memory (LSTM) to be the most useful for the detection of driver frustration. % why?
+%These are especially well suited to remembering information for a long period of time, where other RNNs like the traditional single tanh layer as a repeating module very often struggle \cite{Hochreiter:1997:LSM:1246443.1246450}.
 
 
 
@@ -437,6 +436,11 @@ deep feed forward
 
 multi-dimensional long short-term memory 
 
+%[wtd describe recurrent neural networks, cite original paper]
+
+%[wtd include math and graphs of basic RNN structure]
+
+%[wtd explain exactly the problem that RNNs solve (sequence and removing the need to include historical data in the inputs similar to how CNNs solve the problem of needing so many weights for the spatial input)]
 
 
 
@@ -451,11 +455,7 @@ multi-dimensional long short-term memory
 
 
 
-
-
-One of the pitfalls of recurrent neural networks is their inability to model [wtd describe lstms]
-
-[wtd describe lstms and include graphs]
+One of the pitfalls of recurrent neural networks like the traditional single tanh layer as a repeating module is their inability to remember information for a long period of time \cite{Hochreiter:1997:LSM:1246443.1246450}.
 
 [wtd describe what problems lstms solve aka able to capture longer sequences, and downfalls]
 
@@ -470,29 +470,39 @@ One of the pitfalls of recurrent neural networks is their inability to model [wt
 
 
 
-[wtd describe GRUs and include graphs]
+Sometimes only seen as a variant of the LSTM, the GRU is a simpler recurrent cell with only one set/reset input $x_t$.
 
-[wtd describe what problems GRUs solve vs lstms vs RNNs, and downfalls]
 
 \subsubsection{Attention Mechanisms}
 
-[wtd describe attention mechanisms]
+\begin{figure}[h]
+    \centering
+	\includegraphics[width=.4\textwidth]{./images/illustrations/attention}
+    \caption{The result of using a spatial transformer as the
+first layer of a fully-connected network trained for distorted
+MNIST digit classification in \cite{DBLP:journals/corr/JaderbergSZK15}.}
+    \label{fig:attention}
+\end{figure}
 
-One of the more interesting recent discovering in the neural network architectures is that of attention mechanisms.  These approaches allow a neural network to "focus" on a specific area of input, and have produced state-of-the-art results in several machine learning tasks such as machine translation and speech recognition [wtd cite some papers on attention].
+
+
+One of the more interesting recent discovering in the neural network architectures is that of attention mechanisms.  These approaches allow a neural network to "focus" on a specific area of input, and have produced state-of-the-art results in several machine learning tasks such as machine translation and speech recognition \cite{DBLP:journals/corr/JaderbergSZK15}.
 
 \subsection{Deep Learning}
 
-One of the primary advances in neural networks in the past several years has been the advent of deep learning.  Existing conceptually since the inception of neural networks, deep learning refers to network architectures with more than one hidden layer.  Conventionally speaking, a deep network is a network with many hidden layers, sometimes in the hundreds [wtd cite microsoft paper on the 1000 layer network].  The discovery of adding more layers to a neural network to increase performance, however, has its own pitfalls.
+One of the primary advances in neural networks in the past several years has been the advent of deep learning.  Existing conceptually since the inception of neural networks, deep learning refers to network architectures with more than one hidden layer.  Conventionally speaking, a deep network is a network with many hidden layers, sometimes in the hundreds or thousans in \cite{DBLP:journals/corr/HeZRS15}. The discovery of adding more layers to a neural network to increase performance, however, has its own pitfalls.
 
-For example, deep neural networks suffer from the problem of vanishing gradients [wtd cite some paper] and training time.  While previous approaches to conquering this problem have been somewhat successful [wtd cite bengio paper on how to actually train neural networks effectively], more advanced approaches have shown even greater success, for example normalization and regularization techniques, explained below.  Novel architectures such as deep residual networks [wtd cite microsoft deep residual network paper] have shown promise in this area as well.  Futhermore, the growing collection of larger annotated datasets and cheap, available processing power (such as GPUs and cloud computing), and the availability of open-source neural network toolkits have had major contributions to the success of neural networks as well [wtd cite tensorflow paper, torch, cite open source dataset papers].
+For example, deep neural networks suffer from the problem of vanishing gradients \cite{Hochreiter:01book} and training time.  While previous approaches to conquering this problem have been somewhat successful \cite{DBLP:journals/corr/abs-1206-5533}, more advanced approaches have shown even greater success, for example normalization and regularization techniques, explained below.  Novel architectures such as deep residual networks \cite{DBLP:journals/corr/HeZRS15} have shown promise in this area as well.  Futhermore, the growing collection of larger annotated datasets and cheap, available processing power (such as GPUs and cloud computing), and the availability of open-source neural network toolkits have had major contributions to the success of neural networks as well \cite{tensorflow2015-whitepaper}, \cite{DBLP:journals/corr/SynnaeveNACLLRU16}. %TODO: cite open source dataset papers
 
 \subsection{Recent Advances in Neural Networks}
 
-Up until [wtd find the date of exploring weight initalization research] neural network weights were initialized randomly.  Contributing to the success of deep neural networks, several different initialization schemes have been discovered [wtd cite He initialization paper and other initializer papers, find these in the Keras documention]
+Up until 2010 neural network weights were usually initialized randomly before the weights were adjusted during training.  Contributing to the success of deep neural networks, several different initialization schemes have been discovered like the He normal initializer in \cite{DBLP:journals/corr/HeZR015} and the Glorot uniform initializer, also called Xavier uniform initializer in \cite{pmlr-v9-glorot10a}.
 
-For example, research into normalization and regularization has lead to faster training rates and higher accuracy, while preventing overfitting.  More specifically, batch normalization has shown to be greatly advantageous in speeding up the training of neural networks while reducing the amount of hyperparameter tuning [wtd cite batchnorm paper].  Batch normalization however, suffers from some issues [wtd pitfalls of batchnorm].
+For example, research into normalization and regularization has lead to faster training rates and higher accuracy, while preventing overfitting.  More specifically, batch normalization\footnote{A good introduction to batch normalisation can be found here: \url{https://kratzert.github.io/2016/02/12/understanding-the-gradient-flow-through-the-batch-normalization-layer.html}} has shown to be greatly advantageous in speeding up the training of neural networks while reducing the amount of hyperparameter tuning \cite{DBLP:journals/corr/IoffeS15}. Batch normalization however is inefficient whenever the batches do not consist of independent samples, such as in the UrbanSound8K dataset and introduces some extra overhead during training and network configuration.
 
-Even more recently, work has been done in the area of self-normalizing networks that [wtd cite SNN paper on SELU] remove the need for batch normalization and greatly increase accuracy and training speed in fully-connected neural networks.
+% Bottom line, BN is definitely a very powerful tool to tackle existing problems but it should be noted that it does not come for free. First, BN introduces some overhead during training in terms of space, extra parameters, and time, for the data normalization. Second, layers in networks needs to be adjusted because BN is applied before the activation and third, a post-processing step is often required.
+
+Even more recently, work has been done in the area of self-normalizing networks\footnote{A good introduction to self-normalisation is available at: \url{https://medium.com/towards-data-science/selu-make-fnns-great-again-snn-8d61526802a9}} that remove the need for batch normalization and greatly increase accuracy and training speed in fully-connected neural networks \cite{DBLP:journals/corr/KlambauerUMH17}.
 
 \chapter{Dataset}
 
