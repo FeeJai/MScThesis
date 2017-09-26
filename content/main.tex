@@ -138,7 +138,7 @@ To identify the different frequencies, the next step is the calculation of a pow
 
 \subsection{Chroma}
 
-The chroma feature is mainly used in music recognition. It is based on the twelve pitch classes commonly used in music theory \cite{Mller:2015:FMP:2815664}. Sounds that differ by one or more octave, i.e. ratio of frequencies occur at a ratio of $2^n : 1$ with n being an integer.
+The chroma feature is mainly used in music recognition. It is based on the twelve pitch classes commonly used in music theory \cite{Mller:2015:FMP:2815664}. Sounds that differ by one or more octave, i.e. ratio of frequencies occur at a ratio of $2^n : 1$ with n being an integer are added to the same class. Image \ref{fig:chroma} illustrates the results of the chroma feature for an audio file of a short concordant clip. Very characteristic for the piano as an instrument is a peak 8 classes above the base class, and can manually be configured for instrument retrieval tasks. 
 
 
 \begin{figure}[H]
@@ -518,8 +518,7 @@ It is necessary to point out that the sliding window intentionally creates overl
   slices from the same source are not diverted across training and validation set. The authors provide for that by splitting the data into 10 distinct folds intended for k-fold cross validation as a means of model verification.
 
 %TODO: Overlap -> overfit
-
-We use the urban sound dataset SONYC, which is... [wtd put my description of dataset here]. [wtd explain advantages of this dataset, explain pitfalls, dicusss other datasets and attempt to collect youtube horn dataset].  [wtd describe how it was created]
+[wtd explain advantages of this dataset, explain pitfalls, dicusss other datasets and attempt to collect youtube horn dataset].
 
 \section{Content}
 
@@ -587,13 +586,13 @@ This indicates that extracted features of a mel spectrogram are still heavily co
 
 [wtd discuss train/test split, cross valdiation 10 fold?]
 
-We evaluated training across several optimizers including SGD + momentum, Adam, and RMSProp.  Results for each optimizer are included in figure [wtd link to figure showing training times and loss]
+I have evaluated training across several optimizers including SGD + momentum, Adam, and RMSProp.  Results for each optimizer are included in figure [wtd link to figure showing training times and loss]
 
 For training and modeling the neural network, we used Python with the Tensorflow and Keras libraries [wtd include Keras/tensorflow citations].
 
-The network was trained using a quad-core processor with an NVIDIA 1080 Ti graphics processer.
+After the Hardware of my personal MacBookPro11,3 equiped with a 2,3 GHz Intel Core i7 (TensorFlow does no longer support GPU Acceleration on MacOS) reached it's limits, I borrowed a quad-core processor machine with an NVIDIA 1080 Ti graphics processor for network training.
 
-Overall, training took a total of [wtd include time of how long training took].
+Overall, training took a total of 4m 56s on this machine.
 
 \section{Results}
 
@@ -603,9 +602,44 @@ Overall, we were able to achieve state-of-the-art results on the SONYC urban sou
 
 [wtd discuss pitfalls]
 
-\chapter{Comparing Gradient Boosting to GRUs and Attention}
+\chapter{Other approaches}
+\section{Comparing Gradient Boosting to GRUs and Attention}
 
-In addition to the deep neural network approach, we attempted to use gradient boosted trees, using the xgboost library [wtd cite xgboost] to achieve similar results.  As mentioned, gradient boosting has been very successful in classification tasks involving a small input dimensionality.
+In addition to the deep neural network approach, an attempt to use gradient boosted trees, using the xgboost library \cite{DBLP:journals/corr/ChenG16} to achieve similar results.  As mentioned, gradient boosting has been very successful in classification tasks involving a small input dimensionality.
+
+\section{Attempted recreation of NYU papers}
+
+PCA whitening
+
+For each experiment we report the average accuracy across all 10 folds.
+
+[wtd differences in audio libraries and sklearn]
+
+[wtd why were most results no reproducable]
+
+\subsection{A Dataset and Taxonomy for Urban Sound Research}
+
+"To ensure
+the observed changes in accuracy are not an artifact of a
+specific classification algorithm, we compare 5 different algorithms:
+decision tree (J48), k-NN (k = 5), random forest
+(500 trees), support vector machine (radial basis function
+kernel), and a baseline majority vote classifier (ZeroR)."
+
+\subsection{UNSUPERVISED FEATURE LEARNING FOR URBAN SOUND CLASSIFICATION}
+
+"Whilst we could use the resulting log-mel-spectrograms directly
+as input for the feature learning, it has been shown that the
+learned features can be significantly improved by decorrelating the
+input dimensions using e.g. ZCA or PCA whitening"
+
+Spherical k-means
+
+
+\subsection{Deep Convolutional Neural Networks and Data
+Augmentation for Environmental Sound
+Classification}
+
 
 \chapter{Conclusion}
 
@@ -615,5 +649,5 @@ In addition to the deep neural network approach, we attempted to use gradient bo
 
 [wtd discuss problem with audio classification task]
 
-We believe that one of the primary reasons audio classification is such a difficult task is due to the lack of available data.  Therefore, as the amount of labeled audio classification datasets increases (such as in genre classification [wtd cite stanford audio classification paper]), we predict there will be an increase in performance in this area.
+It has been shown that most likely one of the primary reasons audio classification is such a difficult task is due to the lack of available data.  Therefore, as the amount of labeled audio classification datasets increases (such as in genre classification [wtd cite stanford audio classification paper]), it is likely predict there will be an increase in performance in this area.
 
