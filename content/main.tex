@@ -1,14 +1,17 @@
 \chapter{Introduction}
 \label{Introduction}
 
-Audio processing, more precisely named audio signal processing, has been of interest since radio broadcasting and telephone systems capable of sound transmission started to replace the morse code\cite{spanias2006audio}. In it's simplest form, as used in the original telegraph, morse code is created by repeatedly opening an electrical circuit manually with a switch so that a visualisation device like a light bulb or an electric bell is turned on and off intermittedly. This discrete signal is transmitted over distance by extending the electrical circuit with long wires to a different physical location, so that the switch operator can transmit a message by morse encoding to the recipient who will have to use the same codebook for decoding.
+Audio processing, more precisely named audio signal processing, has been of interest since radio broadcasting and telephone systems capable of sound transmission started to replace the morse code \cite{spanias2006audio}. In it's simplest form, as used in the original telegraph, morse code is created by repeatedly opening an electrical circuit manually with a switch so that a visualisation device like a light bulb or an electric bell is turned on and off intermittedly. 
 
-\begin{figure}[h]
+
+\begin{figure}[H]
     \centering
-	\includegraphics[width=.45\textwidth]{./images/illustrations/morse-chart}
+	\includegraphics[width=.4\textwidth]{./images/illustrations/morse-chart}
     \caption{A codebook for the international morse code, where black means transmit}
     \label{fig:morse}
 \end{figure}
+
+This discrete signal is transmitted over distance by extending the electrical circuit with long wires to a different physical location, so that the switch operator can transmit a message by morse encoding to the recipient who will have to use the same codebook for decoding.
 
 The same purpose can be achieved wirelessly by repeatedly turning a radio transmitter on and off, which can be considered the simplest form of HF-modulation. However, things are more complex for the real- or near-time transmission of speech without manual en- and decoding. Since most harmonics of the human voice occur in the range of 500 Hz to 2 kHz, according to the Nyquist–Shannon sampling theorem a sampling rate of at least 4 kHz is required for transmission\footnote{To verify this empirically I have downsampled a recording of both my voice and of the song Tom's Diner to 4kHz. While both the voice and the lyrics were still understandable, the melody perished and the sounds F and S were nearly indistiguishable. This is probably the reason why many speech encoding standards like the common G.711 use a sampling rate of 8 kHz}. When radio transmission was invented in the late 19th century, it was not feasible to encode this information in a digital form (such as morse code). Instead different forms of analog modulation methods had to be developed, which was the birth of audio signal processing.
 
@@ -31,15 +34,14 @@ An especially interesting area of audio processing is classification.  Given an 
 The first project idea was to assist MIT AgeLab's human factors research in the traffic safety impact of self driving cars. This lab has a long history of detecting different forms of driver frustration with monitoring equipment in cars. They have also published research on the automatic detection of these factors through machine learning on video and audio \cite{Abdic:2016:DFD:3060621.3060809} instead of manual annotation.
 
 
+Machine learning is especially interesting as an addition in the field of audio processing. Previously this has mainly seen popularity in the audio processing task of speech recognition. While there have been many advances in this area, there has been surprisingly little work in other audio processing tasks, for example, in the detection of urban sounds and background audio classification in general. Until recently, these tasks have been approached using sophisticated, hand-crafted features and algorithms that mostly have existed since the sixties or earlier and were optimised to take advantage of analog hardware. As hardware advanced, more modern algorithms and techniques were able to be used such as gradient boosting and neural networks. These approaches represent the current state-of-the-art as it applies to audio classification.
+
 \begin{figure}[h]
     \centering
 	\includegraphics[width=.65\textwidth]{./images/illustrations/driver-frustration}
     \caption{Different examples of concentration and frustration while interacting with an in-car voice control system as shown in \cite{Abdic:2016:DFD:3060621.3060809}.}
     \label{fig:am}
 \end{figure}
-
-
-Machine learning is especially interesting as an addition in the field of audio processing. Previously this has mainly seen popularity in the audio processing task of speech recognition. While there have been many advances in this area, there has been surprisingly little work in other audio processing tasks, for example, in the detection of urban sounds and background audio classification in general. Until recently, these tasks have been approached using sophisticated, hand-crafted features and algorithms that mostly have existed since the sixties or earlier and were optimised to take advantage of analog hardware. As hardware advanced, more modern algorithms and techniques were able to be used such as gradient boosting and neural networks. These approaches represent the current state-of-the-art as it applies to audio classification.
 
 
 %% WHAT DID NOT MAKE IT INTO THE THESIS
@@ -59,7 +61,7 @@ Although there have been some recent breakthroughs in the field by Google's Deep
 
 \begin{figure}[h]
     \centering
-	\includegraphics[width=.85\textwidth]{./images/illustrations/audio-signal}
+	\includegraphics[width=.7\textwidth]{./images/illustrations/audio-signal}
     \caption{Common wave-plot representation of a 4s dog bark audio file and a zoom into seven 23ms frames consisting of 3549 data points}
     \label{fig:audio}
 \end{figure}
@@ -88,7 +90,6 @@ The resulting csv can be read with python csv script and very often directly be 
 \subsection{Spectrograms}
 
 Probably the best-known feature extractor is the Fourier Transformation. In 1822, while studying heat transfer, Joseph Fourier proved that certain functions could be written as a sum of a finite number of harmonics \cite{fourier1878}. This led the way onto the development of the Fourier transform, the decomposition of a signal into the different sine frequenices it is made up of. As input, the Fourier transform requires a periodic and infinite signal. In real-world scenarios, where recorded instead of generated input is used, the signal is cut into short slices and the transformation is done for each slice individually with the assumption that it would be repeating indefinitely as a simple workaround \cite{Smith97}.
-The advance of digital signal processing has made it possible to utilize the Fourier transform to create a visual representation of the different frequencies in a signal such as sound. The most common format of display is a a two-dimensional diagram, where the abscissa represents the time dimension and the ordinate the separate frequency ranges. The intensity can either be displayed through the brightness or intensity of different colors. 
 
 \begin{figure}[h]
     \centering
@@ -96,6 +97,8 @@ Probably the best-known feature extractor is the Fourier Transformation. In 1822
     \caption{The spectral distribution of the dog bark audio}
     \label{fig:spef}
 \end{figure}
+
+The advance of digital signal processing has made it possible to utilize the Fourier transform to create a visual representation of the different frequencies in a signal such as sound. The most common format of display is a a two-dimensional diagram, where the abscissa represents the time dimension and the ordinate the separate frequency ranges. The intensity can either be displayed through the brightness or intensity of different colors. 
 
 To increase verboseness and to prevent noise, individual slices can be created overlapping through the use of window functions. Subsequently the intensity of each spectrum can be calculated by applying the fourier transform onto the thereby generated individual chunks.
 
@@ -106,30 +109,29 @@ In Indo-European languages a change of the pitch usually does not alter a spoken
 
 That is why a method has become extremely popular that provides a separation between voice pitch and the formants. Developed by \cite{noll67}, the Mel-frequency cepstral coefficients (MFCCs) have become the most commonly used feature in speech recognition tasks \cite{ganchev2005comparative}, a transformation that is inspired by the inner workings of the cochlea, including the sensory organ of hearing inside the human ear, the Organ of Cortil. 
 
-\begin{figure}[h]
-    \centering
-	\includegraphics[width=.7\textwidth]{./images/illustrations/Gray921}
-    \caption{Location and principle of the cochlea inside the inner ear. - Henry Gray, 1918, copyright expired}
-    \label{fig:gray}
-\end{figure}
-
 The first step in its calculation is the slicing into short frames through a window function, mimicking inertia in the organ. Different sound frequencies create resonance in different areas of the cochlea’s narrowing spiral tube, where the wobbling of sensory hair called the stereocilia create nervous impulses.
 
 To identify the different frequencies, the next step is the calculation of a power spectrum through Fourier transformation. This result is a power spectrum on a linear frequency scale, which does not correlate well with the perception of different frequencies in humans \cite{mel}. 
 
-  \begin{figure}[h]
+\begin{figure}[h]
     \centering
-	\includegraphics[width=.6\textwidth]{./images/illustrations/mfcc}
-    \caption{Graphic representation of MFCCs of the dog bark audio file}
-    \label{fig:mfcc}
+	\includegraphics[width=.9\textwidth]{./images/illustrations/Gray921}
+    \caption{Location and principle of the cochlea inside the inner ear. - Henry Gray, 1918, copyright expired}
+    \label{fig:gray}
 \end{figure}
- 
+
  
  While low frequencies below 20 Hz can hardly be detected, the effect becomes especially predominant with frequencies over 1 kHz. The transformation from the Hertz- onto the so-called Mel-scale is used as the next step to map the spectrum onto the percieved frequencies. 
  
  The linear scale is mapped into discrete bins through a triangular activation functions within the human hearing range as well in this step. Like most human senses in accordance to Fechner’s law \cite{fechner1860} the relationship between stimulus and perception is logarithmic, wich means a quadrupling of the acoustic pressure causes the perceived intensity (loudness) of sound to double. A similar effect can be achieved by taking the logarithms of the power spectrum.
  
-
+  \begin{figure}[h]
+    \centering
+	\includegraphics[width=.9\textwidth]{./images/illustrations/mfcc}
+    \caption{Graphic representation of MFCCs of the dog bark audio file}
+    \label{fig:mfcc}
+\end{figure}
+ 
  To decorrelate the energies of the overlapping filterbanks, in order to separate pitch, modulation (added by the vocal in human speech) and noise, usually the discrete cosine transformation is performed on the log mel powers. % The resulting coefficient 2-13 form the MFCCs.
  
  The resulting amplitudes form the Mel-frequency cepstral coefficients.
@@ -141,7 +143,7 @@ The chroma feature is mainly used in music recognition. It is based on the twelv
 
 \begin{figure}[H]
     \centering
-	\includegraphics[width=.5\textwidth]{./images/illustrations/chroma}
+	\includegraphics[width=.7\textwidth]{./images/illustrations/chroma}
     \caption{Illustration of the Chroma feature of a C maj scale played on a piano. Created by Meinard Müller. Source: Wikipedia; CC-BY-SA}
     \label{fig:chroma}
 \end{figure}
@@ -160,7 +162,7 @@ There are multiple different machine learning algorithms useable with audio info
 
 
 \subsection{Linear and Logistic Regression}
-
+\label{chptr:reg}
 
  
 The simplest model of a relationship between an explanatory and one dependent variable is the linear regression with a dataset ${\displaystyle \{y_{i},\,x_{i}\}_{i=1}^{n}}$ of n statistical units, with Y being the dependent and x being the explanatory variable.
@@ -303,6 +305,17 @@ GOOGLE CLOUD BIG DATA AND MACHINE LEARNING BLOG - Learn TensorFlow and deep lear
 After each neuron has calculated the sum of its weighted inputs, it passes it to a (usually non-linear) "activation" function.  There are advantages and disadvantages to different activation functions.
 
 
+
+\begin{figure}[h]
+    \centering
+	\includegraphics[width=.7\textwidth]{./images/illustrations/ActivationFunctions}
+    \caption{Common non-linear activation functions. Source: orngunnarsson.blogspot.de}
+    \label{fig:actviation}
+\end{figure}
+
+
+
+
 \subsubsection{Linear}
 
 A linear activation function takes the weighted summed inputs to the neuron and multiplies it by a constant, giving the neuron the ability to scale the inputs.
@@ -311,17 +324,35 @@ A linear activation function takes the weighted summed inputs to the neuron and 
   $f(x)=cx$\par
 }
 
+If the parameter $c = 1$, this is activation referred to as the identity function.
+
 
 \subsubsection{Sigmoid}
-[wtd describe sigmoidal activation, include math]
+
+Sigmoid is a mathematical function where the output is constrained by horizontal asymptotes such as $\displaystyle \lim_{x\to - \infty} f(x) =  0; \lim_{x\to + \infty} f(x) =  1$. This causes a very characteristic plot. 
+
+In machine learning, sigmoid refers to a special case of the logit function also used in logistic regression (see chapter \ref{chptr:reg}) described as:
 
 {\centering
 	$\displaystyle f(x)={\frac {L}{1+e^{-k(x-x_{0})}}}$\par
 }
 
+This function mimics a natural growth process, which generally occurs in three phases: The lag phase, in which growth begins slowly and can usually be approximated linearly, an exponential phase of rapid growth with a following stationary phase where environmental limits first slow  down and then bring the growth to a complete stop. In artificial ecosystems, such as the famous petry dish, there is usually a fourth phase called death-phase, where the lack of remaining supplies causes the population to shrink rather rapidly. This phase does not exist in the sigmoid model. 
+
+% WIKIPEDIA: Many natural processes, such as those of complex system learning curves, exhibit a progression from small beginnings that accelerates and approaches a climax over time. When a specific mathematical model is lacking, a sigmoid function is often used.[2]
+
+
+
 \subsubsection{TanH}
 
-Similar to the sigmoid function, [wtd explain tanh]
+Like all hyperbolic operations, the Tangens hyperbolicus is a generalization of the trigonometric function onto the complex number space so that $\text{tan}(ix) = i * \text{tanh}(x)$. Similar to the sigmoid function, the TanH-function is constrained by two horizontal asymptotes, but the range of output is $(-1; 1)$. The function can be calculated as follows:
+
+{\centering
+$\displaystyle \tanh x={\frac {\sinh x}{\cosh x}}={\frac {e^{x}-e^{-x}}{e^{x}+e^{-x}}}$
+\par
+}
+
+Since the lower bound is not very
 
 \subsubsection{Rectified Linear Unit}
 [wtd describe relu activation, include math]

@@ -23,6 +23,9 @@
 \usepackage[a4paper]{geometry}
 \usepackage{fancyhdr, blindtext}
 \pagestyle{fancy}
+
+\renewcommand{\baselinestretch}{1.5} 
+
 \renewcommand{\headrule}{{\color{grey}\hrule width\headwidth height\headrulewidth \vskip-\headrulewidth}}
 \fancyhf{}
 \fancyhead[L]{\headerfont\color{grey} \MakeUppercase{\leftmark}}
@@ -38,12 +41,11 @@
 }
 
 % paragraphs and formatting
-
 \parindent0mm
 \setlength{\parskip}{.5\baselineskip}
 \usepackage{multicol}
 \setlength{\columnsep}{1cm}
-\setlength{\columnseprule}{1pt}
+\setlength{\columnseprule}{2pt}
 \def\columnseprulecolor{\color{grey}}
 
 % graphics and figures
