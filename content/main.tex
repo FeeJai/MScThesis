@@ -403,6 +403,19 @@ A special network architecture, that has proven to generate best results in imag
 Its difference is the existence of a convolutional layer as the core building block.
 Instead of having weighted connections between all the neurons in neighbouring layers the network uses a self-taught filterkernel as parameter. Validation efforts to train the network with know filters, like the sobel image filter by simply supplying before and after images have been largely successful.
 
+
+
+\begin{figure}[h]
+    \centering
+	\includegraphics[width=.7\textwidth]{./images/illustrations/cnn}
+    \caption{Concept of a convolutional layer. Source: Deep Learning by Josh Patterson, Adam Gibson}
+    \label{fig:cnn}
+\end{figure}
+
+
+
+
+
 The connectivity pattern of sharing the same connectivity weights between each neurons in neighbouring layers is inspired by the visual cortex in the mammalian brain.
 Mathematically, the operation can be approximated by a convolution operation, which gave the network architecture its name. 
 
@@ -422,6 +435,16 @@ While CNNS solve the problem of dimensionality in terms of spatial relationships
 
 
 % http://colah.github.io/posts/2015-08-Understanding-LSTMs/
+
+
+\begin{figure}[h]
+    \centering
+	\includegraphics[width=.8\textwidth]{./images/illustrations/rnn}
+    \caption{A recurrent neural network and the unfolding in time of the computation involved in its forward computation. Source: Nature}
+    \label{fig:rnn}
+\end{figure}
+
+
 
 While most animals have a at least one form of memory and what happened in the past is always taken into consideration, after completion of the training phase in NNs the past traditionally has no impact onto the result. 
 In contrast, Recurrent Neural Network (RNNs) extend the idea by not only allowing feed-forward propagation but adding connections between units that form a directed cycle (loops), therefor allowing information to persist. 
@@ -449,10 +472,9 @@ multi-dimensional long short-term memory
 \begin{figure}[h]
     \centering
 	\includegraphics[width=.8\textwidth]{./images/illustrations/LSTM3}
-    \caption{The repeating module in an LSTM contains four interacting layers.}
+    \caption{The repeating module in an LSTM contains four interacting layers. Source: colah.github.io. Reproduced with permission}
     \label{fig:mesh1}
-\end{figure}\footnote{Source: http://colah.github.io/posts/2015-08-Understanding-LSTMs/. Reproduced with permission}
-
+\end{figure}
 
 
 One of the pitfalls of recurrent neural networks like the traditional single tanh layer as a repeating module is their inability to remember information for a long period of time \cite{Hochreiter:1997:LSM:1246443.1246450}.
@@ -464,9 +486,9 @@ One of the pitfalls of recurrent neural networks like the traditional single tan
 \begin{figure}[h]
     \centering
 	\includegraphics[width=.8\textwidth]{./images/illustrations/GRU}
-    \caption{A GRU, as defined by Cho, et al. (2014).}
+    \caption{A GRU, as defined by Cho, et al. (2014). Source: colah.github.io. Reproduced with permission}
     \label{fig:mesh1}
-\end{figure}\footnote{Source: http://colah.github.io/posts/2015-08-Understanding-LSTMs/. Reproduced with permission}
+\end{figure}
 
 
 
@@ -477,7 +499,7 @@ Sometimes only seen as a variant of the LSTM, the GRU is a simpler recurrent cel
 
 \begin{figure}[h]
     \centering
-	\includegraphics[width=.4\textwidth]{./images/illustrations/attention}
+	\includegraphics[width=.5\textwidth]{./images/illustrations/attention}
     \caption{The result of using a spatial transformer as the
 first layer of a fully-connected network trained for distorted
 MNIST digit classification in \cite{DBLP:journals/corr/JaderbergSZK15}.}
@@ -508,7 +530,7 @@ Even more recently, work has been done in the area of self-normalizing networks\
 
 \section{Creation}
 
-The UrbanSounds8K dataset used for this research is based on \cite{Salamon:UrbanSound:ACMMM:14}. It contains audio recording from the Freesound API, initially comprised 1302 recordings with the total length of 27 hours of audio and was manually labelled according to the Urban Sound Taxonomy created and introduced with the same paper. Labels span over 10 low-level classes in this taxonomy and offer an additional salience (foreground or background) classification.
+The UrbanSounds8K dataset used for this research was published in 2014 with \cite{Salamon:UrbanSound:ACMMM:14}. It contains audio recording from the Freesound API, initially comprised 1302 recordings with the total length of 27 hours of audio and was manually labelled according to the Urban Sound Taxonomy created and introduced with the same paper. Labels span over 10 low-level classes in this taxonomy and offer an additional salience (foreground or background) classification.
 
 The final audio samples have been provided by the authors publicly in the form of slices up to 4s long. Those were created by a 4s sliding window algorithm with a hop size of 2s and a limit of maximum 1000 slices per class. This results in a total of 8732 labeled slices or 8.75 hours of audio.
 
@@ -546,6 +568,10 @@ The relatively low amount of car horns caused a problem, since the detection of 
 
 As mentioned in the introduction, a raw audio signal consists of a high-dimensionality huge amount of data and is therefor not suitable as input for a learning algorithm without previous feature extraction.
 
+This chapter contains visualisations of different features. It can be seen, that there is a distinct pattern per sound class that can easily be recognized by humans. It therefor is logical, that common image recognition networks should easily be able to lear these characteristics and be able to classify the audio files correctly along these characteristics.
+
+If a CNN or a RNN is the better example remains open to debate.
+
 
 % As noted in [13], the raw audio signal is not suitable as direct input to a classifier due to its extremely high dimensionality and the fact that it would be unlikely for perceptually similar sounds to be neighbours in vector space
 
@@ -553,9 +579,38 @@ As mentioned in the introduction, a raw audio signal consists of a high-dimensio
 
 \subsection{Spectrogram}
 
+\begin{figure}[H]
+    \centering
+	\includegraphics[width=.9\textwidth]{./images/features/spec-lin}
+    \caption{Linear spectrogram of different audio classes}
+    \label{fig:spec}
+\end{figure}
+
+
 \subsection{MFCC}
 
+
+\begin{figure}[H]
+    \centering
+	\includegraphics[width=.9\textwidth]{./images/features/mfcc-25}
+    \caption{Visualisation of 25 Mel Frequency Cepstral Coefficients}
+    \label{fig:mfcc}
+\end{figure}
+
+
+
 \subsection{Chroma}
+
+\begin{figure}[H]
+    \centering
+	\includegraphics[width=.9\textwidth]{./images/features/chroma}
+    \caption{Chromagram of different audio classes}
+    \label{fig:chroma}
+\end{figure}
+
+
+Chroma shows little coherence, except for the classes engine_idling and siren.
+
 
 \subsection{Quality improvements}
 While usually not being succesful with neural networks, there has been moderate success in the classification of bird songs and acoustic scenes using more traditional classification methods like the spherical k-means algorithm in the past. To improve classification accuracy, \cite{Coates2012} has shown that dimensionality reduction with PCA whitening over scaled features has significatnly increased accuracy. 
@@ -594,6 +649,10 @@ After the Hardware of my personal MacBookPro11,3 equiped with a 2,3 GHz Intel Co
 
 Overall, training took a total of 4m 56s on this machine.
 
+\subsection{The problem of overfitting}
+
+\subsection{k-fold validation}
+
 \section{Results}
 
 [wtd results table]
@@ -626,7 +685,7 @@ decision tree (J48), k-NN (k = 5), random forest
 (500 trees), support vector machine (radial basis function
 kernel), and a baseline majority vote classifier (ZeroR)."
 
-\subsection{UNSUPERVISED FEATURE LEARNING FOR URBAN SOUND CLASSIFICATION}
+\subsection{Unsupervised feature learning for urban sound classification}
 
 "Whilst we could use the resulting log-mel-spectrograms directly
 as input for the feature learning, it has been shown that the
