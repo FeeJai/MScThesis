@@ -302,6 +302,8 @@ GOOGLE CLOUD BIG DATA AND MACHINE LEARNING BLOG - Learn TensorFlow and deep lear
 
 WEIGHT INITIALIZATION: https://medium.com/@amarbudhiraja/towards-weight-initialization-in-deep-neural-networks-908d3d9f1e02
 
+%% gradient-based learning methods and backpropagation. In such methods, each of the neural network's weights receives an update proportional to the gradient of the error function with respect to the current weight in each iteration of training. Traditional activation functions such as the hyperbolic tangent function have gradients in the range (−1, 1), and backpropagation computes gradients by the chain rule. This has the effect of multiplying n of these small numbers to compute gradients of the "front" layers in an n-layer network, meaning that the gradient (error signal) decreases exponentially with n while the front layers train very slowly.
+
 \subsection{Activation Functions}
 \label{activation}
 
@@ -361,13 +363,17 @@ The bigger output range causes a higher derivate of the activation near  $x=0$ c
 
 
 \subsubsection{Rectified Linear Unit}
-Random initialization on symmetric functions like TanH \cite{Hahnloser:2000aa}
 
- allow more effective training on large datasets in deep and complex networks.  vanishing gradients \cite{Hochreiter:01book}
+More recent networks often use rectified linear units (ReLUs) as activation function in the hidden layers, introduced in 2000 with motivations in biology \cite{Hahnloser:2000aa}. According to Yann LeCun, it has become the most popular activation function in 2015. The formula is relatively simple, returning zero if the sum of the weighted inputs is negative and identity otherwise: 
 
 {\centering
 	$f(x)=max(0, x)$\par
 }
+
+
+An advantage is that with random initialisation, only have of the neurons will produce an output other than 0, while with antisymmetric functions like TanH every cell will produce an output between -1 and 1. The main advantage however is that the differential of the identity function is 1 (differentiation of the sigmoid is in the range of 0 and 0.25). This avoids the problem of vanishing gradients \cite{Hochreiter:01book} during backpropagation. That means, the error gradient of each layer's neurons being computed by the chain rule causes the gradient to decrease exponentially with distance from the output, causing the layers to train more slowly closer to the input layer.
+
+% allow more effective training on large datasets in deep and complex networks. 
 
 \subsubsection{Scaled Exponential Linear Unit}
 [wtd describe selu activation, include math, include special initialization required]
@@ -382,7 +388,10 @@ Random initialization on symmetric functions like TanH \cite{Hahnloser:2000aa}
 }
 
 
-The paper (\cite{DBLP:journals/corr/KlambauerUMH17})
+The paper (\cite{DBLP:journals/corr/KlambauerUMH17}) 
+
+
+\footnote{A very nice github repo available under \url{https://github.com/bioinf-jku/SNNs} contains tutorials and implementations of SNNs as suggested by Klambauer et al and served as inspiration for code developed during this thesis.}
 
 
 \subsubsection{Softmax}
