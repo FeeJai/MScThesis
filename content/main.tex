@@ -13,7 +13,7 @@ Audio processing, more precisely named audio signal processing, has been of inte
 
 This discrete signal is transmitted over distance by extending the electrical circuit with long wires to a different physical location, so that the switch operator can transmit a message by morse encoding to the recipient who will have to use the same codebook for decoding.
 
-The same purpose can be achieved wirelessly by repeatedly turning a radio transmitter on and off, which can be considered the simplest form of HF-modulation. However, things are more complex for the real- or near-time transmission of speech without manual en- and decoding. Since most harmonics of the human voice occur in the range of 500 Hz to 2 kHz, according to the Nyquist–Shannon sampling theorem a sampling rate of at least 4 kHz is required for transmission\footnote{To verify this empirically I have downsampled a recording of both my voice and of the song Tom's Diner to 4kHz. While both the voice and the lyrics were still understandable, the melody perished and the sounds F and S were nearly indistiguishable. This is probably the reason why many speech encoding standards like the common G.711 use a sampling rate of 8 kHz}. When radio transmission was invented in the late 19th century, it was not feasible to encode this information in a digital form (such as morse code). Instead different forms of analog modulation methods had to be developed, which was the birth of audio signal processing.
+The same purpose can be achieved wirelessly by repeatedly turning a radio transmitter on and off, which can be considered the simplest form of HF-modulation. However, things are more complex for the real- or near-time transmission of speech without manual encoding and decoding. Since most harmonics of the human voice occur in the range of 500 Hz to 2 kHz, according to the Nyquist–Shannon sampling theorem a sampling rate of at least 4 kHz is required for transmission\footnote{To verify this empirically I have downsampled a recording of both my voice and of the song Tom's Diner to 4kHz. While both the voice and the lyrics were still understandable, the melody perished and the sounds F and S were nearly indistiguishable. This is probably the reason why many speech encoding standards like the common G.711 use a sampling rate of 8 kHz}. When radio transmission was invented in the late 19th century, it was not feasible to encode this information in a digital form (such as morse code). Instead different forms of analog modulation methods had to be developed, which was the birth of audio signal processing.
 
 \begin{figure}[h]
     \centering
@@ -34,7 +34,7 @@ An especially interesting area of audio processing is classification.  Given an 
 The first project idea was to assist MIT AgeLab's human factors research in the traffic safety impact of self driving cars. This lab has a long history of detecting different forms of driver frustration with monitoring equipment in cars. They have also published research on the automatic detection of these factors through machine learning on video and audio \cite{Abdic:2016:DFD:3060621.3060809} instead of manual annotation.
 
 
-Machine learning is especially interesting as an addition in the field of audio processing. Previously this has mainly seen popularity in the audio processing task of speech recognition. While there have been many advances in this area, there has been surprisingly little work in other audio processing tasks, for example, in the detection of urban sounds and background audio classification in general. Until recently, these tasks have been approached using sophisticated, hand-crafted features and algorithms that mostly have existed since the sixties or earlier and were optimised to take advantage of analog hardware. As hardware advanced, more modern algorithms and techniques were able to be used such as gradient boosting and neural networks. These approaches represent the current state-of-the-art as it applies to audio classification.
+Machine learning is especially interesting as an addition to the field of audio processing. Previously this has mainly seen popularity in the audio processing task of speech recognition. While there have been many advances in this area, there has been surprisingly little work in other audio processing tasks, for example, in the detection of urban sounds and background audio classification in general. Until recently, these tasks have been approached using sophisticated, hand-crafted features and algorithms that mostly have existed since the sixties or earlier and were optimised to take advantage of analog hardware. As hardware advanced, more modern algorithms and techniques were able to be used such as gradient boosting and neural networks. These approaches represent the current state-of-the-art as it applies to audio classification.
 
 \begin{figure}[h]
     \centering
@@ -69,15 +69,17 @@ Although there have been some recent breakthroughs in the field by Google's Deep
 
 This is in stark contrast to the amount of data in other machine learning tasks, such as the common 28x28 greyscale image in the MNIST image recognition dataset, where each image is represented by only $28*28*8 = 6.272$ bits \cite{lecun1998mnist}.
 
-Therefor we rely on a mechanism called feature extraction. This means the creation of a signal processing algorithms, that transforms the raw audio signal into meaningful information, by removing redundancies and irrelevancies while presenting the relevant information in as little dimensions as possible. A challenge is that what might be relevant differs strongly depending on the context. As an example, the well-known MP3 compression specifially removes content that can not be heard by the human ear \cite{brandenburg1999mp3}. While that is adequate for digital compression of an audio file without affecting the  listener's impressin, this might very well decrease the detection and classification rate of other algorithms.  
+Therefore we rely on a mechanism called feature extraction. This means the creation of a signal processing algorithms, that transforms the raw audio signal into meaningful information, by removing redundancies and irrelevancies while presenting the relevant information in as little dimensions as possible. A challenge is that what might be relevant differs strongly depending on the context. As an example, the well-known MP3 compression specifially removes content that can not be heard by the human ear \cite{brandenburg1999mp3}. While that is adequate for digital compression of an audio file without affecting the  listener's impressin, this might very well decrease the detection and classification rate of other algorithms.  
 
 
 \section{Machine Learning for Audio through Feature Extraction}
 
 
-[wtd list and describe various audio processing task such as sound classification and speech recognition]
+%[wtd list and describe various audio processing task such as sound classification and speech recognition]
 
-[wtd describe historical approaches to audio classification and audio processing tasks]
+% LOOK UP EXAMPLES OF MACHINE LEARNING FOR AUDIO CLASSIFICATION; ABDIC road mositure
+
+%[wtd describe historical approaches to audio classification and audio processing tasks]
 
 
 For the purpose of this thesis, I have evaluated the ESSENTIA audio analysis library \cite{bogdanov:Essentia:ACMMULTIMEDIA13} via its Python bindings and librosa \cite{BMcFee:librosa}, which is a native python implementation. 
@@ -85,7 +87,7 @@ These have been selected as they seem to be the only actively-maintained open-so
 
 Later, my supervisor suggested to compare the results to OpenSMILE, which is promoted as the "Munich Open-source Multimedia Feature Extractor" \cite{Eyben:2013:RDO:2502081.2502224}.
 OpenSMILE is extremely easy to use through its command line tool "SMILEextract". A simple demo script that extracts some basic features can be created by invoking "SMILExtract -cfgFileTemplate -configDflt cWaveSource,cFramer,cEnergy"\footnote{This example taken from the OpenSMILE manual extracts log energy features broken down into separate frequency bands. There are configuration examples for Chroma, MFCC, and PLP features delivered with the library.}.
-The resulting csv can be read with python csv script and very often directly be used for machine learning applications. While this library has proven to be extremely powerful, the  configuration procedure and the multi-step pipeline led me to prefer librosa, so that everything from loading the audio, to feature selection and extraction as the machine learning steps could be implemented in python.  %TODO: Different results with librosa and OpenSMILE.
+The resulting csv can be read with python csv library and very often directly be used for machine learning applications. While this library has proven to be extremely powerful, the  configuration procedure and the multi-step pipeline led me to prefer librosa, so that everything from loading the audio, to feature selection and extraction as the machine learning steps could be implemented in python.  %TODO: Different results with librosa and OpenSMILE.
 
 \subsection{Spectrograms}
 
@@ -200,7 +202,7 @@ The primary downfall of linear/logistic regression is the inability to model non
     \label{fig:svm}
 \end{figure}
 
-The biggest improvement in SVMs over more traditional machine learning methods is that it will find on optimal solution without being affected by local minima.
+The biggest improvement in SVMs over more traditional machine learning methods is that it will find an optimal solution without being affected by local minima.
 
 Support vectors are the subset of all data points lieing closest to the decision surface (as seen in figure \ref{fig:svm}). These specify the decision function entirely by themselves. The SVM optimizes the margin around the separating hyperplane (a line in 2 dimensional space) to be maximum.
 
@@ -240,7 +242,7 @@ These characteristics make random forests useful for audio classification, where
 
 Gradient boosting is an supervised ensemble learning method that combines many "weak" learners, to form one single strong learner.  It has been proven to be a very successful machine learning method and has been applied with great success to many different challenges of the machine learning competition "Kaggle". Like most methods, it can be applied to both regression and classification problems.
 
-The concept of Adaptive Boosting was introduced with \cite{Freund97adecision-theoretic} Freund and Schapire and has become the classic example of learning with boosting. It sequentially trains a serious of models that are able to accept a weighted collection of training points, i.e. we would add a vector of weights to our training data that indicates the importance of accurately predicting each specific data point. In each sequence the importance of incorrectly predicted data points is increased and the weight of the ones predicted correctly decreased and therefor incrementally minimizing the exponential loss.
+The concept of Adaptive Boosting was introduced with \cite{Freund97adecision-theoretic} Freund and Schapire and has become the classic example of learning with boosting. It sequentially trains a series of models that are able to accept a weighted collection of training points, i.e. we would add a vector of weights to our training data that indicates the importance of accurately predicting each specific data point. In each sequence the importance of incorrectly predicted data points is increased and the weight of the ones predicted correctly decreaseses and therefore incrementally minimizes the exponential loss.
 
 An unwanted side effect of this boosting technique is that very often the weight of statistical outliers is increased continously and noise is amplified heavily. Adaboost therefor depends on high-quality. % data and experiments during this thesis have not been proven to give useful results TODO: Detail this
 
@@ -273,15 +275,28 @@ In this original paper each neuron is a function with one binary output $y \epsi
 
 This allows modeling of boolean AND-, OR-, and NOT-relationships, making a network of McCulloug-Pitts neurons a full equivalent to the boolean algebra. Consequently the authors already assumed, that nearly every arithmetic function could be calculated with generalisation of this concept form binary in- and outputs to real numbers. This is done in modern neural networks, while also replacing the threshold with an activation function (see \ref{activation}).
 
+\begin{wrapfigure}{r}{.45\textwidth}
+  \vspace{-25pt}
+    \centering
+	\includegraphics[width=.45\textwidth]{./images/illustrations/gradient-descent}
+    \caption{3D gradient descent. Source: Eli Bendersky's website}
+    \label{fig:gradient-descent}
+      \vspace{-15pt}
+\end{wrapfigure}
+
+
+% explain what neural networks are, put graphs, explain advantages such as ability to deal with curse of dimonsionality and ability to deal with non-linear relationships, explain pitfalls
+
+Another change is the automated learning of weights through methods of stochastic gradient descent, an iterative method of minimising a function by moving the function's input variables along the function's derivative repeatedly. For neural networks this is done on the basis of a cost (or loss) function which maps the network's classification accuracy onto a real number. 
+
+The first step usually is a random initialisation of all input weights. This will return random output. The error on the training data can then be backpropagated, i.e. the contribution of each neuron to the total error is calculated and the weights are adjusted accordingly.
+
+ %[wtd explain stochastic gradient descent and optimizers ADAM, Adadelta, momentum, etc.]
+ 
 
  Neural networks have had a fickle history as well, with an ebb-and-flow of popularity, last peaking in the 90s \cite{Bengio91z}.  Due to advances in computational power, parallel processing paradigms, and neural network architectures in the past several years, neural networks are seeing great successes across many machine learning tasks. For example, in \cite{Silver:2016aa} neural networks were for the first time in history able to outperform a human champion in the game of Go, playing at a level previously thought not possible and still leaving many experienced players baffled.  
 
 
- 
-% explain what neural networks are, put graphs, explain advantages such as ability to deal with curse of dimonsionality and ability to deal with non-linear relationships, explain pitfalls
-
-
- [wtd explain stochastic gradient descent and optimizers ADAM, Adadelta, momentum, etc.]
 
 
 %The newest branch in machine learning attempting high level abstactions is so called deep learning. 
@@ -359,6 +374,8 @@ $\displaystyle \tanh x={\frac {\sinh x}{\cosh x}}={\frac {e^{x}-e^{-x}}{e^{x}+e^
 \par
 }
 
+\vspace{20pt}
+
 The bigger output range causes a higher derivate of the activation near  $x=0$ compared to the traditional sigmoid. This solves a common problem with back-propagation when normalized data centered around zero causes the back-propagation algorithm to develop biased gradients and getting stuck in local minima \cite{LeCun1998}.
 
 
@@ -367,31 +384,38 @@ The bigger output range causes a higher derivate of the activation near  $x=0$ c
 More recent networks often use rectified linear units (ReLUs) as activation function in the hidden layers, introduced in 2000 with motivations in biology \cite{Hahnloser:2000aa}. According to Yann LeCun, it has become the most popular activation function in 2015. The formula is relatively simple, returning zero if the sum of the weighted inputs is negative and identity otherwise: 
 
 {\centering
-	$f(x)=max(0, x)$\par
+	$\displaystyle f(x)=max(0, x)$\par
 }
 
 
-An advantage is that with random initialisation, only have of the neurons will produce an output other than 0, while with antisymmetric functions like TanH every cell will produce an output between -1 and 1. The main advantage however is that the differential of the identity function is 1 (differentiation of the sigmoid is in the range of 0 and 0.25). This avoids the problem of vanishing gradients \cite{Hochreiter:01book} during backpropagation. That means, the error gradient of each layer's neurons being computed by the chain rule causes the gradient to decrease exponentially with distance from the output, causing the layers to train more slowly closer to the input layer.
+An advantage is that with random initialisation, only have of the neurons will produce an output other than 0, while with antisymmetric functions like TanH every cell will produce an output between -1 and 1. The main advantage however is that the derivative of the identity function is 1 (differentiation of the sigmoid is in the range of 0 and 0.25). This avoids the problem of vanishing gradients \cite{Hochreiter:01book} during backpropagation. That means, the error gradient of each layer's neurons being computed by the chain rule causes the gradient to decrease exponentially with distance from the output, causing the layers to train more slowly closer to the input layer.
 
 % allow more effective training on large datasets in deep and complex networks. 
 
 \subsubsection{Scaled Exponential Linear Unit}
-[wtd describe selu activation, include math, include special initialization required]
+
+A new concept that was published while I was already researching Urban Sound Classification is Self Normalizing Networks (SNN). While most recent advances are due to  recurrent and convolutional layers, the work in the paper \cite{DBLP:journals/corr/KlambauerUMH17} is mainly aimed at improving the (classic) feed-forward network structure.
+
+SELU is a special case of an Exponential Linear Unit, a function that has an exponential growth below a certain point ($x = 0$ in this case) and linear growth above. 
+ 
 
 
 {\centering
-	$\text{selu}(x) = \lambda\ \begin{cases}
+	$\displaystyle \text{selu}(x) = \lambda\ \begin{cases}
     x,& \text{if } x > 0\\
     \alpha e^{x} - \alpha,& \text{if } x\leq 0\\
 	\end{cases}$
 	\par
 }
 
+The parameters $\alpha$ and $\lambda$ are not backpropagated but derived from the distribution of the inputs.
+With default values
+\footnote{
+As calculated on pp. 11f of \cite{DBLP:journals/corr/KlambauerUMH17} for inputs with a mean of zero with a standard deviation of one the values are
+ \(\alpha \approx 1.67326\) and  \(\lambda \approx 1.0507\) }
+the function looks similar to relu. However, if the network is not initialized randomly but the weights are distributed with a standard deviation $\sigma = \frac{1}{\sqrt{n}}$ (n being the size of the input) around the mean $\mu = 0$, neuron activations will converge towards zero mean and unit variance during training \cite{DBLP:journals/corr/KlambauerUMH17}. There are other requirements, including a modified dropout technique.
 
-The paper (\cite{DBLP:journals/corr/KlambauerUMH17}) 
-
-
-\footnote{A very nice github repo available under \url{https://github.com/bioinf-jku/SNNs} contains tutorials and implementations of SNNs as suggested by Klambauer et al and served as inspiration for code developed during this thesis.}
+The reference paper has shown tremendous success on common machine learning challenges where simple feed-forward networks withs self-normalisation were able to match or outperform complex network's performances, but not everything could be replicated yet\footnote{A  github repo that contains tutorials and implementations of SNNs as suggested by Klambauer et al and served as inspiration for code developed during this thesis is available at: \url{https://github.com/bioinf-jku/SNNs}}.
 
 
 \subsubsection{Softmax}
