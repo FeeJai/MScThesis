@@ -31,6 +31,8 @@ There are several different areas of audio processing such as sound effects, mod
 
 An especially interesting area of audio processing is classification.  Given an audio sample, choose the best-fit class for that sample from a finite set of classes.  A common usage is music genre classification (and other music information retrieval tasks), with the purpose of finding the genre a music sample belongs to. In this thesis my specific focus is on urban sound classification: given an audio sample, choose which class, for example, police sirens, car horns, motorcycle engines or other sounds that occur in natural urban environments the sample belongs to. This problem has several applications such as increasing the safety of self driving cars by detecting the existence and direction of car sirens before the car itself becomes visible or measuring the health impact of different forms of noise on the population.
 
+%%TODO: Personal motivation
+
 The first project idea was to assist MIT AgeLab's human factors research in the traffic safety impact of self driving cars. This lab has a long history of detecting different forms of driver frustration with monitoring equipment in cars. They have also published research on the automatic detection of these factors through machine learning on video and audio \cite{Abdic:2016:DFD:3060621.3060809} instead of manual annotation.
 
 
@@ -81,6 +83,8 @@ Therefore we rely on a mechanism called feature extraction. This means the creat
 
 %[wtd describe historical approaches to audio classification and audio processing tasks]
 
+
+%TODO: Google Urban Sound (Background?) Dataset
 
 For the purpose of this thesis, I have evaluated the ESSENTIA audio analysis library \cite{bogdanov:Essentia:ACMMULTIMEDIA13} via its Python bindings and librosa \cite{BMcFee:librosa}, which is a native python implementation. 
 These have been selected as they seem to be the only actively-maintained open-source packages for audio signal processing with sufficient background literature and documentation. 
@@ -181,7 +185,7 @@ Although simple, multiple linear regression is used extensively for a variety of
 Another generalisation of this concept, where multiple dependent variables are predicted, is the extension of the process called multivariante linear regression. All dependant variables need to be correlated however \cite{Yan:2009:LRA:1717831}.
 
 
-For discrete choice or other distributions where the dependent variable is a discrete or binary category, the modified version called logistic regression was developed in \cite{cox58reg}. Instead of a linear model, the  function ${\displaystyle F(x)={\frac {1}{1+e^{-(\beta _{0}+\beta _{1}x)}}}}$ will always return a value between 0 and 1, which can be interpreted as the likelihood of a dataset falling into the binary category labeled as 1. It also allows to estimate the relationship of an explanatory variable and the likelihood of an outcome (e.g. speeding will increase the likelihood of an accident by xx\%)
+For discrete choice or other distributions where the dependent variable is a discrete or binary category, the modified version called logistic regression was developed in \cite{cox58reg}. Instead of a linear model, the  function ${\displaystyle F(x)={\frac {1}{1+e^{-(\beta _{0}+\beta _{1}x)}}}}$ will always return a value between 0 and 1, which can be interpreted as the likelihood of a dataset falling into the binary category labeled as 1. It also allows to estimate the relationship of an explanatory variable and the likelihood of an outcome (e.g. by what percentage would speeding by 10 mph increase the likelihood of an accident)
 
 Parameter estimation is hereby more complicated than in linear regression and an iterative method needs to be used, such as the Newton–Raphson method.
 
@@ -252,8 +256,6 @@ The library xgboost \cite{DBLP:journals/corr/ChenG16} has become the de facto st
 
 \section{Neural Networks}
 
-Contrary to the previously discussed approaches to machine learning, neural networks have existed for much longer. Surprisingly, the idea of creating a mathematical model of an artifcial neuron has first been published in 1943 \cite{McCulloch1943} with the intent of studying whether a mammalian brain could truly evaluate computable mathematical functions.
-
 
 \begin{figure}[h]
     \centering
@@ -261,6 +263,9 @@ Contrary to the previously discussed approaches to machine learning, neural netw
     \caption{Graphical representation of the McCulloch-Pitts model. Source: aishack.in}
     \label{fig:mcculloch-pitts}
 \end{figure}
+
+
+Contrary to the previously discussed approaches to machine learning, neural networks have existed for much longer. Surprisingly, the idea of creating a mathematical model of an artifcial neuron has first been published in 1943 \cite{McCulloch1943} with the intent of studying whether a mammalian brain could truly evaluate computable mathematical functions.
 
 
 In this original paper each neuron is a function with one binary output $y \epsilon \{0;1\}$ and one or multiple binary inputs $x_n \epsilon \{0;1\}$ with a specific weight $w_n \epsilon \mathbb{R}$ and a threshold value $T \epsilon \mathbb{R}$. A weighted sum of inputs is calculated with the simple arithmetic operation $\text{sum} = x_1w_1 + x_2w_2 + x_3w_3 + ...$ . The output value is dependent on the neuron's threshold
@@ -308,6 +313,8 @@ After a longer experience with Tensorflow, the browser based Convnet.js was eval
 While it being a java script implementation, due to the characteristics of any scripted language its performance naturally is unable to match the GPGPU accelerated TensorFlow implementation, where Python only serves as high-level bindings in order to simplify the API interface and its implementation in real world use cases.tens
 
 It's strength primarily 
+
+%%TODO: Cite and expand
 
 
 Hacker's guide to Neural Networks: http://karpathy.github.io/neuralnets/
@@ -392,6 +399,15 @@ An advantage is that with random initialisation, only have of the neurons will p
 
 % allow more effective training on large datasets in deep and complex networks. 
 
+\subsubsection{Softmax}
+The softmax activation function transforms a set of probabilities into a vector of real values in the range [0, 1] that add up to 1. Each value in the vector can be interpreted as the probability of 
+
+{\centering
+	$\displaystyle \sigma (\mathbf {z} )_{j}={\frac {e^{z_{j}}}{\sum _{k=1}^{K}e^{z_{k}}}}$
+	\par
+}
+
+
 \subsubsection{Scaled Exponential Linear Unit}
 
 A new concept that was published while I was already researching Urban Sound Classification is Self Normalizing Networks (SNN). While most recent advances are due to  recurrent and convolutional layers, the work in the paper \cite{DBLP:journals/corr/KlambauerUMH17} is mainly aimed at improving the (classic) feed-forward network structure.
@@ -417,14 +433,6 @@ the function looks similar to relu. However, if the network is not initialized r
 
 The reference paper has shown tremendous success on common machine learning challenges where simple feed-forward networks withs self-normalisation were able to match or outperform complex network's performances, but not everything could be replicated yet\footnote{A  github repo that contains tutorials and implementations of SNNs as suggested by Klambauer et al and served as inspiration for code developed during this thesis is available at: \url{https://github.com/bioinf-jku/SNNs}}.
 
-
-\subsubsection{Softmax}
-The softmax activation function transforms a set of probabilities
-
-{\centering
-	$\displaystyle \sigma (\mathbf {z} )_{j}={\frac {e^{z_{j}}}{\sum _{k=1}^{K}e^{z_{k}}}}$
-	\par
-}
 
 \subsection{Convolutional Neural Networks}
 
@@ -559,7 +567,7 @@ For example, research into normalization and regularization has lead to faster t
 
 Even more recently, work has been done in the area of self-normalizing networks\footnote{A good introduction to self-normalisation is available at: \url{https://medium.com/towards-data-science/selu-make-fnns-great-again-snn-8d61526802a9}} that remove the need for batch normalization and greatly increase accuracy and training speed in fully-connected neural networks \cite{DBLP:journals/corr/KlambauerUMH17}.
 
-\chapter{Dataset}
+\chapter{Public Urban Sounds Datasets}
 
 \section{Creation}
 
@@ -595,6 +603,8 @@ dog_bark & 1000 \\children_playing & 1000 \\car_horn & 429 \\air_conditioner 
 \end{table}
 
 The relatively low amount of car horns caused a problem, since the detection of various car horns was one of the AgeLab's main motivation.
+
+%TODO; Solution,Focus shift
 
 
 \section{Feature Extraction}
@@ -652,6 +662,9 @@ This indicates that extracted features of a mel spectrogram are still heavily co
 
 [wtd describe what features are typically used in audio classification task]
 
+
+% K MEANS
+
 [wtd describe what features were extracted by the SONYC team]
 
 \chapter{Audio Classification using GRUs and Attention Mechanisms}
@@ -694,7 +707,7 @@ Overall, we were able to achieve state-of-the-art results on the SONYC urban sou
 
 [wtd discuss pitfalls]
 
-\chapter{Other approaches}
+\chapter{Other approaches to audio recognition}
 \section{Comparing Gradient Boosting to GRUs and Attention}
 
 In addition to the deep neural network approach, an attempt to use gradient boosted trees, using the xgboost library \cite{DBLP:journals/corr/ChenG16} to achieve similar results.  As mentioned, gradient boosting has been very successful in classification tasks involving a small input dimensionality.
@@ -708,6 +721,10 @@ For each experiment we report the average accuracy across all 10 folds.
 [wtd differences in audio libraries and sklearn]
 
 [wtd why were most results no reproducable]
+
+%TODO Essentia v LibRosa
+
+%Scattering
 
 \subsection{A Dataset and Taxonomy for Urban Sound Research}
 

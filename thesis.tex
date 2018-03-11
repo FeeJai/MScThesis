@@ -22,6 +22,11 @@ Neural Network Technology}
 \def\advisora{Lex Fridman, PhD}
 \def\advisorb{Dr.\ Dominik Haneberg}
 
+%% Workaround old code:
+% https://tex.stackexchange.com/questions/346870/bf-is-an-undefined-command
+\DeclareOldFontCommand{\bf}{\normalfont\bfseries}{\mathbf}
+
+
 \begin{document}
 
     \frontmatter
@@ -44,5 +49,6 @@ Neural Network Technology}
     %\nocite{*}
     \bibliography{bibliography}
     \chapter{Source Code}
+    \chapter{Permission to use}
 
 \end{document}
