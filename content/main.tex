@@ -6,14 +6,14 @@ Audio processing, more precisely named audio signal processing, has been of inte
 
 \begin{figure}[H]
     \centering
-	\includegraphics[width=.4\textwidth]{./images/illustrations/morse-chart}
+	\includegraphics[width=.45\textwidth]{./images/illustrations/morse-chart}
     \caption{A codebook for the international morse code, where black means transmit}
     \label{fig:morse}
 \end{figure}
 
 This discrete signal is transmitted over distance by extending the electrical circuit with long wires to a different physical location, so that the switch operator can transmit a message by morse encoding to the recipient who will have to use the same codebook for decoding.
 
-The same purpose can be achieved wirelessly by repeatedly turning a radio transmitter on and off, which can be considered the simplest form of HF-modulation. However, things are more complex for the real- or near-time transmission of speech without manual encoding and decoding. Since most harmonics of the human voice occur in the range of 500 Hz to 2 kHz, according to the Nyquist–Shannon sampling theorem a sampling rate of at least 4 kHz is required for transmission\footnote{To verify this empirically I have downsampled a recording of both my voice and of the song Tom's Diner to 4kHz. While both the voice and the lyrics were still understandable, the melody perished and the sounds F and S were nearly indistiguishable. This is probably the reason why many speech encoding standards like the common G.711 use a sampling rate of 8 kHz}. When radio transmission was invented in the late 19th century, it was not feasible to encode this information in a digital form (such as morse code). Instead different forms of analog modulation methods had to be developed, which was the birth of audio signal processing.
+The same purpose can be achieved wirelessly by repeatedly turning a radio transmitter on and off, which can be considered the simplest form of HF-modulation. However, things are more complex for the real- or near-time transmission of speech without manual encoding and decoding. Since most harmonics of the human voice occur in the range of 500 Hz to 2 kHz, according to the Nyquist–Shannon sampling theorem a sampling rate of at least 4 kHz is required for transmission\footnote{To verify this empirically I have downsampled a recording of both my voice and of the rather famous song Tom's Diner to 4kHz. While both the voice and the lyrics were still understandable, the melody perished and the sounds F and S were nearly indistiguishable. This is probably the reason why common speech encoding standards such as GSM's G.711 use a sampling rate of 8 kHz}. When radio transmission was invented in the late 19th century, it was not feasible to encode this information in a digital form (such as morse code). Instead different forms of analog modulation methods had to be developed, which was the birth of audio signal processing.
 
 \begin{figure}[h]
     \centering
@@ -22,21 +22,20 @@ The same purpose can be achieved wirelessly by repeatedly turning a radio transm
     \label{fig:am}
 \end{figure}
 
-From the early 20th century onwards it started to transcended it's original use while still being required for every form telecommunication. The grammophone necessisated frequency alterations for more natural sound and the development of cinemas lead to improvements in speaker technology, separation of tweeter and woofer and required the invention of crossover networks \cite{spanias2006audio}.
-Today it is widely used for purposes such as entertainment (iPod), medical devices (ultrasound systems), magnetic storage of information (audio cassette, hard disks), and speed measurement (doppler effect).
+From the early 20th century onwards it started to transcended it's original use while still being required for every form telecommunication. When home audio playback become available with the phonograph, the analog storage technology necessitated significant frequency alterations to compensate for the mass inertia of the mechanical stylus and diaphragm (so called equalization)\cite{copeland2008manual}. Later the development of cinemas lead to improvements in speaker technology, separation of tweeter and woofer and required the invention of crossover networks \cite{spanias2006audio}.
+Today it is widely used for purposes such as entertainment (iPod), medical devices (ultrasound systems), magnetic storage of information (audio cassette, hard disks), and speed measurements  (doppler effect).
  
  
-Before computers enabled digital signal processing, audio was handled transformed with discrete analog circuits. An equalizer for example was constructed by using resonant circuits (consisting of an inductor and a capacitor) as a frequency filter to allow independent gain control with separate amplifiers for different bands.
-There are several different areas of audio processing such as sound effects, modulation and demodulation, compression, and quality enhancements like noise reduction.
+Before computers enabled digital signal processing, audio was transformed through discrete analog circuits. For example, an equalizer might be constructed by using resonant circuits (consisting of an inductor and a capacitor) as frequency filters to allow independent gain control with separate amplifiers for different bands.
+There are several different areas of audio processing such as: sound effects, modulation and demodulation, compression, and quality enhancements like noise reduction.
 
-An especially interesting area of audio processing is classification.  Given an audio sample, choose the best-fit class for that sample from a finite set of classes.  A common usage is music genre classification (and other music information retrieval tasks), with the purpose of finding the genre a music sample belongs to. In this thesis my specific focus is on urban sound classification: given an audio sample, choose which class, for example, police sirens, car horns, motorcycle engines or other sounds that occur in natural urban environments the sample belongs to. This problem has several applications such as increasing the safety of self driving cars by detecting the existence and direction of car sirens before the car itself becomes visible or measuring the health impact of different forms of noise on the population.
+An especially interesting area of audio processing is classification. Given an audio sample, choose the best-fit class for that sample from a finite set of classes.  A common usage is music genre recognition (and other music information retrieval tasks) with the purpose of finding the genre a music sample belongs to. In this thesis my specific focus is on urban sound classification: given an audio sample, choose which class, for example, police sirens, car horns, motorcycle engines or other sounds that occur in natural urban environments the sample belongs to. This problem has several applications such as increasing the safety of self driving cars by detecting the existence and direction of car sirens before the car itself becomes visible or measuring the health impact of different forms of noise on the population.
 
-%%TODO: Personal motivation
+%% Personal motivation
 
-The first project idea was to assist MIT AgeLab's human factors research in the traffic safety impact of self driving cars. This lab has a long history of detecting different forms of driver frustration with monitoring equipment in cars. They have also published research on the automatic detection of these factors through machine learning on video and audio \cite{Abdic:2016:DFD:3060621.3060809} instead of manual annotation.
+This idea for this thesis came up during my studies at MIT AgeLab's human factors on traffic research group. At that time the group was working on various traffic safety projects where human behaviour in every day traffic was first to be recorded by equipping volunteers' cars with cameras and then to be analysed by scientists. For large amounts of data this created an enormous amount of work so there was a project that applied computer vision technologies to assist in the creation of situational awareness for the research team and automatically analyse certain situations, e.g. Tesla Autopilot handoff. 
 
-
-Machine learning is especially interesting as an addition to the field of audio processing. Previously this has mainly seen popularity in the audio processing task of speech recognition. While there have been many advances in this area, there has been surprisingly little work in other audio processing tasks, for example, in the detection of urban sounds and background audio classification in general. Until recently, these tasks have been approached using sophisticated, hand-crafted features and algorithms that mostly have existed since the sixties or earlier and were optimised to take advantage of analog hardware. As hardware advanced, more modern algorithms and techniques were able to be used such as gradient boosting and neural networks. These approaches represent the current state-of-the-art as it applies to audio classification.
+Just before I started, the team had finished their first paper on using audio detection to annotate road conditions (dry, wet, snow) \cite{Abdic:2016:DFD:3060621.3060809}. This immediately caught my attention as I expected that advanced driver assistance systems and other levels of vehicle automation acoustic detection capabilities might enhance system characteristics in the response to other vehicle and environmental cues. When I did further research I however discovered that research on acoustic machine learning is surprisingly rare apart from speech recognition. This sparked my interest, whether it would be possible to combine audio processing and machine learning for traffic safety purposes. 
 
 \begin{figure}[h]
     \centering
@@ -44,6 +43,12 @@ Machine learning is especially interesting as an addition to the field of audio 
     \caption{Different examples of concentration and frustration while interacting with an in-car voice control system as shown in \cite{Abdic:2016:DFD:3060621.3060809}.}
     \label{fig:am}
 \end{figure}
+
+
+%%The first project idea was to assist MIT AgeLab's human factors research in the traffic safety impact of self driving cars. This lab has a long history of detecting different forms of driver frustration with monitoring equipment in cars. They have also published research on the automatic detection of these factors through machine learning on video and audio \cite{Abdic:2016:DFD:3060621.3060809} instead of manual annotation.
+
+Machine learning is especially interesting as an addition to the field of audio processing. Previously this has mainly seen popularity in the audio processing task of speech recognition. While there have been many advances in this area, there has been surprisingly little work in other audio processing tasks, for example, in the detection of urban sounds and background audio classification in general. Until recently, these tasks have been approached using sophisticated, hand-crafted features and algorithms that mostly have existed since the sixties or earlier and were optimised to take advantage of analog hardware. As hardware advanced, more modern algorithms and techniques were able to be used such as gradient boosting and neural networks. These approaches represent the current state-of-the-art as it applies to audio classification.
+
 
 
 %% WHAT DID NOT MAKE IT INTO THE THESIS
@@ -58,7 +63,7 @@ The main purpose of this thesis then was to apply state-of-the-art neural networ
 \chapter{Background and Related Work}
 \label{Background and Related Work}
 
-Although there have been some recent breakthroughs in the field by Google's Deep Mind project (\cite{DBLP:journals/corr/OordDZSVGKSK16}) raw audio is rarely used  with machine learning algorithms directly. This is because one minute of mono channel audio, sampled with the very common AD conversion rate of 44.1 kHz, produces the amount of 2.646.000 data points alone. The data points are usually 16 bit integers indicating the amplitude of the audio wave at the present moment.
+Although there have been some recent breakthroughs in the field by Google's Deep Mind project (\cite{DBLP:journals/corr/OordDZSVGKSK16}) raw audio is rarely used  with machine learning algorithms directly. This is because one minute of mono channel audio, sampled with the very common analog to digital conversion rate of 44.1 kHz, produces the amount of 2.646.000 data points alone. Every single data point is usually stored as a 16 bit integer containing the amplitude of the audio wave at the present moment between zero and the microphones maximum sensitivity, which totals to 42.336.000 bits or roughly 5.2 Megabytes of information per minute of uncompressed mono audio.
 
 
 \begin{figure}[h]
@@ -69,7 +74,7 @@ Although there have been some recent breakthroughs in the field by Google's Deep
 \end{figure}
 
 
-This is in stark contrast to the amount of data in other machine learning tasks, such as the common 28x28 greyscale image in the MNIST image recognition dataset, where each image is represented by only $28*28*8 = 6.272$ bits \cite{lecun1998mnist}.
+This is in stark contrast to the amount of data in other machine learning tasks. For example in the very common MNIST image recognition dataset of handwritten numeric digits each image consists  28x28 greyscale pixels which leads to a binary representation of $28*28*8 = 6.272$ bits of information \cite{lecun1998mnist} - a difference of four orders of magnitude.  
 
 Therefore we rely on a mechanism called feature extraction. This means the creation of a signal processing algorithms, that transforms the raw audio signal into meaningful information, by removing redundancies and irrelevancies while presenting the relevant information in as little dimensions as possible. A challenge is that what might be relevant differs strongly depending on the context. As an example, the well-known MP3 compression specifially removes content that can not be heard by the human ear \cite{brandenburg1999mp3}. While that is adequate for digital compression of an audio file without affecting the  listener's impressin, this might very well decrease the detection and classification rate of other algorithms.  
 
