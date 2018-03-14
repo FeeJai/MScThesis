@@ -287,29 +287,31 @@ Another part of ongoing discussion is the best practice on the ratio of estimato
 
 Gradient boosting is an supervised ensemble learning method that combines many "weak" learners, to form one single strong learner.  It has been proven to be a very successful machine learning method and has been applied with great success to many different challenges of the machine learning competition "Kaggle". Like most methods, it can be applied to both regression and classification problems.
 
-The concept of Adaptive Boosting was introduced with \cite{Freund97adecision-theoretic} Freund and Schapire and has become the classic example of learning with boosting. It sequentially trains a series of models that are able to accept a weighted collection of training points, i.e. we would add a vector of weights to our training data that indicates the importance of accurately predicting each specific data point. In each sequence the importance of incorrectly predicted data points is increased and the weight of the ones predicted correctly decreaseses and therefore incrementally minimizes the exponential loss.
+The concept of Adaptive Boosting was introduced with \cite{Freund97adecision-theoretic} and has become the classic example of learning with boosting. It sequentially trains a series of models that are able to accept a weighted collection of training points, i.e. we would add a vector of weights to our training data that indicates the importance of accurately predicting each specific data point. In each sequence the importance of incorrectly predicted data points is increased and the weight of the ones predicted correctly decreaseses and therefore incrementally minimizes the exponential loss.
 
 An unwanted side effect of this boosting technique is that very often the weight of statistical outliers is increased continously and noise is amplified heavily. Adaboost therefor depends on high-quality. % data and experiments during this thesis have not been proven to give useful results TODO: Detail this
 
 The library xgboost \cite{DBLP:journals/corr/ChenG16} has become the de facto standard for gradient boosting after winning Kaggle's Higgs Machine Learning Challenge in 2014 \cite{xgboost-wins}. While there are nowadays bindings for nearly any language available, only the integration into Python's scikit-learn has been evaluated for this thesis.
 
-
+\newpage
 
 \section{Neural Networks}
-
-
-\begin{figure}[h]
-    \centering
-	\includegraphics[width=.6\textwidth]{./images/illustrations/mcculloch-pitts}
-    \caption{Graphical representation of the McCulloch-Pitts model. Source: aishack.in}
-    \label{fig:mcculloch-pitts}
-\end{figure}
+\label{nn}
 
 
 Contrary to the previously discussed approaches to machine learning, neural networks have existed for much longer. Surprisingly, the idea of creating a mathematical model of an artifcial neuron has first been published in 1943 \cite{McCulloch1943} with the intent of studying whether a mammalian brain could truly evaluate computable mathematical functions.
 
 
-In this original paper each neuron is a function with one binary output $y \epsilon \{0;1\}$ and one or multiple binary inputs $x_n \epsilon \{0;1\}$ with a specific weight $w_n \epsilon \mathbb{R}$ and a threshold value $T \epsilon \mathbb{R}$. A weighted sum of inputs is calculated with the simple arithmetic operation $\text{sum} = x_1w_1 + x_2w_2 + x_3w_3 + ...$ . The output value is dependent on the neuron's threshold
+
+\begin{figure}[h]
+    \centering
+	\includegraphics[width=.7\textwidth]{./images/illustrations/mcculloch-pitts}
+    \caption{Graphical representation of the McCulloch-Pitts model. Source: aishack.in}
+    \label{fig:mcculloch-pitts}
+\end{figure}
+
+
+In this original paper each neuron is a function with one binary output $y \epsilon \{0;1\}$ and one or multiple binary inputs $x_n \epsilon \{0;1\}$ with a specific weight $w_n \epsilon \mathbb{R}$ and a threshold value $T \epsilon \mathbb{R}$. A weighted sum of inputs is calculated, similar to linear regression, with the simple arithmetic operation $\text{sum} = x_1w_1 + x_2w_2 + x_3w_3 + ...$ . The output value is dependent on the neuron's threshold
 
 {\centering
 	$y(x_1, ..., x_n) = \begin{cases}
@@ -319,13 +321,14 @@ In this original paper each neuron is a function with one binary output $y \epsi
 	\par
 }
 
-This allows modeling of boolean AND-, OR-, and NOT-relationships, making a network of McCulloug-Pitts neurons a full equivalent to the boolean algebra. Consequently the authors already assumed, that nearly every arithmetic function could be calculated with generalisation of this concept form binary in- and outputs to real numbers. This is done in modern neural networks, while also replacing the threshold with an activation function (see \ref{activation}).
+This allows modelling of boolean AND-, OR-, and NOT-relationships, making a network of McCulloug-Pitts neurons a full equivalent to the boolean algebra. Consequently the authors already assumed that nearly every arithmetic function could be calculated with generalisation of this concept form binary in- and outputs to real numbers. This is done in modern neural networks, while also replacing the binary threshold with an activation function (see \ref{activation}).
 
-\begin{wrapfigure}{r}{.45\textwidth}
-  \vspace{-25pt}
+\begin{wrapfigure}{r}{.5\textwidth}
+  \vspace{-10pt}
     \centering
-	\includegraphics[width=.45\textwidth]{./images/illustrations/gradient-descent}
-    \caption{3D gradient descent. Source: Eli Bendersky's website}
+    \hspace{-25pt}
+	\includegraphics[width=.55\textwidth]{./images/illustrations/gradient-descent}
+    \caption{3-dimensional gradient descent\newline Src: Eli Bendersky's website}
     \label{fig:gradient-descent}
       \vspace{-15pt}
 \end{wrapfigure}
@@ -333,66 +336,66 @@ This allows modeling of boolean AND-, OR-, and NOT-relationships, making a netwo
 
 % explain what neural networks are, put graphs, explain advantages such as ability to deal with curse of dimonsionality and ability to deal with non-linear relationships, explain pitfalls
 
-Another change is the automated learning of weights through methods of stochastic gradient descent, an iterative method of minimising a function by moving the function's input variables along the function's derivative repeatedly. For neural networks this is done on the basis of a cost (or loss) function which maps the network's classification accuracy onto a real number. 
+Another change is the automated learning of weights through methods of stochastic gradient descent, an iterative method of minimising a function by moving the function's input variables along the function's derivative repeatedly. For neural networks this is done on the basis of a cost- (sometimes named "loss-") function which maps the network's classification accuracy onto a real number. 
 
 The first step usually is a random initialisation of all input weights. This will return random output. The error on the training data can then be backpropagated, i.e. the contribution of each neuron to the total error is calculated and the weights are adjusted accordingly.
 
  %[wtd explain stochastic gradient descent and optimizers ADAM, Adadelta, momentum, etc.]
  
 
- Neural networks have had a fickle history as well, with an ebb-and-flow of popularity, last peaking in the 90s \cite{Bengio91z}.  Due to advances in computational power, parallel processing paradigms, and neural network architectures in the past several years, neural networks are seeing great successes across many machine learning tasks. For example, in \cite{Silver:2016aa} neural networks were for the first time in history able to outperform a human champion in the game of Go, playing at a level previously thought not possible and still leaving many experienced players baffled.  
-
+ Neural networks have had a fickle history with an ebb-and-flow of popularity, last peaking in the 90s \cite{Bengio91z}.  Due to advances in computational power, parallel processing paradigms, and neural network architectures in the past several years neural networks are seeing great successes across many machine learning tasks. For example, in \cite{Silver:2016aa} neural networks were for the first time in history able to outperform a human champion in the game of Go, playing at a level previously thought not possible and still leaving many experienced players baffled.  
 
 
 
 %The newest branch in machine learning attempting high level abstactions is so called deep learning. 
 
-Tensorflow is a library published by Google in 2014 in an effort to open-source their internal deep-learning functionalities into a universal library. While in the beginning it lacked distributed computing functionality and the support for GPGPU was poor, 
+Tensorflow \cite{tensorflow2015-whitepaper} is a library that was published by Google in 2014 in an effort to open-source their internal deep-learning functionalities into an universal library. While the computational part is written in C++ for performance all functionality, such as designing a network and training the model, is accessed through high-level python bindings in order to simplify the API interface and its implementation in real world use cases. Even though it first lacked distributed computing functionality and the support for GPGPU was poor in the beginning it has rapidly become popular for almost all deep learning tasks and Amazon Web Services\footnote{\url{https://aws.amazon.com/tensorflow/}}, Google\footnote{\url{https://cloud.google.com/ml-engine/}} and nVidia\footnote{\url{https://www.nvidia.com/en-us/gpu-cloud/}} have made hardware accelerated cloud solutions available in the meanwhile.
+
+After a longer trial with Tensorflow, the browser based Convnet.js was evaluated to see if it could be used as a viable alternative for the tasks in this thesis.
+Due to its nature of being a JavaScript implementation and the characteristics of any scripted language its performance is obviously unable to match the GPGPU accelerated TensorFlow implementation. It's strength primarily is the web integration which allows to create click-through tutorials and GUIs for demonstration and experimentation that require no primary setup by the end user. 
+
+While the concept is intriguing, the usage in this thesis has not been deemed feasible as the feature extraction still had to be done in a different environment and the subsequent export of the feature vectors and import into the browser has been extremely error-prone. After the trial I have reverted to using Tensorflow while later models were built upon the Keras library (an API frontend that serves as an abstraction layer for multiple neural network frameworks) \cite{chollet2015keras}.
 
 
-After a longer experience with Tensorflow, the browser based Convnet.js was evaluated to see if it could be used as a viable alternative for the tasks in this thesis.
-While it being a java script implementation, due to the characteristics of any scripted language its performance naturally is unable to match the GPGPU accelerated TensorFlow implementation, where Python only serves as high-level bindings in order to simplify the API interface and its implementation in real world use cases.tens
-
-It's strength primarily 
 
 %%TODO: Cite and expand
+\newpage
+
+%Hacker's guide to Neural Networks: http://karpathy.github.io/neuralnets/
+
+%GOOGLE CLOUD BIG DATA AND MACHINE LEARNING BLOG - Learn TensorFlow and deep learning, without a Ph.D.: https://cloud.google.com/blog/big-data/2017/01/learn-tensorflow-and-deep-learning-without-a-phd
 
 
-Hacker's guide to Neural Networks: http://karpathy.github.io/neuralnets/
-
-GOOGLE CLOUD BIG DATA AND MACHINE LEARNING BLOG - Learn TensorFlow and deep learning, without a Ph.D.: https://cloud.google.com/blog/big-data/2017/01/learn-tensorflow-and-deep-learning-without-a-phd
-
-
-WEIGHT INITIALIZATION: https://medium.com/@amarbudhiraja/towards-weight-initialization-in-deep-neural-networks-908d3d9f1e02
+%WEIGHT INITIALIZATION: https://medium.com/@amarbudhiraja/towards-weight-initialization-in-deep-neural-networks-908d3d9f1e02
 
 %% gradient-based learning methods and backpropagation. In such methods, each of the neural network's weights receives an update proportional to the gradient of the error function with respect to the current weight in each iteration of training. Traditional activation functions such as the hyperbolic tangent function have gradients in the range (−1, 1), and backpropagation computes gradients by the chain rule. This has the effect of multiplying n of these small numbers to compute gradients of the "front" layers in an n-layer network, meaning that the gradient (error signal) decreases exponentially with n while the front layers train very slowly.
 
 \subsection{Activation Functions}
 \label{activation}
 
-After each neuron has calculated the sum of its weighted inputs, it passes it to a (usually non-linear) "activation" function.  There are advantages and disadvantages to different activation functions.
-
+The McCulloch–Pitts neuron discussed in \ref{nn} simply becomes active if the weighted sum of input vales exceeds the specified threshold value. This only allows a binary output for which most contemporary tasks are far too complex. In contrast the concept of an activation function allows a more differentiated output consisting of a real value. After each neuron has calculated the sum of its weighted inputs, in this case the result is inserted into a (usually non-linear) mathematical function that can perform amplification as well as delimiting, such as \texttt{tanh}, \texttt{relu} or \texttt{softplus}.
 
 
 \begin{figure}[h]
     \centering
-	\includegraphics[width=.7\textwidth]{./images/illustrations/ActivationFunctions}
+	\includegraphics[width=.9\textwidth]{./images/illustrations/ActivationFunctions}
     \caption{Common non-linear activation functions. Source: orngunnarsson.blogspot.de}
     \label{fig:actviation}
 \end{figure}
 
-
+There are advantages and disadvantages to different activation functions and the best fit has to be determined based on the task on hand, the properties of the input and output data, and the available computational power. Sometimes there might not even be a best practice and we have to revert to trial and error.
+However, a lot of the recent algorithmic advancements have been made in this area what makes it especially interestring for further consideration:
 
 
 \subsubsection{Linear}
 
-A linear activation function takes the weighted summed inputs to the neuron and multiplies it by a constant, giving the neuron the ability to scale the inputs.
+A linear activation function takes the weighted, summed inputs to the neuron and multiplies it by a constant, giving the neuron the ability to scale the inputs.
 
 {\centering
   $f(x)=cx$\par
 }
 
-If the parameter $c = 1$, this is activation referred to as the identity function.
+If the parameter $c = 1$, this activation function is referred to as the identity function and identical to a McCulloch–Pitts neuron without a threshold.
 
 
 \subsubsection{Sigmoid}
@@ -401,9 +404,14 @@ Sigmoid is a mathematical function where the output is constrained by horizontal
 
 In machine learning, sigmoid refers to a special case of the logit function also used in logistic regression (see chapter \ref{chptr:reg}) described as:
 
+\vspace{15pt}
+
 {\centering
 	$\displaystyle f(x)={\frac {L}{1+e^{-k(x-x_{0})}}}$\par
 }
+
+\vspace{15pt}
+
 
 This function mimics a natural growth process, which generally occurs in three phases: The lag phase, in which growth begins slowly and can usually be approximated linearly, an exponential phase of rapid growth with a following stationary phase where environmental limits first slow  down and then bring the growth to a complete stop.
 
@@ -424,7 +432,7 @@ $\displaystyle \tanh x={\frac {\sinh x}{\cosh x}}={\frac {e^{x}-e^{-x}}{e^{x}+e^
 
 \vspace{20pt}
 
-The bigger output range causes a higher derivate of the activation near  $x=0$ compared to the traditional sigmoid. This solves a common problem with back-propagation when normalized data centered around zero causes the back-propagation algorithm to develop biased gradients and getting stuck in local minima \cite{LeCun1998}.
+The bigger output range causes a higher derivate of the activation near  $x=0$ compared to the traditional sigmoid. This solves a common problem with back-propagation when normalized data centered around zero causes the back-propagation algorithm to develop biased gradients and is vulnerable to getting stuck in local minima \cite{LeCun1998}.
 
 
 \subsubsection{Rectified Linear Unit}
@@ -436,7 +444,8 @@ More recent networks often use rectified linear units (ReLUs) as activation func
 }
 
 
-An advantage is that with random initialisation, only have of the neurons will produce an output other than 0, while with antisymmetric functions like TanH every cell will produce an output between -1 and 1. The main advantage however is that the derivative of the identity function is 1 (differentiation of the sigmoid is in the range of 0 and 0.25). This avoids the problem of vanishing gradients \cite{Hochreiter:01book} during backpropagation. That means, the error gradient of each layer's neurons being computed by the chain rule causes the gradient to decrease exponentially with distance from the output, causing the layers to train more slowly closer to the input layer.
+An advantage is that with random initialisation only half of the neurons will produce an output other than 0 in the first iteration reducing the computational complexity compared to antisymmetric functions like \texttt{TanH} where every cell will produce an output between -1 and 1.
+The main advantage however is that the derivative of the identity function is 1 (differentiation of the sigmoid is in the range of 0 and 0.25). This avoids the problem of vanishing gradients \cite{Hochreiter:01book} during backpropagation. That means, the error gradient of each layer's neurons being computed by the chain rule causes the gradient to decrease exponentially with distance from the output, causing layers closer to the input layer to train more slowly.
 
 % allow more effective training on large datasets in deep and complex networks. 
 
@@ -453,7 +462,7 @@ The softmax activation function transforms a set of probabilities into a vector 
 
 A new concept that was published while I was already researching Urban Sound Classification is Self Normalizing Networks (SNN). While most recent advances are due to  recurrent and convolutional layers, the work in the paper \cite{DBLP:journals/corr/KlambauerUMH17} is mainly aimed at improving the (classic) feed-forward network structure.
 
-SELU is a special case of an Exponential Linear Unit, a function that has an exponential growth below a certain point ($x = 0$ in this case) and linear growth above. 
+SELU is a special variant of the Exponential Linear Unit, a function that has an exponential growth below a certain point ($x = 0$ in this case) and linear growth above. 
  
 
 
@@ -466,11 +475,10 @@ SELU is a special case of an Exponential Linear Unit, a function that has an exp
 }
 
 The parameters $\alpha$ and $\lambda$ are not backpropagated but derived from the distribution of the inputs.
-With default values
-\footnote{
+With default values\footnote{
 As calculated on pp. 11f of \cite{DBLP:journals/corr/KlambauerUMH17} for inputs with a mean of zero with a standard deviation of one the values are
  \(\alpha \approx 1.67326\) and  \(\lambda \approx 1.0507\) }
-the function looks similar to relu. However, if the network is not initialized randomly but the weights are distributed with a standard deviation $\sigma = \frac{1}{\sqrt{n}}$ (n being the size of the input) around the mean $\mu = 0$, neuron activations will converge towards zero mean and unit variance during training \cite{DBLP:journals/corr/KlambauerUMH17}. There are other requirements, including a modified dropout technique.
+the function looks similar to relu. However, if the network is not initialized randomly but the weights are distributed with a standard deviation $\sigma = \frac{1}{\sqrt{n}}$ (n being the size of the input) around the mean $\mu = 0$ neuron activations will converge towards zero mean and unit variance during training \cite{DBLP:journals/corr/KlambauerUMH17}. There are other requirements including a modified dropout technique.
 
 The reference paper has shown tremendous success on common machine learning challenges where simple feed-forward networks withs self-normalisation were able to match or outperform complex network's performances, but not everything could be replicated yet\footnote{A  github repo that contains tutorials and implementations of SNNs as suggested by Klambauer et al and served as inspiration for code developed during this thesis is available at: \url{https://github.com/bioinf-jku/SNNs}}.
 
@@ -481,7 +489,7 @@ The reference paper has shown tremendous success on common machine learning chal
 
 %Efforts to train the network with know filters, like the sobel image filter have been largely successful by adding before and after images.  
 
-A special network architecture, that has proven to generate best results in image recognition is the Convolutional Neural Network \cite{Lecun98gradient-basedlearning}.
+A special network architecture that has proven to generate best results in image recognition is the Convolutional Neural Network \cite{Lecun98gradient-basedlearning}.
 Its difference is the existence of a convolutional layer as the core building block.
 Instead of having weighted connections between all the neurons in neighbouring layers the network uses a self-taught filterkernel as parameter. Validation efforts to train the network with know filters, like the sobel image filter by simply supplying before and after images have been largely successful.
 
@@ -489,7 +497,7 @@ Instead of having weighted connections between all the neurons in neighbouring l
 
 \begin{figure}[h]
     \centering
-	\includegraphics[width=.7\textwidth]{./images/illustrations/cnn}
+	\includegraphics[width=.8\textwidth]{./images/illustrations/cnn}
     \caption{Concept of a convolutional layer. Source: Deep Learning by Josh Patterson, Adam Gibson}
     \label{fig:cnn}
 \end{figure}
@@ -498,18 +506,23 @@ Instead of having weighted connections between all the neurons in neighbouring l
 
 
 
-The connectivity pattern of sharing the same connectivity weights between each neurons in neighbouring layers is inspired by the visual cortex in the mammalian brain.
+The connectivity pattern of sharing the same connectivity weights between all neurons in neighbouring layers is inspired by the visual cortex in the mammalian brain.
 Mathematically, the operation can be approximated by a convolution operation, which gave the network architecture its name. 
 
-Even in CNNs eventually the high level reasoning is done in a fully connected layer at the end.
+While the name CNNs implies that all layers work with kernels the high level reasoning or classification task has to be done by at least one fully connected layer at the end of the network.
 
-AlexNet, a famous example with 500,000 neurons in five convolutional layers \cite{AlexNet} was a major breakthrough in the field of computer vision, submitted to the "Large Scale Visual Recognition Challenge 2012", which is commonly referred to as the annual olympics of computer vision.
-In this competition, AlexNet achieved a top-5 test error rate of 15.4\% on the 1.2 million images in 1,000 categories, while the second best entry only achieved an error of more than 26\% \cite{ILSVRC15}. 
-The network consists of five convolutional layers, includes dropout layers and employes three fully connected layers in front of the output layer. Instead of the conventional tanh activation function, ReLU makes training more efficient.
-Another innovation was the parallelization happening in the training. The authors split the networks layers into separate chunks that were trained on two independent graphic cards. The training still lasted six days, even though they were using two GTX 580 GPUs, that were the most powerful solution on the market at that time.
+AlexNet is a famous example with 500,000 neurons in five convolutional layers \cite{AlexNet} that was a major breakthrough in the field of computer vision. It was submitted to the "Large Scale Visual Recognition Challenge 2012" which is commonly referred to as the annual olympics of computer vision.
+During this competition AlexNet achieved a top-5 test error rate of 15.4\% on the 1.2 million images in 1,000 categories, while the second best entry only achieved an error of more than 26\% \cite{ILSVRC15}. 
+
+This network consisted of five convolutional layers, includes dropout layers and employs three fully connected layers in front of the output layer. Instead of the conventional \texttt{TanH} activation function, \texttt{ReLU} made training more efficient.
+Another innovation was the parallelization happening in the training. The authors split the networks layers into separate chunks that were trained on two independent graphic cards. The training still lasted six days, even though they were using two GTX 580 GPUs that were the most powerful solution on the market at that time.
 
 
-Convolutional neural networks refers to any neural network with a convolutional layer.  These networks have achieved state-of-the-art results on many computer vision-related tasks, primarily because of their ability to "downsample" inputs while minimizing information loss.  It is because of this "downsampling" that these network are feasible to train, as opposed to a fully-connected network which has significantly more weights to train.  A convolutional layer is one that attempts to discover spatial relationships, aka filters, across neuronal inputs. [wtd describe + show graphs of convolutional layers].  This layer contains a set of filters, or weight matrices, that are convolved across the neuronal inputs, resulting in an output matrix called a feature map.  The weights of the filters are learned during training.  Typically these networks involve other spatial layers, such as max pooling layers, which directly downsample the neuronal inputs.
+Convolutional neural networks refers to any neural network with a convolutional layer.  These networks have achieved state-of-the-art results on many computer vision-related tasks, primarily because of their ability to "downsample" inputs while minimizing information loss.  It is because of this "downsampling" that these network are feasible to train, as opposed to a fully-connected network which has significantly more weights to train.  A convolutional layer is one that attempts to discover spatial relationships, aka filters, across neuronal inputs.
+%[wtd describe + show graphs of convolutional layers].
+This layer contains a set of filters or weight matrices that are convolved across the neuronal inputs, resulting in an output matrix called a feature map.  The weights of the filters are learned during training.  Typically these networks involve other spatial layers, such as max pooling layers, which directly downsample the neuronal inputs.
+
+As some audio feature extraction methods output visual representations of the data that could be used for classification after some practice, it is likely that CNNs might play a vital role in this thesis. 
 
 \subsection{Recurrent Neural Networks}
 
