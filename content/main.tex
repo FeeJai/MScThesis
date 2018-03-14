@@ -17,7 +17,7 @@ The same purpose can be achieved wirelessly by repeatedly turning a radio transm
 
 \begin{figure}[h]
     \centering
-	\includegraphics[width=.85\textwidth]{./images/illustrations/am}
+	\includegraphics[width=.95\textwidth]{./images/illustrations/am}
     \caption{Amplitude modulation. Created by Ivan Akira. Source: Wikipedia; CC-BY-SA}
     \label{fig:am}
 \end{figure}
@@ -35,14 +35,16 @@ An especially interesting area of audio processing is classification. Given an a
 
 This idea for this thesis came up during my studies at MIT AgeLab's human factors on traffic research group. At that time the group was working on various traffic safety projects where human behaviour in every day traffic was first to be recorded by equipping volunteers' cars with cameras and then to be analysed by scientists. For large amounts of data this created an enormous amount of work so there was a project that applied computer vision technologies to assist in the creation of situational awareness for the research team and automatically analyse certain situations, e.g. Tesla Autopilot handoff. 
 
-Just before I started, the team had finished their first paper on using audio detection to annotate road conditions (dry, wet, snow) \cite{Abdic:2016:DFD:3060621.3060809}. This immediately caught my attention as I expected that advanced driver assistance systems and other levels of vehicle automation acoustic detection capabilities might enhance system characteristics in the response to other vehicle and environmental cues. When I did further research I however discovered that research on acoustic machine learning is surprisingly rare apart from speech recognition. This sparked my interest, whether it would be possible to combine audio processing and machine learning for traffic safety purposes. 
 
 \begin{figure}[h]
     \centering
-	\includegraphics[width=.65\textwidth]{./images/illustrations/driver-frustration}
+	\includegraphics[width=.85\textwidth]{./images/illustrations/driver-frustration}
     \caption{Different examples of concentration and frustration while interacting with an in-car voice control system as shown in \cite{Abdic:2016:DFD:3060621.3060809}.}
     \label{fig:am}
 \end{figure}
+
+
+Just before I started, the team had finished their first paper on using audio detection to annotate road conditions (dry, wet, snow) \cite{Abdic:2016:DFD:3060621.3060809}. This immediately caught my attention as I expected that advanced driver assistance systems and other levels of vehicle automation acoustic detection capabilities might enhance system characteristics in the response to other vehicle and environmental cues. When I did further research I however discovered that research on acoustic machine learning is surprisingly rare apart from speech recognition. This sparked my interest, whether it would be possible to combine audio processing and machine learning for traffic safety purposes. 
 
 
 %%The first project idea was to assist MIT AgeLab's human factors research in the traffic safety impact of self driving cars. This lab has a long history of detecting different forms of driver frustration with monitoring equipment in cars. They have also published research on the automatic detection of these factors through machine learning on video and audio \cite{Abdic:2016:DFD:3060621.3060809} instead of manual annotation.
@@ -65,10 +67,11 @@ The main purpose of this thesis then was to apply state-of-the-art neural networ
 
 Although there have been some recent breakthroughs in the field by Google's Deep Mind project (\cite{DBLP:journals/corr/OordDZSVGKSK16}) raw audio is rarely used  with machine learning algorithms directly. This is because one minute of mono channel audio, sampled with the very common analog to digital conversion rate of 44.1 kHz, produces the amount of 2.646.000 data points alone. Every single data point is usually stored as a 16 bit integer containing the amplitude of the audio wave at the present moment between zero and the microphones maximum sensitivity, which totals to 42.336.000 bits or roughly 5.2 Megabytes of information per minute of uncompressed mono audio.
 
+%%TODO Check amount of data points
 
 \begin{figure}[h]
     \centering
-	\includegraphics[width=.7\textwidth]{./images/illustrations/audio-signal}
+	\includegraphics[width=.6\textwidth]{./images/illustrations/audio-signal}
     \caption{Common wave-plot representation of a 4s dog bark audio file and a zoom into seven 23ms frames consisting of 3549 data points}
     \label{fig:audio}
 \end{figure}
@@ -76,7 +79,17 @@ Although there have been some recent breakthroughs in the field by Google's Deep
 
 This is in stark contrast to the amount of data in other machine learning tasks. For example in the very common MNIST image recognition dataset of handwritten numeric digits each image consists  28x28 greyscale pixels which leads to a binary representation of $28*28*8 = 6.272$ bits of information \cite{lecun1998mnist} - a difference of four orders of magnitude.  
 
-Therefore we rely on a mechanism called feature extraction. This means the creation of a signal processing algorithms, that transforms the raw audio signal into meaningful information, by removing redundancies and irrelevancies while presenting the relevant information in as little dimensions as possible. A challenge is that what might be relevant differs strongly depending on the context. As an example, the well-known MP3 compression specifially removes content that can not be heard by the human ear \cite{brandenburg1999mp3}. While that is adequate for digital compression of an audio file without affecting the  listener's impressin, this might very well decrease the detection and classification rate of other algorithms.  
+
+\begin{figure}[h]
+    \centering
+	\includegraphics[width=.8\textwidth]{./images/illustrations/pipeline-fe}
+    \caption{Source: sheffield.ac.uk - Reproduction under fair use}
+    \label{fig:pipeline-fe}
+\end{figure}
+
+
+A common workaround if the amount of data is too big to be efficiently handled directly by classifying algorithms is the technique of feature extraction. This means the creation of signal processing algorithms that transform the raw audio signal into meaningful information of lower bandwith. The most obvious way this an be done is by removing redundancies and irrelevancies while presenting the relevant information in as little dimensions as possible. The main challenge when designing these algorithms is the decision of what exactly might be relevant as this differs strongly depending on the context.
+As an example, the well-known MP3 compression specifically removes content that can not be heard by the human ear \cite{brandenburg1999mp3}. While that is adequate for digital compression of an audio file without affecting the listeners' impressions, the same effect could very well decrease the detection and classification rate of a machine learning classifier as it might be based on characteristic features different to human sound perception.  
 
 
 \section{Machine Learning for Audio through Feature Extraction}
@@ -91,32 +104,50 @@ Therefore we rely on a mechanism called feature extraction. This means the creat
 
 %TODO: Google Urban Sound (Background?) Dataset
 
-For the purpose of this thesis, I have evaluated the ESSENTIA audio analysis library \cite{bogdanov:Essentia:ACMMULTIMEDIA13} via its Python bindings and librosa \cite{BMcFee:librosa}, which is a native python implementation. 
+For the purpose of this thesis, I have evaluated the ESSENTIA audio analysis library \cite{bogdanov:Essentia:ACMMULTIMEDIA13} through its Python language bindings and the librosa audio and music analysis library\cite{BMcFee:librosa}, which is a native python implementation. 
 These have been selected as they seem to be the only actively-maintained open-source packages for audio signal processing with sufficient background literature and documentation. 
 
-Later, my supervisor suggested to compare the results to OpenSMILE, which is promoted as the "Munich Open-source Multimedia Feature Extractor" \cite{Eyben:2013:RDO:2502081.2502224}.
-OpenSMILE is extremely easy to use through its command line tool "SMILEextract". A simple demo script that extracts some basic features can be created by invoking "SMILExtract -cfgFileTemplate -configDflt cWaveSource,cFramer,cEnergy"\footnote{This example taken from the OpenSMILE manual extracts log energy features broken down into separate frequency bands. There are configuration examples for Chroma, MFCC, and PLP features delivered with the library.}.
-The resulting csv can be read with python csv library and very often directly be used for machine learning applications. While this library has proven to be extremely powerful, the  configuration procedure and the multi-step pipeline led me to prefer librosa, so that everything from loading the audio, to feature selection and extraction as the machine learning steps could be implemented in python.  %TODO: Different results with librosa and OpenSMILE.
+Later, during research at MIT my supervisor suggested to compare the results to OpenSMILE, which is promoted as the "The Munich Versatile and Fast Open-Source Audio Feature Extractor" \cite{Eyben:2013:RDO:2502081.2502224}. It is developed by a private company in Garching that is a spin off of a former research group led by Prof. Björn Schuller at TUM.
+
+Besides its versatility the main advantage of OpenSMILE seems to be its extreme ease of use for basic tasks through its command line tool "SMILEextract". A simple demo script that extracts some basic features can be created by invoking 
+
+"\texttt{SMILExtract -cfgFileTemplate -configDflt cWaveSource,cFramer,cEnergy}"\footnote{This example taken from the OpenSMILE manual extracts log energy features broken down into separate frequency bands. There are configuration examples for Chroma, MFCC, and PLP features delivered with the library.}.
+
+The resulting csv can be read with a python csv library and very often directly be used for machine learning applications. While this library has proven to be extremely powerful, the  configuration procedure and the multi-step pipeline required a rather complex setup which ultimately led me to prefer librosa. That way the whole process of loading the audio, feature selection and extraction as well at the machine learning steps could be implemented in the same language and easily be demonstrated and debugged using Jupyter Notebooks.
+
+%TODO: Correlation coefficient with results from librosa and OpenSMILE.
 
 \subsection{Spectrograms}
 
-Probably the best-known feature extractor is the Fourier Transformation. In 1822, while studying heat transfer, Joseph Fourier proved that certain functions could be written as a sum of a finite number of harmonics \cite{fourier1878}. This led the way onto the development of the Fourier transform, the decomposition of a signal into the different sine frequenices it is made up of. As input, the Fourier transform requires a periodic and infinite signal. In real-world scenarios, where recorded instead of generated input is used, the signal is cut into short slices and the transformation is done for each slice individually with the assumption that it would be repeating indefinitely as a simple workaround \cite{Smith97}.
+Probably the best-known feature extractor is the Fourier Transformation. In 1822, while studying heat transfer, Joseph Fourier proved that certain functions could be written as a sum of a finite number of harmonics \cite{fourier1878}. This led the way onto the development of the Fourier transform, the decomposition of a signal into the different sine frequenices it is made up of. As input, the Fourier transform requires a periodic and infinite signal. This precondition is unrealistic in real-world scenarios, where this method is employed on recorded instead of generated input data. As a simple workaround the recorded signal is cut into short slices and the transformation is done for each slice individually, with the artificial assumption that the slice would be repeating indefinitely \cite{Smith97}.
+The advance of digital signal processing has made it possible to utilise the Fourier transformation method in order to create visual representations of the different frequencies in an input signal such as sound. The most common format of display is a a two-dimensional diagram, where the abscissa represents the time dimension and the ordinate the separate frequency ranges. The prevalence and intensity of each frequency range can either be displayed through the brightness, hue or a combination of both color gradients for each resulting data point. 
+
 
 \begin{figure}[h]
     \centering
-	\includegraphics[width=.9\textwidth]{./images/illustrations/spectrogram}
+	\includegraphics[width=\textwidth]{./images/illustrations/spectrogram}
     \caption{The spectral distribution of the dog bark audio}
     \label{fig:spef}
 \end{figure}
 
-The advance of digital signal processing has made it possible to utilize the Fourier transform to create a visual representation of the different frequencies in a signal such as sound. The most common format of display is a a two-dimensional diagram, where the abscissa represents the time dimension and the ordinate the separate frequency ranges. The intensity can either be displayed through the brightness or intensity of different colors. 
-
-To increase verboseness and to prevent noise, individual slices can be created overlapping through the use of window functions. Subsequently the intensity of each spectrum can be calculated by applying the fourier transform onto the thereby generated individual chunks.
 
 
-\subsection{MFCC}
+To increase verboseness and to reduce the amount of noise, the signal can be smoothed before transformation when individual slices are are not cut but created in an overlapping way through the use of window functions. Subsequently the intensity of each spectrum can be calculated by applying the fourier transform onto the thereby generated individual but overlapping chunks.
 
-In Indo-European languages a change of the pitch usually does not alter a spoken word’s meaning \cite{auditoryneuroscience}. Instead, information is encoded by filtering the sound while passing the vocal tract, including the pharynx and the tongue causing changes in the envelope of the short time power spectrum. This makes the fourier transformation itself not helpful with speech recognition. Other information, like the speaker's gender and nervousness could possible be extracted nevertheless.
+
+\subsection{Mel Frequency Cepstral Coefficients}
+
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+    \centering
+	\includegraphics[width=.375\textwidth]{./images/illustrations/Sagittalmouth}
+    \caption{Vocal tract in humans - Source: Wikimedia Commons; Copyright expired}
+    \label{fig: Sagittalmouth}
+\end{wrapfigure}
+
+
+
+In Indo-European languages a change of the pitch usually does not alter a spoken word’s meaning \cite{auditoryneuroscience}. Instead information is encoded by filtering the sound while passing the vocal tract, including the pharynx and the tongue causing changes in the envelope of the short time power spectrum. This makes the fourier transformation itself not helpful with speech recognition. Other information, such as the speaker's gender and level of nervousness could possible be extracted nevertheless.
 
 That is why a method has become extremely popular that provides a separation between voice pitch and the formants. Developed by \cite{noll67}, the Mel-frequency cepstral coefficients (MFCCs) have become the most commonly used feature in speech recognition tasks \cite{ganchev2005comparative}, a transformation that is inspired by the inner workings of the cochlea, including the sensory organ of hearing inside the human ear, the Organ of Cortil. 
 
@@ -124,18 +155,21 @@ That is why a method has become extremely popular that provides a separation bet
 
 To identify the different frequencies, the next step is the calculation of a power spectrum through Fourier transformation. This result is a power spectrum on a linear frequency scale, which does not correlate well with the perception of different frequencies in humans \cite{mel}. 
 
+ While low frequencies below 20 Hz can hardly be detected, the effect becomes especially predominant with frequencies over 1 kHz. The transformation from the Hertz- onto the so-called Mel-scale is used as the next step to map the spectrum onto the percieved frequencies. 
+
+
 \begin{figure}[h]
     \centering
-	\includegraphics[width=.9\textwidth]{./images/illustrations/Gray921}
+	\includegraphics[width=.8\textwidth]{./images/illustrations/Gray921}
     \caption{Location and principle of the cochlea inside the inner ear. - Henry Gray, 1918, copyright expired}
     \label{fig:gray}
 \end{figure}
 
- 
- While low frequencies below 20 Hz can hardly be detected, the effect becomes especially predominant with frequencies over 1 kHz. The transformation from the Hertz- onto the so-called Mel-scale is used as the next step to map the spectrum onto the percieved frequencies. 
- 
+  
  The linear scale is mapped into discrete bins through a triangular activation functions within the human hearing range as well in this step. Like most human senses in accordance to Fechner’s law \cite{fechner1860} the relationship between stimulus and perception is logarithmic, wich means a quadrupling of the acoustic pressure causes the perceived intensity (loudness) of sound to double. A similar effect can be achieved by taking the logarithms of the power spectrum.
- 
+
+ To decorrelate the energies of the overlapping filterbanks, in order to separate pitch, modulation (added by the vocal in human speech) and noise, usually the discrete cosine transformation is performed on the log mel powers. % The resulting coefficient 2-13 form the MFCCs.
+  
   \begin{figure}[h]
     \centering
 	\includegraphics[width=.9\textwidth]{./images/illustrations/mfcc}
@@ -143,13 +177,11 @@ To identify the different frequencies, the next step is the calculation of a pow
     \label{fig:mfcc}
 \end{figure}
  
- To decorrelate the energies of the overlapping filterbanks, in order to separate pitch, modulation (added by the vocal in human speech) and noise, usually the discrete cosine transformation is performed on the log mel powers. % The resulting coefficient 2-13 form the MFCCs.
- 
  The resulting amplitudes form the Mel-frequency cepstral coefficients.
 
 \subsection{Chroma}
 
-The chroma feature is mainly used in music recognition. It is based on the twelve pitch classes commonly used in music theory \cite{Mller:2015:FMP:2815664}. Sounds that differ by one or more octave, i.e. ratio of frequencies occur at a ratio of $2^n : 1$ with n being an integer are added to the same class. Image \ref{fig:chroma} illustrates the results of the chroma feature for an audio file of a short concordant clip. Very characteristic for the piano as an instrument is a peak 8 classes above the base class, and can manually be configured for instrument retrieval tasks. 
+The chroma feature is mainly used in music recognition. It is based on the twelve pitch classes commonly used in music theory \cite{Mller:2015:FMP:2815664}. Sounds that differ by one or more octaves, i.e. ratio of frequencies occur at a ratio of $2^n : 1$ with n being an integer are added to the same class. Image \ref{fig:chroma} illustrates the results of the chroma feature for an audio file of a short concordant clip. Very characteristic for the piano as an instrument is the peak 8 classes above the base class, which can manually be configured as a method of instrument detection. 
 
 
 \begin{figure}[H]
@@ -164,12 +196,11 @@ The chroma feature is mainly used in music recognition. It is based on the twelv
 \section{Traditional machine learning approaches}
 
 
-Machine learning has once more become popular in the last few years as the recent advancements supplied sufficient computational power for training deep neural networks with huge amounts of data.
-It can mathematically be described as a system that receives existing data and generates a function that can be used to predict properties of future data.
-The quality is measured as the generalization performance, i.e. the accuracy on data used not for training.
+Machine learning has once more become popular in the last few years as the recent hardware advancements have finally supplied sufficient computational power for training deep neural networks with huge amounts of data.
+Mathematically machine learning can easily be described as a system that receives existing data and algorithmically generates a new function that can be used to predict properties of future data.
+The quality is measured as the generalsation performance, i.e. the accuracy on data not used for training.
 
-
-There are multiple different machine learning algorithms useable with audio information recognition.
+While nowadays there are dozens of different machine learning algorithms known a handful have been de determined useable for audio information recognition in this thesis.
 
 
 \subsection{Linear and Logistic Regression}
@@ -187,10 +218,10 @@ There are multiple ways of estimating the parameters available, with the conditi
 Although simple, multiple linear regression is used extensively for a variety of tasks in practice, for example in Germany to estimate the credit risk of consumers (Schufa) with parameters being the length of the credit histroy, the frequency of address change and the number of different credit cards and bank accounts on one customer. % TODO: Cite
 
 
-Another generalisation of this concept, where multiple dependent variables are predicted, is the extension of the process called multivariante linear regression. All dependant variables need to be correlated however \cite{Yan:2009:LRA:1717831}.
+Another generalisation of this concept, where multiple dependent variables are predicted, is the extension of the process called multivariante linear regression. The usefulness of this method is however restricted by the fact that all dependant variables need to be correlated \cite{Yan:2009:LRA:1717831}.
 
 
-For discrete choice or other distributions where the dependent variable is a discrete or binary category, the modified version called logistic regression was developed in \cite{cox58reg}. Instead of a linear model, the  function ${\displaystyle F(x)={\frac {1}{1+e^{-(\beta _{0}+\beta _{1}x)}}}}$ will always return a value between 0 and 1, which can be interpreted as the likelihood of a dataset falling into the binary category labeled as 1. It also allows to estimate the relationship of an explanatory variable and the likelihood of an outcome (e.g. by what percentage would speeding by 10 mph increase the likelihood of an accident)
+For discrete choice or other distributions where the dependent variable is a discrete or binary category, the modified version called logistic regression was first published by \cite{cox58reg}. Instead of a linear model, the  function ${\displaystyle F(x)={\frac {1}{1+e^{-(\beta _{0}+\beta _{1}x)}}}}$ will always return a value between 0 and 1, that henceforth can be interpreted as the chance of a certain data point falling into the binary category labeled as 1. The same procedure allows us to estimate the relationship of an explanatory variable and the probability of an outcome (e.g. by what percentage would speeding by 10 mph increase the likelihood of an accident).
 
 Parameter estimation is hereby more complicated than in linear regression and an iterative method needs to be used, such as the Newton–Raphson method.
 
@@ -201,8 +232,6 @@ The primary downfall of linear/logistic regression is the inability to model non
 
 \subsection{SVMs}
 
-Support Vector Machine are among the most popular supervised machine learning methods and have shown great success in the classification of high-dimensional data. In its simplest form a model is created out of training data, with each instance belonging to one of two categories and the categories are linearly separable.
-
 
 \begin{figure}[h]
     \centering
@@ -211,13 +240,15 @@ The primary downfall of linear/logistic regression is the inability to model non
     \label{fig:svm}
 \end{figure}
 
-The biggest improvement in SVMs over more traditional machine learning methods is that it will find an optimal solution without being affected by local minima.
+The so called Support Vector Machine are among the most popular supervised machine learning algorithms and have shown great success in the classification of high-dimensional data. In its simplest form a model is created out of training data, with each instance belonging to one of two categories and the categories are linearly separable.
 
-Support vectors are the subset of all data points lieing closest to the decision surface (as seen in figure \ref{fig:svm}). These specify the decision function entirely by themselves. The SVM optimizes the margin around the separating hyperplane (a line in 2 dimensional space) to be maximum.
+The biggest improvement in SVMs over more traditional machine learning methods is that it will always find an optimal solution without the risk of being affected by local minima.
 
-By using a kernel function, they can be extended onto categories that are not linearly separable. The kernel will transform the original input space that may be non-linear and of higher dimension into a simpler space that can be linearly separated with a hyperplane. Known kernels are available for polynomic, hyperbolic tangent and other relationships. However choosing the right kernel may not always by easy and trial and error with cross validation is sometimes necessary.
+Support vectors are the subset of all data points lying closest to the decision surface (as seen in figure \ref{fig:svm}). These specify the decision function entirely by themselves. The SVM optimizes the margin around the separating hyperplane (a line in 2 dimensional space) to be maximum.
 
-They can be used for classification as well as for regression.
+By using a kernel function, SVMs can be extended onto categories that are not linearly separable. The kernel will transform the original input space that may be non-linear and of higher dimension into a simpler space that can be linearly separated with a hyperplane. Known kernels are available for polynomic, hyperbolic tangent and other relationships. However choosing the right kernel may not always by easy and trial and error with cross validation is sometimes necessary.
+
+Because the hyperplane is known Support Vector Machines can not only be used for classification but also for predictions through regression.
 
 
 %TODO: citations needed
@@ -571,6 +602,9 @@ For example, research into normalization and regularization has lead to faster t
 % Bottom line, BN is definitely a very powerful tool to tackle existing problems but it should be noted that it does not come for free. First, BN introduces some overhead during training in terms of space, extra parameters, and time, for the data normalization. Second, layers in networks needs to be adjusted because BN is applied before the activation and third, a post-processing step is often required.
 
 Even more recently, work has been done in the area of self-normalizing networks\footnote{A good introduction to self-normalisation is available at: \url{https://medium.com/towards-data-science/selu-make-fnns-great-again-snn-8d61526802a9}} that remove the need for batch normalization and greatly increase accuracy and training speed in fully-connected neural networks \cite{DBLP:journals/corr/KlambauerUMH17}.
+
+
+% Can maybe be expanded to page 35
 
 \chapter{Public Urban Sounds Datasets}
 
