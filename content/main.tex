@@ -181,12 +181,14 @@ To identify the different frequencies, the next step is the calculation of a pow
 
 \subsection{Chroma}
 
-The chroma feature is mainly used in music recognition. It is based on the twelve pitch classes commonly used in music theory \cite{Mller:2015:FMP:2815664}. Sounds that differ by one or more octaves, i.e. ratio of frequencies occur at a ratio of $2^n : 1$ with n being an integer are added to the same class. Image \ref{fig:chroma} illustrates the results of the chroma feature for an audio file of a short concordant clip. Very characteristic for the piano as an instrument is the peak 8 classes above the base class, which can manually be configured as a method of instrument detection. 
+The chroma feature is mainly used in music recognition. It is based on the twelve pitch classes commonly used in music theory \cite{Mller:2015:FMP:2815664}. Sounds that differ by one or more octaves, i.e. ratio of frequencies occur at a ratio of $2^n : 1$ with n being an integer are added to the same class.
+
+Image \ref{fig:chroma} illustrates the results of the chroma feature for an audio file of a short concordant clip. Very characteristic for the piano as an instrument is the peak 8 classes above the base class, which can manually be configured as a method of instrument detection. 
 
 
-\begin{figure}[H]
+\begin{figure}[p]
     \centering
-	\includegraphics[width=.7\textwidth]{./images/illustrations/chroma}
+	\includegraphics[width=.85\textwidth]{./images/illustrations/chroma}
     \caption{Illustration of the Chroma feature of a C maj scale played on a piano. Created by Meinard Müller. Source: Wikipedia; CC-BY-SA}
     \label{fig:chroma}
 \end{figure}
@@ -200,7 +202,7 @@ Machine learning has once more become popular in the last few years as the recen
 Mathematically machine learning can easily be described as a system that receives existing data and algorithmically generates a new function that can be used to predict properties of future data.
 The quality is measured as the generalsation performance, i.e. the accuracy on data not used for training.
 
-While nowadays there are dozens of different machine learning algorithms known a handful have been de determined useable for audio information recognition in this thesis.
+While nowadays there are dozens of different machine learning algorithms known a handful have been found useable for audio information recognition in this thesis.
 
 
 \subsection{Linear and Logistic Regression}
@@ -233,18 +235,20 @@ The primary downfall of linear/logistic regression is the inability to model non
 \subsection{SVMs}
 
 
-\begin{figure}[h]
-    \centering
-	\includegraphics[width=.5\textwidth]{./images/illustrations/svm}
-    \caption{Example of linear separation of two classes on maximum-margin hyperplane. Source: Wikimedia Commons; Public Domain}
-    \label{fig:svm}
-\end{figure}
-
 The so called Support Vector Machine are among the most popular supervised machine learning algorithms and have shown great success in the classification of high-dimensional data. In its simplest form a model is created out of training data, with each instance belonging to one of two categories and the categories are linearly separable.
 
 The biggest improvement in SVMs over more traditional machine learning methods is that it will always find an optimal solution without the risk of being affected by local minima.
 
+\begin{figure}[h]
+    \centering
+	\includegraphics[width=.6\textwidth]{./images/illustrations/svm}
+    \caption{Example of linear separation of two classes on maximum-margin hyperplane. Source: Wikimedia Commons; Public Domain}
+    \label{fig:svm}
+\end{figure}
+
+
 Support vectors are the subset of all data points lying closest to the decision surface (as seen in figure \ref{fig:svm}). These specify the decision function entirely by themselves. The SVM optimizes the margin around the separating hyperplane (a line in 2 dimensional space) to be maximum.
+
 
 By using a kernel function, SVMs can be extended onto categories that are not linearly separable. The kernel will transform the original input space that may be non-linear and of higher dimension into a simpler space that can be linearly separated with a hyperplane. Known kernels are available for polynomic, hyperbolic tangent and other relationships. However choosing the right kernel may not always by easy and trial and error with cross validation is sometimes necessary.
 
@@ -258,24 +262,25 @@ Because the hyperplane is known Support Vector Machines can not only be used for
 \subsection{Random Forests}
 
 
-Random forest classification was introduced with \cite{Breiman2001} and have shown success in predicting medical events, such as developing certain diseases as there are multiple advantages over other classification methods like SVM.
+Random forest classification was introduced with \cite{Breiman2001} and has shown success in multiple rather unexpected areas like medicine, where it was used to predict the development of certain diseases as there are multiple advantages over other classification methods like SVM.
 
-The random forest classifier is a predictive model consisting of multiple decision trees. The risk of overfitting the model to the available data, but not generalising well to new data is significantly reduced by learning multiple models over different subsamples of the training set and casting a majority vote at prediction time. \cite{statisticallearning}.
+The random forest classifier is a predictive model consisting of a multitude of individual decision trees. The risk of overfitting the model to the available data, but not generalising well to new data is significantly reduced by learning multiple models over different subsamples of the training set and casting a majority vote at prediction time. \cite{statisticallearning}.
 
-The first step in growing a forest is the creation of $n$ random subsamples of the training data, which are allowed to overlap. Each subsample is used to create an independent decision tree, where a small number of features is randomly selected that may be considered as the predictor for each split until the tree is fully developed.
+The first step in growing a forest is the creation of $n$ random subsamples of the training data, whereby these subsamples are allowed to overlap. Each subsample is subsequently being used to create an independent decision tree, where a small number of features is randomly selected that may be considered as the predictor for each split until the tree is fully developed.
 
-Like other machine learning methods, random forests can be used for regression, if instead of decision trees regression trees are computed and the majority vote is replaced with averaging the result of the trees. However, the performance of using the random forest algorithm for regression has shown to fall behind other methods and it is therefor seldomly used.
+Like other machine learning methods, random forests can be used for regression if instead of decision trees regression trees are computed and the majority vote is replaced with an average over the result of the trees. The performance of using the random forest algorithm for regression however has shown to fall behind other methods and it is therefore seldomly used.
 
-A big advantage of this algorithm is that empirical data suggests that the out-of-bag error estimate is almost identical to that obtained by cross-validation, which means it is unlikely that overfitting might have skewed the results. Other advantages are that the evaluation can be parallelised very efficiently through map-reduce, as each tree can be evaluated independently. This makes it very efficient on big amounts of data. Also the training effort only scales linearly with the number of trees, which leads to fast iterations.
+A big advantage of this algorithm is that empirical data from experiments points to the conclusion that the out-of-bag error estimate is almost identical to that obtained by cross-validation, which means it is unlikely that overfitting might have skewed the results. Other advantages are that the evaluation can be parallelised very efficiently through map-reduce, as each tree can be evaluated independently. This makes it very efficient on big amounts of data. Also the training effort only scales linearly with the number of trees, which leads to fast iterations.
 
-These characteristics make random forests useful for audio classification, where the available datasets are usually limited and other algorithms might overfit to certain characteristics of the recording equipment instead of the recorded data.
+These characteristics make random forests useful for audio classification, where the available datasets are usually limited and other algorithms might easily overfit, for example to certain characteristics like the noise profile of the used recording equipment instead of the recorded actual data.
+
+The biggest counterargument to using random forests is that the algorithm was found experimentally and not developed and proven mathematically. That is why its properties are not as well understood as these of many other methods which comes at the price of reduced predictability. Also correct usage seems to be more difficult as programmers tend to optimise the parameters experimentally on the test set and not based on general characteristics of the input data which unintentionally leads to overfitting and a biased validation \cite{StroblMalley}. 
+
+Another part of ongoing discussion is the best practice on the ratio of estimators to features. While the famous publication "How Many Trees in a Random Forest?"(\cite{Oshiro}) concludes a general optimum between 64--128 trees independent of the input's characteristics, the authors' official website\footnote{Link: \url{https://www.stat.berkeley.edu/~breiman/RandomForests/cc_home.htm}} states that "Random forests does not overfit. You can run as many trees as you want" while only increasing the required computational power. Nevertheless, \cite{Segal} has concluded early on that "(the) presence of noise covariates is one factor that can contribute to such profiles". This is a huge caveat when working with audio and requires careful consideration and fine-tuning for our purpose. 
 
 %TODO: higher accuracy on smaller dimensional data or datasets
 
-%TODO: pitfalls of random forests
-
 %TODO: estimators to features 
-
 
 
 \subsection{Gradient Boosting}
