@@ -92,7 +92,7 @@ A common workaround if the amount of data is too big to be efficiently handled d
 As an example, the well-known MP3 compression specifically removes content that can not be heard by the human ear \cite{brandenburg1999mp3}. While that is adequate for digital compression of an audio file without affecting the listeners' impressions, the same effect could very well decrease the detection and classification rate of a machine learning classifier as it might be based on characteristic features different to human sound perception.  
 
 
-\section{Machine Learning for Audio through Feature Extraction}
+\section{Machine Learning for Audio Through Feature Extraction}
 
 
 %[wtd list and describe various audio processing task such as sound classification and speech recognition]
@@ -195,7 +195,7 @@ Image \ref{fig:chroma} illustrates the results of the chroma feature for an audi
 
 
 
-\section{Traditional machine learning approaches}
+\section{Traditional Machine Learning Approaches}
 
 
 Machine learning has once more become popular in the last few years as the recent hardware advancements have finally supplied sufficient computational power for training deep neural networks with huge amounts of data.
@@ -494,7 +494,6 @@ Its difference is the existence of a convolutional layer as the core building bl
 Instead of having weighted connections between all the neurons in neighbouring layers the network uses a self-taught filterkernel as parameter. Validation efforts to train the network with know filters, like the sobel image filter by simply supplying before and after images have been largely successful.
 
 
-
 \begin{figure}[h]
     \centering
 	\includegraphics[width=.8\textwidth]{./images/illustrations/cnn}
@@ -503,16 +502,23 @@ Instead of having weighted connections between all the neurons in neighbouring l
 \end{figure}
 
 
-
-
-
 The connectivity pattern of sharing the same connectivity weights between all neurons in neighbouring layers is inspired by the visual cortex in the mammalian brain.
 Mathematically, the operation can be approximated by a convolution operation, which gave the network architecture its name. 
 
-While the name CNNs implies that all layers work with kernels the high level reasoning or classification task has to be done by at least one fully connected layer at the end of the network.
+While the name CNNs implies that all layers work with kernels the high level reasoning or classification task has to be done by at least one fully connected layer at the end of the network as shown in \ref{fig:typical-cnn}:
+
+
+\begin{figure}[h]
+    \centering
+	\includegraphics[width=.95\textwidth]{./images/illustrations/typical-cnn}
+    \caption{Typical CNN architecture.\newline Source: \url{en.wikipedia.org}, by Aphex34; CC-BY-SA 4.0}
+    \label{fig:typical-cnn}
+\end{figure}
+
 
 AlexNet is a famous example with 500,000 neurons in five convolutional layers \cite{AlexNet} that was a major breakthrough in the field of computer vision. It was submitted to the "Large Scale Visual Recognition Challenge 2012" which is commonly referred to as the annual olympics of computer vision.
 During this competition AlexNet achieved a top-5 test error rate of 15.4\% on the 1.2 million images in 1,000 categories, while the second best entry only achieved an error of more than 26\% \cite{ILSVRC15}. 
+
 
 This network consisted of five convolutional layers, includes dropout layers and employs three fully connected layers in front of the output layer. Instead of the conventional \texttt{TanH} activation function, \texttt{ReLU} made training more efficient.
 Another innovation was the parallelization happening in the training. The authors split the networks layers into separate chunks that were trained on two independent graphic cards. The training still lasted six days, even though they were using two GTX 580 GPUs that were the most powerful solution on the market at that time.
@@ -526,11 +532,15 @@ As some audio feature extraction methods output visual representations of the da
 
 \subsection{Recurrent Neural Networks}
 
-While CNNS solve the problem of dimensionality in terms of spatial relationships, RNNs do so in terms of sequential, or temporal relationships.  Typically, to represent a temporal or sequential relationship, inputs are stacked in a windowed-fashion.  However, this greatly increases the number of weights required at the input layer.  Therefore, RNNs reduce the amount weights by allowing sequences to be passed in without requiring weights be connected to these input features.
+While CNNS solve the problem of dimensionality in terms of spatial relationships, RNNs do so in terms of sequential or temporal relationships.  Typically, to represent a temporal or sequential relationship inputs are stacked in a windowed-fashion.  However, this greatly increases the number of weights required at the input layer.  Therefore RNNs reduce the amount weights by allowing sequences to be passed in without requiring weights to be connected to these input features.
 
 
 % http://colah.github.io/posts/2015-08-Understanding-LSTMs/
 
+
+
+Nearly every animal has at least one form of memory and what happened in the past is always taken into consideration. In NNs however after completion of the training phase the past traditionally has no impact onto the result. 
+In contrast, Recurrent Neural Network (RNNs) extend the idea by not only allowing feed-forward propagation but adding connections between units that form a directed cycle (loops) therefore allowing information to persist. 
 
 \begin{figure}[h]
     \centering
@@ -540,19 +550,19 @@ While CNNS solve the problem of dimensionality in terms of spatial relationships
 \end{figure}
 
 
+Adding this kind of internal memory has proven to be especially useful for tasks like speech recognition \cite{sak2014long} where due to the grammatical nature of human languages the meaning of heterographs (such as to, too and two) can almost always (and only) be determined by context.
 
-While most animals have a at least one form of memory and what happened in the past is always taken into consideration, after completion of the training phase in NNs the past traditionally has no impact onto the result. 
-In contrast, Recurrent Neural Network (RNNs) extend the idea by not only allowing feed-forward propagation but adding connections between units that form a directed cycle (loops), therefor allowing information to persist. 
-Adding this kind of internal memory has proven to be especially useful for tasks like speech recognition \cite{sak2014long}, where due to the grammatical nature of human languages the meaning of heterograph such as to, too and two can almost always be determined by context.
+The exact history of the first usage of RNNs is unclear. The english Wikipedia states that the first published version was the Hopfield-Network in 1982, however there is no citation to back this claim.
 
-%While there are many different RNN architectures I have found the so called Long-Short Term Memory (LSTM) to be the most useful for the detection of driver frustration. % why?
-%These are especially well suited to remembering information for a long period of time, where other RNNs like the traditional single tanh layer as a repeating module very often struggle \cite{Hochreiter:1997:LSM:1246443.1246450}.
+The concept of an RNN can be extended to training a network without supplying specific labels to the training data but instead evaluating the network's performance through a reward function in certain intervals \cite{sutton1998reinforcement}. This process is known as reinforcement learning and was, for example, used to train the famous AlphaGo network on a trial-and-error basis by playing thousands of games against other instances of itself after it had reached the limit of proficiency achievable with supervised learning from 30 million moves by human experts \cite{alphaGo}.
 
+%The simplest RNN is equivalent to a feed-forward network, where each cell's output $W$ 
 
 
-deep feed forward
 
-multi-dimensional long short-term memory 
+%deep feed forward
+
+%multi-dimensional long short-term memory 
 
 %[wtd describe recurrent neural networks, cite original paper]
 
@@ -560,19 +570,26 @@ multi-dimensional long short-term memory
 
 %[wtd explain exactly the problem that RNNs solve (sequence and removing the need to include historical data in the inputs similar to how CNNs solve the problem of needing so many weights for the spatial input)]
 
+%reinforcement learning
+
 
 
 \subsubsection{LSTMs}
 
+One of the pitfalls of recurrent neural networks like the traditional single tanh layer as a repeating module is their inability to remember information for a long period of time \cite{Hochreiter:1997:LSM:1246443.1246450}.
+
+
+%While there are many different RNN architectures I have found the so called Long-Short Term Memory (LSTM) to be the most useful for the detection of driver frustration. % why?
+%These are especially well suited to remembering information for a long period of time, where other RNNs like the traditional single tanh layer as a repeating module very often struggle \cite{Hochreiter:1997:LSM:1246443.1246450}.
+
+
 \begin{figure}[h]
     \centering
 	\includegraphics[width=.8\textwidth]{./images/illustrations/LSTM3}
-    \caption{The repeating module in an LSTM contains four interacting layers. Source: colah.github.io. Reproduced with permission}
+    \caption{The repeating module in an LSTM contains four interacting layers. Source: \url{colah.github.io}. Reproduced with permission}
     \label{fig:mesh1}
 \end{figure}
 
-
-One of the pitfalls of recurrent neural networks like the traditional single tanh layer as a repeating module is their inability to remember information for a long period of time \cite{Hochreiter:1997:LSM:1246443.1246450}.
 
 [wtd describe what problems lstms solve aka able to capture longer sequences, and downfalls]
 
@@ -581,7 +598,7 @@ One of the pitfalls of recurrent neural networks like the traditional single tan
 \begin{figure}[h]
     \centering
 	\includegraphics[width=.8\textwidth]{./images/illustrations/GRU}
-    \caption{A GRU, as defined by Cho, et al. (2014). Source: colah.github.io. Reproduced with permission}
+    \caption{A GRU, as defined by Cho, et al. (2014). Source: \url{colah.github.io}. Reproduced with permission}
     \label{fig:mesh1}
 \end{figure}
 
@@ -610,6 +627,9 @@ One of the more interesting recent discovering in the neural network architectur
 One of the primary advances in neural networks in the past several years has been the advent of deep learning.  Existing conceptually since the inception of neural networks, deep learning refers to network architectures with more than one hidden layer.  Conventionally speaking, a deep network is a network with many hidden layers, sometimes in the hundreds or thousans in \cite{DBLP:journals/corr/HeZRS15}. The discovery of adding more layers to a neural network to increase performance, however, has its own pitfalls.
 
 For example, deep neural networks suffer from the problem of vanishing gradients \cite{Hochreiter:01book} and training time.  While previous approaches to conquering this problem have been somewhat successful \cite{DBLP:journals/corr/abs-1206-5533}, more advanced approaches have shown even greater success, for example normalization and regularization techniques, explained below.  Novel architectures such as deep residual networks \cite{DBLP:journals/corr/HeZRS15} have shown promise in this area as well.  Futhermore, the growing collection of larger annotated datasets and cheap, available processing power (such as GPUs and cloud computing), and the availability of open-source neural network toolkits have had major contributions to the success of neural networks as well \cite{tensorflow2015-whitepaper}, \cite{DBLP:journals/corr/SynnaeveNACLLRU16}. %TODO: cite open source dataset papers
+
+\newpage
+
 
 \subsection{Recent Advances in Neural Networks}
 
@@ -724,7 +744,7 @@ This indicates that extracted features of a mel spectrogram are still heavily co
 
 [wtd describe what features were extracted by the SONYC team]
 
-\chapter{Audio Classification using GRUs and Attention Mechanisms}
+\chapter{Audio Classification Using GRUs and Attention Mechanisms}
 
 [wtd discuss implementation]
 
@@ -734,9 +754,13 @@ This indicates that extracted features of a mel spectrogram are still heavily co
 
 [wtd discuss any additional preprocessing done]
 
+\newpage
+
 \section{Network Architecture}
 
 [wtd discuss exact nature of the architecture such as the layer, etc. include a graph, describe loss function]
+
+\newpage
 
 \section{Training}
 
@@ -752,9 +776,14 @@ After the Hardware of my personal MacBookPro11,3 equiped with a 2,3 GHz Intel Co
 
 Overall, training took a total of 4m 56s on this machine.
 
-\subsection{The problem of overfitting}
+\subsection{The Problem of Overfitting}
 
-\subsection{k-fold validation}
+\newpage
+
+\subsection{k-fold Validation}
+
+
+\newpage
 
 \section{Results}
 
@@ -764,12 +793,22 @@ Overall, we were able to achieve state-of-the-art results on the SONYC urban sou
 
 [wtd discuss pitfalls]
 
-\chapter{Other approaches to audio recognition}
+\chapter{Other Approaches to Audio Recognition}
 \section{Comparing Gradient Boosting to GRUs and Attention}
 
 In addition to the deep neural network approach, an attempt to use gradient boosted trees, using the xgboost library \cite{DBLP:journals/corr/ChenG16} to achieve similar results.  As mentioned, gradient boosting has been very successful in classification tasks involving a small input dimensionality.
 
-\section{Attempted recreation of NYU papers}
+\newpage
+
+bla
+
+\newpage
+
+
+
+\section{Attempted Recreation of NYU Papers}
+
+After receiving rather mediocre results on the SONYC dataset with my own network, I moved on to recreate 
 
 PCA whitening
 
@@ -792,7 +831,12 @@ decision tree (J48), k-NN (k = 5), random forest
 (500 trees), support vector machine (radial basis function
 kernel), and a baseline majority vote classifier (ZeroR)."
 
-\subsection{Unsupervised feature learning for urban sound classification}
+\newpage
+
+\newpage
+
+
+\subsection{Unsupervised Feature Learning for Urban Sound Classification}
 
 "Whilst we could use the resulting log-mel-spectrograms directly
 as input for the feature learning, it has been shown that the
@@ -800,6 +844,9 @@ learned features can be significantly improved by decorrelating the
 input dimensions using e.g. ZCA or PCA whitening"
 
 Spherical k-means
+
+
+\newpage
 
 
 \subsection{Deep Convolutional Neural Networks and Data
