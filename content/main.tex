@@ -136,6 +136,7 @@ To increase verboseness and to reduce the amount of noise, the signal can be smo
 
 
 \subsection{Mel Frequency Cepstral Coefficients}
+\label{MFCC}
 
 
 \begin{wrapfigure}{r}{0.4\textwidth}
@@ -650,34 +651,35 @@ For example, deep neural networks suffer from the problem of vanishing gradients
 
 \subsection{Recent Advances in Neural Networks}
 
-Up until 2010 neural network weights were usually initialized randomly before the weights were adjusted during training.  Contributing to the success of deep neural networks, several different initialization schemes have been discovered like the He normal initializer in \cite{DBLP:journals/corr/HeZR015} and the Glorot uniform initializer, also called Xavier uniform initializer in \cite{pmlr-v9-glorot10a}.
+Up until 2010 neural network weights were usually initialised randomly before the weights were adjusted during training.  Contributing to the success of deep neural networks, several different initialisation schemes have been discovered like the He normal initialiser in \cite{DBLP:journals/corr/HeZR015} and the Glorot uniform initializer, also called Xavier uniform initialiser in \cite{pmlr-v9-glorot10a}.
 
-For example, research into normalization and regularization has lead to faster training rates and higher accuracy, while preventing overfitting.  More specifically, batch normalization\footnote{A good introduction to batch normalisation can be found here: \url{https://kratzert.github.io/2016/02/12/understanding-the-gradient-flow-through-the-batch-normalization-layer.html}} has shown to be greatly advantageous in speeding up the training of neural networks while reducing the amount of hyperparameter tuning \cite{DBLP:journals/corr/IoffeS15}. Batch normalization however is inefficient whenever the batches do not consist of independent samples, such as in the UrbanSound8K dataset and introduces some extra overhead during training and network configuration.
+For example, research into normalisation and regularisation has lead to faster training rates and higher accuracy, while preventing overfitting.  More specifically, batch normalisation\footnote{A good introduction to batch normalisation can be found here: \url{https://kratzert.github.io/2016/02/12/understanding-the-gradient-flow-through-the-batch-normalization-layer.html}} has shown to be greatly advantageous in speeding up the training of neural networks while reducing the amount of hyperparameter tuning \cite{DBLP:journals/corr/IoffeS15}. Batch normalisation however is inefficient whenever the batches do not consist of independent samples, such as in the UrbanSound8K dataset and introduces some extra overhead during training and network configuration.
 
 % Bottom line, BN is definitely a very powerful tool to tackle existing problems but it should be noted that it does not come for free. First, BN introduces some overhead during training in terms of space, extra parameters, and time, for the data normalization. Second, layers in networks needs to be adjusted because BN is applied before the activation and third, a post-processing step is often required.
 
-Even more recently, work has been done in the area of self-normalizing networks\footnote{A good introduction to self-normalisation is available at: \url{https://medium.com/towards-data-science/selu-make-fnns-great-again-snn-8d61526802a9}} that remove the need for batch normalization and greatly increase accuracy and training speed in fully-connected neural networks \cite{DBLP:journals/corr/KlambauerUMH17}.
+Even more recently, work has been done in the area of self-normalising networks\footnote{A good introduction to self-normalisation is available at: \url{https://medium.com/towards-data-science/selu-make-fnns-great-again-snn-8d61526802a9}} that remove the need for batch normalisation and greatly increase accuracy and training speed in fully-connected neural networks \cite{DBLP:journals/corr/KlambauerUMH17}.
 
 
 % Can maybe be expanded to page 35
 
 \chapter{Public Urban Sounds Datasets}
 
-\section{Creation}
-
+\section{Urban Sound 8K}
 The UrbanSounds8K dataset used for this research was published in 2014 with \cite{Salamon:UrbanSound:ACMMM:14}. It contains audio recording from the Freesound API, initially comprised 1302 recordings with the total length of 27 hours of audio and was manually labelled according to the Urban Sound Taxonomy created and introduced with the same paper. Labels span over 10 low-level classes in this taxonomy and offer an additional salience (foreground or background) classification.
+
+\subsection{Creation}
 
 The final audio samples have been provided by the authors publicly in the form of slices up to 4s long. Those were created by a 4s sliding window algorithm with a hop size of 2s and a limit of maximum 1000 slices per class. This results in a total of 8732 labeled slices or 8.75 hours of audio.
 
 It is necessary to point out that the sliding window intentionally creates overlaps which result in the same audio information being present in up to two different slices. Additionally, due to the characteristics of urban sound, slices originating from the same original recording can have identifiable background or foreground sounds and other characteristics that can unintentionally be learned by the algorithm. %TODO: improve language
 
- This does not constitute a potenital for error, as long as 
+ This does not constitute a potential for error, as long as 
   slices from the same source are not diverted across training and validation set. The authors provide for that by splitting the data into 10 distinct folds intended for k-fold cross validation as a means of model verification.
 
 %TODO: Overlap -> overfit
-[wtd explain advantages of this dataset, explain pitfalls, dicusss other datasets and attempt to collect youtube horn dataset].
+%[wtd explain advantages of this dataset, explain pitfalls, discuss other datasets and attempt to collect youtube horn dataset].
 
-\section{Content}
+\subsection{Content}
 
 As mentioned above, the dataset is labeled according to the Urban Sound Taxonomy(\cite{Salamon:UrbanSound:ACMMM:14}). The ten low-label classes present are air conditioner, car horn, children playing, dog bark, drilling, engine idling, gunshot, jackhammer, siren, and street music.
 
@@ -700,6 +702,65 @@ The relatively low amount of car horns caused a problem, since the detection of 
 
 %TODO; Solution,Focus shift
 
+\section{Creation of an own Car Horn Dataset}
+
+Youtube Downloader
+
+Traffic
+
+labeler created using python and flask
+
+detection of lound noises
+
+800 samples
+
+Often driver's VLOG polluted by noise
+
+
+
+\section{Google's AudioSet}
+
+" large-scale dataset of manually-annotated audio events that endeavors to bridge the gap in data availability between image and audio research"
+
+youtube
+
+635 audio classes
+
+lack of computing power in feature extraction
+
+detailed explanation of creation and labeling, baseline
+
+fully connected feed forward network 
+
+
+google precision score 31,4 \%
+
+
+Paper: CNN architectures for large-scale audio classification
+
+Source code is available and used in \ref{vggish}
+
+e Fourier transform applying 25 ms
+windows every 10 ms. The resulting spectrogram is integrated into
+64 mel-spaced frequency bins, and the magnitude of each bin is logtransformed
+after adding a small offset to avoid numerical issues.
+This gives log-mel spectrogram patches of 96 × 64 bins that form
+the input to all classifiers. During training we fetch mini-batches of
+128 input examples by randomly sampling from all patches.
+
+Batch normalization 
+
+Adam optimizer
+
+@inproceedings{45857,
+title = {Audio Set: An ontology and human-labeled dataset for audio events},
+author  = {Jort F. Gemmeke and Daniel P. W. Ellis and Dylan Freedman and Aren Jansen and Wade Lawrence and R. Channing Moore and Manoj Plakal and Marvin Ritter},
+year  = {2017},
+booktitle = {Proc. IEEE ICASSP 2017},
+address = {New Orleans, LA}
+}
+
+
 
 \section{Feature Extraction}
 
@@ -707,8 +768,9 @@ As mentioned in the introduction, a raw audio signal consists of a high-dimensio
 
 This chapter contains visualisations of different features. It can be seen, that there is a distinct pattern per sound class that can easily be recognized by humans. It therefor is logical, that common image recognition networks should easily be able to lear these characteristics and be able to classify the audio files correctly along these characteristics.
 
-If a CNN or a RNN is the better example remains open to debate.
+statistical characteristics
 
+show visulaisation among averages
 
 % As noted in [13], the raw audio signal is not suitable as direct input to a classifier due to its extremely high dimensionality and the fact that it would be unlikely for perceptually similar sounds to be neighbours in vector space
 
@@ -753,6 +815,10 @@ Chroma shows little coherence, except for the classes engine_idling and siren.
 While usually not being succesful with neural networks, there has been moderate success in the classification of bird songs and acoustic scenes using more traditional classification methods like the spherical k-means algorithm in the past. To improve classification accuracy, \cite{Coates2012} has shown that dimensionality reduction with PCA whitening over scaled features has significatnly increased accuracy. 
 This indicates that extracted features of a mel spectrogram are still heavily correlated.
 
++ noise
+
++ temporal distortion
+
 
 [wtd describe what features are typically used in audio classification task]
 
@@ -771,11 +837,52 @@ This indicates that extracted features of a mel spectrogram are still heavily co
 
 [wtd discuss any additional preprocessing done]
 
+Spectrogram
+
+MFCC (because Salmon et al) 
+
+Log power average and variance over time -> CNN
+
+LibRosa 
+
+ESSENTIA
+
+
+
+
 \newpage
+
+Regression diagramm
+
+First attempt Random Forest
+
+Convolution matrix
+
+accuracy: 69\%
+
+SVM 72\%
+
+accuracy diagram split by classes
 
 \section{Network Architecture}
 
 [wtd discuss exact nature of the architecture such as the layer, etc. include a graph, describe loss function]
+
+Keras 
+
+Attempt1: Feed Forward, recreation of Paper
+
+Attempt2: CNN
+
+Attempt3: RNN, GRU
+
+adding attention
+
+
+Unclear results -> If a CNN or a RNN is the better example remains open to debate.
+
+Lower Accuracy in attempts 2 and 3: DATASET PROBABLY TOO SMALL FOR ANYTHING BESIDES FEED FORWARD
+
 
 \newpage
 
@@ -789,15 +896,24 @@ I have evaluated training across several optimizers including SGD + momentum, Ad
 
 For training and modeling the neural network, we used Python with the Tensorflow and Keras libraries [wtd include Keras/tensorflow citations].
 
-After the Hardware of my personal MacBookPro11,3 equiped with a 2,3 GHz Intel Core i7 (TensorFlow does no longer support GPU Acceleration on MacOS) reached it's limits, I borrowed a quad-core processor machine with an NVIDIA 1080 Ti graphics processor for network training.
+After the Hardware of my personal MacBookPro11,3 equiped with a 2,3 GHz Intel Core i7 (TensorFlow does no longer support GPU Acceleration on MacOS) reached it's limits, I managed to borrow a quad-core processor machine with an NVIDIA 1080 Ti graphics processor for network training from a friend free of charge.
 
 Overall, training took a total of 4m 56s on this machine.
 
 \subsection{The Problem of Overfitting}
 
+Other approach: https://github.com/aqibsaeed/Urban-Sound-Classification
+
+When I used his code and
+
+Overfit, broke test/train folds, 
+
 \newpage
 
 \subsection{k-fold Validation}
+
+
+SCORE Matrix
 
 
 \newpage
@@ -806,18 +922,26 @@ Overall, training took a total of 4m 56s on this machine.
 
 [wtd results table]
 
-Overall, we were able to achieve state-of-the-art results on the SONYC urban sound classification dataset using LSTMs with attention mechanism.
+Overall, I was not able to achieve better than previously publsihed results on the SONYC urban sound classification dataset using LSTMs with attention mechanism.
 
 [wtd discuss pitfalls]
 
 \chapter{Other Approaches to Audio Recognition}
+
+\section{VGGish model}
+\label{vggish}
+
+Source Code available
+
+https://github.com/tensorflow/models/tree/master/research/audioset
+
+Hershey, S. et. al., CNN Architectures for Large-Scale Audio Classification, ICASSP 2017
+
+TODO try this model
+
 \section{Comparing Gradient Boosting to GRUs and Attention}
 
 In addition to the deep neural network approach, an attempt to use gradient boosted trees, using the xgboost library \cite{DBLP:journals/corr/ChenG16} to achieve similar results.  As mentioned, gradient boosting has been very successful in classification tasks involving a small input dimensionality.
-
-\newpage
-
-bla
 
 \newpage
 
@@ -825,9 +949,11 @@ bla
 
 \section{Attempted Recreation of NYU Papers}
 
-After receiving rather mediocre results on the SONYC dataset with my own network, I moved on to recreate 
+After receiving rather mediocre results on the SONYC dataset with my own network I have attempted to improve my own undestanding by recreating the papers published by the same team that provided the SONYC dataset.
 
-PCA whitening
+There has been a community of amateurs on GitHub that have attempted to build projects on the UrbanSound8K dataset. https://github.com/aqibsaeed/Urban-Sound-Classification
+
+
 
 For each experiment we report the average accuracy across all 10 folds.
 
@@ -835,32 +961,67 @@ For each experiment we report the average accuracy across all 10 folds.
 
 [wtd why were most results no reproducable]
 
-%TODO Essentia v LibRosa
+Differences in Essentia and LibRosa, reference Chapter 2
 
 %Scattering
 
+
+ScienceMag Publication: Missing data hinder replication of artificial intelligence studies
+
+Other user's attempt to replicate: https://github.com/cyrta/UrbanSounds
+
+Speech and Music Technology Researcher Pawel Cyrta (ex Samsung)
+
+Others have given up early or made significant mistakes
+
+ReScience Project
+
+
 \subsection{A Dataset and Taxonomy for Urban Sound Research}
 
-"To ensure
-the observed changes in accuracy are not an artifact of a
-specific classification algorithm, we compare 5 different algorithms:
-decision tree (J48), k-NN (k = 5), random forest
-(500 trees), support vector machine (radial basis function
-kernel), and a baseline majority vote classifier (ZeroR)."
+In this paper \cite{Salamon:UrbanSound:ACMMM:14} the UrbanSound8K dataset is initially introduced. The authors in detail explain the creation (section three) and their proposed taxonomy (section two). At this point  our interest is focused on chapter four where an experimental setup for feature extraction and classification is discussed. It is also highlighted that this was about a baseline approach not aimed at an optimal configuration.
 
-\newpage
+The features used for training are 25 Mel-Frequency Cepstral Coefficients (see \ref{MFCC}) computed on slices in the length of 23.2 ms with 50\% overlap. While the calculation is done using 40 Mel bands up to 22.05 kHz only the first 25 coefficients are actually used. As the length of each sound file is up to 4s, the results are transformed into a constant feature vector of dimension 225 by extracting 9 different statistical values per coefficient over time such as minimum, maximum and mean.
 
-\newpage
+The feature vector is used to train different machine learning algorithms: decision tree (J48), k-NN (k = 5), random forest (500 trees), support vector machine (radial basis function kernel), and a baseline majority vote classifier (ZeroR). Unfortunately no further details on the hyperparameters are given. The authors conclude that there is a tie between the classifiers SVM and random forest at an accuracy of approximately 0.7.
 
+I have tried to recreate the results of these two classifiers through Python's scikit-learn \cite{scikit-learn}. Unfortunately the attempt was rather unsuccessful. Even after experimental tuning, which included the reduction of \texttt{n_estimators} to 85 and increasing the \texttt{min_samples_leaf} to two or four in the random forest and excessive experimentation with the gamma value and different kernels for the SVM the accuracy never exceeded .64. These results are already questionable as these optimisations were done using the same k-fold validation technique used to measure the accuracy and there was no separate data set for hyperparameter tuning.
+ 
+A source of error in my approach might be that the feature extraction in the original paper was done using the ESSENTIA library \cite{bogdanov:Essentia:ACMMULTIMEDIA13} while I attempted a recreation using librosa for compatibility reasons. 
 
 \subsection{Unsupervised Feature Learning for Urban Sound Classification}
 
-"Whilst we could use the resulting log-mel-spectrograms directly
-as input for the feature learning, it has been shown that the
-learned features can be significantly improved by decorrelating the
-input dimensions using e.g. ZCA or PCA whitening"
+The subsequent paper \cite{7177954} is not focussed on the dataset anymore but on tradition machine learning approaches on the data. 
 
-Spherical k-means
+Essentia via Python Binding
+
+40 MFCC
+
+temporal dynamics
+
+The data is decorrelated by using prinicpal component analysis (PCA) whithening. This feature is available in sklearn.
+
+n_components = 0.99
+
+svd solver unknown
+
+
+
+Multi step approach:
+
+Spherical k-means per audio file
+
+1000 centroids
+
+Pooling
+
+Random forest
+
+
+
+version of k-means not in sklearn. spherecluster? pip package
+
+UNABLE TO IMPLEMENT
 
 
 \newpage
@@ -869,6 +1030,19 @@ Spherical k-means
 \subsection{Deep Convolutional Neural Networks and Data
 Augmentation for Environmental Sound
 Classification}
+
+no validation set
+
+
+recreated network architecture exactly as described
+
+
+methodological error: hyperparameters tuned on test set
+
+dataset too small?
+
+
+
 
 
 \chapter{Conclusion}
