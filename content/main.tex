@@ -554,7 +554,7 @@ Adding this kind of internal memory has proven to be especially useful for tasks
 
 The exact history of the first usage of RNNs is unclear. The english Wikipedia states that the first published version was the Hopfield-Network in 1982, however there is no citation to back this claim.
 
-The concept of an RNN can be extended to training a network without supplying specific labels to the training data but instead evaluating the network's performance through a reward function in certain intervals \cite{sutton1998reinforcement}. This process is known as reinforcement learning and was, for example, used to train the famous AlphaGo network on a trial-and-error basis by playing thousands of games against other instances of itself after it had reached the limit of proficiency achievable with supervised learning from 30 million moves by human experts \cite{alphaGo}.
+The concept of an RNN can be expanded to training a network without supplying specific labels to the training data but instead evaluating the network's performance through a reward function in certain intervals \cite{sutton1998reinforcement}. This process is known as reinforcement learning and was, for example, used to train the famous AlphaGo network on a trial-and-error basis by playing thousands of games against other instances of itself after it had reached the limit of proficiency achievable with supervised learning from 30 million moves by human experts \cite{alphaGo}.
 
 %The simplest RNN is equivalent to a feed-forward network, where each cell's output $W$ 
 
@@ -570,25 +570,36 @@ The concept of an RNN can be extended to training a network without supplying sp
 
 %[wtd explain exactly the problem that RNNs solve (sequence and removing the need to include historical data in the inputs similar to how CNNs solve the problem of needing so many weights for the spatial input)]
 
-%reinforcement learning
 
 
 
 \subsubsection{LSTMs}
 
-One of the pitfalls of recurrent neural networks like the traditional single tanh layer as a repeating module is their inability to remember information for a long period of time \cite{Hochreiter:1997:LSM:1246443.1246450}.
+One of the pitfalls of recurrent neural networks like the traditional single tanh layer as a repeating module is their practical difficulty with remembering information for a longer period of time. \cite{279181} showed that this is due to an inherent trade-off between efficient learning through gradient-descent and longevity of learned information and suggested that this problem might be solvable by modifying the optimisation algorithm or by employing a different method of optimisation altogether.
 
+ Subsequently \cite{Hochreiter:1997:LSM:1246443.1246450} introduced a new cell architecture to solve the problem of vanishing or exploding error signals which the authors named LONG SHORT-TERM MEMORY. 
+ Instead of a single neural layer each LSTM module contains four different ones that are connected through pointwise vector operations to interact  as a temporal storage.
+ 
+\begin{figure}[h]
+    \centering
+	\includegraphics[width=.95\textwidth]{./images/illustrations/LSTM3}
+    \caption{The repeating module in an LSTM contains four interacting layers. Source: \url{colah.github.io}. Reproduced with permission}
+    \label{fig:mesh1}
+\end{figure}
+
+ 
+ Consequently, each module consists of an input vector $x_t$, an output  $h_t$, and an internal state vector $C_t$ which is preserved over time but can be modified by vector operations on data calculated by internal forget and input gates.
+ 
+ % $+ V_{f} \circ c_{t-1} $ include state in forget operation?!
+ The forget gate $f_t = \sigma (W_{f} * x_t + U_{f} * h_{t-1} + b_f)$ is calculated in each step and subsequently multiplied with the cell state $C_{t-1}$ where the value of $0$ (sigmoid minimum) would completely reset the cell state and the value of $1$ (sigmoid maximum) would entirely carry over the previous state's value.
+
+In a similar fashion new information can be added to the cell state through an input gate $i_t$ that decides whether new input should be stored or not. Its result is then multiplied with a new candidate vector $\tilde{C_t} = \tanh(W_{c} * x_t + U_{c} * h_{t-1} + b_c)$. This final value is the new cell state $C_t = f_t \circ C_{t-1} + i_t \circ \tilde{C_t}$
+
+The output is calculated by an output gate that considers the current cell state as well as the input and the previous output so that $h_t = tanh(C_t) \circ \sigma (W_{h} * x_t + U_{h} * h_{t-1} + b_h)$.
 
 %While there are many different RNN architectures I have found the so called Long-Short Term Memory (LSTM) to be the most useful for the detection of driver frustration. % why?
 %These are especially well suited to remembering information for a long period of time, where other RNNs like the traditional single tanh layer as a repeating module very often struggle \cite{Hochreiter:1997:LSM:1246443.1246450}.
 
-
-\begin{figure}[h]
-    \centering
-	\includegraphics[width=.8\textwidth]{./images/illustrations/LSTM3}
-    \caption{The repeating module in an LSTM contains four interacting layers. Source: \url{colah.github.io}. Reproduced with permission}
-    \label{fig:mesh1}
-\end{figure}
 
 
 [wtd describe what problems lstms solve aka able to capture longer sequences, and downfalls]
@@ -597,7 +608,7 @@ One of the pitfalls of recurrent neural networks like the traditional single tan
 
 \begin{figure}[h]
     \centering
-	\includegraphics[width=.8\textwidth]{./images/illustrations/GRU}
+	\includegraphics[width=.7\textwidth]{./images/illustrations/GRU}
     \caption{A GRU, as defined by Cho, et al. (2014). Source: \url{colah.github.io}. Reproduced with permission}
     \label{fig:mesh1}
 \end{figure}
@@ -611,7 +622,7 @@ Sometimes only seen as a variant of the LSTM, the GRU is a simpler recurrent cel
 
 \begin{figure}[h]
     \centering
-	\includegraphics[width=.5\textwidth]{./images/illustrations/attention}
+	\includegraphics[width=.65\textwidth]{./images/illustrations/attention}
     \caption{The result of using a spatial transformer as the
 first layer of a fully-connected network trained for distorted
 MNIST digit classification in \cite{DBLP:journals/corr/JaderbergSZK15}.}
@@ -627,8 +638,6 @@ One of the more interesting recent discovering in the neural network architectur
 One of the primary advances in neural networks in the past several years has been the advent of deep learning.  Existing conceptually since the inception of neural networks, deep learning refers to network architectures with more than one hidden layer.  Conventionally speaking, a deep network is a network with many hidden layers, sometimes in the hundreds or thousans in \cite{DBLP:journals/corr/HeZRS15}. The discovery of adding more layers to a neural network to increase performance, however, has its own pitfalls.
 
 For example, deep neural networks suffer from the problem of vanishing gradients \cite{Hochreiter:01book} and training time.  While previous approaches to conquering this problem have been somewhat successful \cite{DBLP:journals/corr/abs-1206-5533}, more advanced approaches have shown even greater success, for example normalization and regularization techniques, explained below.  Novel architectures such as deep residual networks \cite{DBLP:journals/corr/HeZRS15} have shown promise in this area as well.  Futhermore, the growing collection of larger annotated datasets and cheap, available processing power (such as GPUs and cloud computing), and the availability of open-source neural network toolkits have had major contributions to the success of neural networks as well \cite{tensorflow2015-whitepaper}, \cite{DBLP:journals/corr/SynnaeveNACLLRU16}. %TODO: cite open source dataset papers
-
-\newpage
 
 
 \subsection{Recent Advances in Neural Networks}
