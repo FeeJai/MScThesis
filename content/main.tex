@@ -22,7 +22,7 @@ The same purpose can be achieved wirelessly by repeatedly turning a radio transm
     \label{fig:am}
 \end{figure}
 
-From the early 20th century onwards it started to transcended it's original use while still being required for every form telecommunication. When home audio playback become available with the phonograph, the analog storage technology necessitated significant frequency alterations to compensate for the mass inertia of the mechanical stylus and diaphragm (so called equalization)\cite{copeland2008manual}. Later the development of cinemas lead to improvements in speaker technology, separation of tweeter and woofer and required the invention of crossover networks \cite{spanias2006audio}.
+From the early 20th century onwards it started to transcend its original use while still being required for every form of telecommunication. When home audio playback become available with the phonograph, the analog storage technology necessitated significant frequency alterations to compensate for the mass inertia of the mechanical stylus and diaphragm (so called equalization)\cite{copeland2008manual}. Later the development of cinemas lead to improvements in speaker technology, separation of tweeter and woofer and required the invention of crossover networks \cite{spanias2006audio}.
 Today it is widely used for purposes such as entertainment (iPod), medical devices (ultrasound systems), magnetic storage of information (audio cassette, hard disks), and speed measurements  (doppler effect).
  
  
@@ -33,7 +33,7 @@ An especially interesting area of audio processing is classification. Given an a
 
 %% Personal motivation
 
-This idea for this thesis came up during my studies at MIT AgeLab's human factors on traffic research group. At that time the group was working on various traffic safety projects where human behaviour in every day traffic was first to be recorded by equipping volunteers' cars with cameras and then to be analysed by scientists. For large amounts of data this created an enormous amount of work so there was a project that applied computer vision technologies to assist in the creation of situational awareness for the research team and automatically analyse certain situations, e.g. Tesla Autopilot handoff. 
+The idea for this thesis came up during my studies at MIT AgeLab's human factors on traffic research group. At that time the group was working on various traffic safety projects. Human behaviour was first to be recorded in every day traffic by equipping volunteers' cars with cameras. It then had to be analysed by scientists. For large amounts of data this created an enormous amount of work so there was a project that applied computer vision technologies to assist in the creation of situational awareness for the research team and automatically analyse certain situations, e.g. Tesla Autopilot handoff. 
 
 
 \begin{figure}[h]
@@ -162,7 +162,7 @@ To identify the different frequencies, the next step is the calculation of a pow
 \begin{figure}[h]
     \centering
 	\includegraphics[width=.8\textwidth]{./images/illustrations/Gray921}
-    \caption{Location and principle of the cochlea inside the inner ear. - Henry Gray, 1918, copyright expired}
+    \caption{Location and principle of the cochlea inside the inner ear. - Henry Gray, 1918; Copyright expired}
     \label{fig:gray}
 \end{figure}
 
@@ -201,7 +201,7 @@ Image \ref{fig:chroma} illustrates the results of the chroma feature for an audi
 
 Machine learning has once more become popular in the last few years as the recent hardware advancements have finally supplied sufficient computational power for training deep neural networks with huge amounts of data.
 Mathematically machine learning can easily be described as a system that receives existing data and algorithmically generates a new function that can be used to predict properties of future data.
-The quality is measured as the generalsation performance, i.e. the accuracy on data not used for training.
+The quality is measured as the generalisation performance, i.e. the accuracy on data not used for training.
 
 While nowadays there are dozens of different machine learning algorithms known a handful have been found useable for audio information recognition in this thesis.
 
@@ -811,21 +811,21 @@ show visulaisation among averages
 Chroma shows little coherence, except for the classes engine_idling and siren.
 
 
-\subsection{Quality improvements}
+\subsection{Quality Improvements}
 While usually not being succesful with neural networks, there has been moderate success in the classification of bird songs and acoustic scenes using more traditional classification methods like the spherical k-means algorithm in the past. To improve classification accuracy, \cite{Coates2012} has shown that dimensionality reduction with PCA whitening over scaled features has significatnly increased accuracy. 
 This indicates that extracted features of a mel spectrogram are still heavily correlated.
 
-+ noise
+wtd noise
 
-+ temporal distortion
+wtd temporal distortion
 
 
-[wtd describe what features are typically used in audio classification task]
+%[wtd describe what features are typically used in audio classification task]
 
 
 % K MEANS
 
-[wtd describe what features were extracted by the SONYC team]
+%[wtd describe what features were extracted by the SONYC team]
 
 \chapter{Audio Classification Using GRUs and Attention Mechanisms}
 
