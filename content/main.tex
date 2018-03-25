@@ -654,12 +654,19 @@ Neural machine translation on the other hand usually employs a sequence-to-seque
 This seems counterintuitive as a human would not translate sentences of variable length in such an inflexible way. The attention mechanism solves this problem. Instead of having a universal fixed-length content vector that needs to hold all context in every step the decoder tells the encoder which content to process to which extent. As shown in \ref{fig:attention} a translation from french into english is attended almost sequentially due to the similar nature of the languages. Due to the high success and straight-forward implementation Google in the meanwhile even included a seq2seq translation with attention into their TensorFlow tutorial\footnote{\url{https://www.tensorflow.org/tutorials/seq2seq\#background_on_the_attention_mechanism}}.
 
 
+% Attention beyond Machine Translation
+
+
 
 \subsection{Deep Learning}
 
 One of the primary advances in neural networks in the past several years has been the advent of deep learning.  Existing conceptually since the inception of neural networks, deep learning refers to network architectures with more than one hidden layer.  Conventionally speaking, a deep network is a network with many hidden layers, sometimes in the hundreds or thousans in \cite{DBLP:journals/corr/HeZRS15}. The discovery of adding more layers to a neural network to increase performance, however, has its own pitfalls.
 
 For example, deep neural networks suffer from the problem of vanishing gradients \cite{Hochreiter:01book} and training time.  While previous approaches to conquering this problem have been somewhat successful \cite{DBLP:journals/corr/abs-1206-5533}, more advanced approaches have shown even greater success, for example normalization and regularization techniques, explained below.  Novel architectures such as deep residual networks \cite{DBLP:journals/corr/HeZRS15} have shown promise in this area as well.  Furthermore, the growing collection of larger annotated datasets and cheap, available processing power (such as GPUs and cloud computing), and the availability of open-source neural network toolkits have had major contributions to the success of neural networks as well \cite{tensorflow2015-whitepaper}, \cite{DBLP:journals/corr/SynnaeveNACLLRU16}. %TODO: cite open source dataset papers
+
+What seems most interesting is that despite the remarkable successes researchers managed to achieve with deep learning the field is still very poorly understood. Especially in regards to the fundamentals there is no consensus in sight. While most people still try to understand and expand the field based on neuroscientific analogies others have argued that it has long transcended its biological origins in a similar way to aircraft designs that rarely copy birds nowadays. While an airfoil's lift can be fully explained and caluclated based on the physical principles of aerodynamics we however still lack a comprehensive explanation for deep neural networks. Consequently we can not always explain what our network are doing and especially it is especially difficult to understand what went wrong whenever an experiment fails.
+
+This is why researchers have come up with other narratives. Christopher Olah, from whom I have gained most of my knowledge, has argued in an essay\footnote{\url{http://colah.github.io/posts/2015-09-NN-Types-FP/}}, which he only published on his blog, that deep learning is the intersection of algorithmic optimisation and functional programming. To illustrate this he has drawn many analogies between type theory and data representations in common networks, the concept of a neuron as a reusable abstractions, and multiple layers acting as chained functions transforming data. 
 
 
 \subsection{Recent Advances in Neural Networks}
