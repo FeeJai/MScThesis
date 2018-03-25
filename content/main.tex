@@ -460,6 +460,8 @@ The softmax activation function transforms a set of probabilities into a vector 
 
 
 \subsubsection{Scaled Exponential Linear Unit}
+\label{selu}
+
 
 A new concept that was published while I was already researching Urban Sound Classification is Self Normalizing Networks (SNN). While most recent advances are due to  recurrent and convolutional layers, the work in the paper \cite{DBLP:journals/corr/KlambauerUMH17} is mainly aimed at improving the (classic) feed-forward network structure.
 
@@ -677,7 +679,11 @@ For example, research into normalisation and regularisation has lead to faster t
 
 % Bottom line, BN is definitely a very powerful tool to tackle existing problems but it should be noted that it does not come for free. First, BN introduces some overhead during training in terms of space, extra parameters, and time, for the data normalization. Second, layers in networks needs to be adjusted because BN is applied before the activation and third, a post-processing step is often required.
 
-Even more recently, work has been done in the area of self-normalising networks\footnote{A good introduction to self-normalisation is available at: \url{https://medium.com/towards-data-science/selu-make-fnns-great-again-snn-8d61526802a9}} that remove the need for batch normalisation and greatly increase accuracy and training speed in fully-connected neural networks \cite{DBLP:journals/corr/KlambauerUMH17}.
+Even more recently, work has been done in the area of self-normalising networks 
+% \footnote{A good introduction to self-normalisation is available at: \url{https://medium.com/towards-data-science/selu-make-fnns-great-again-snn-8d61526802a9}}
+ that remove the need for batch normalisation and greatly increase accuracy and training speed in fully-connected neural networks. This is done by neuron activations that cause data to converge towards zero mean and unit variance \cite{DBLP:journals/corr/KlambauerUMH17}. To construct such a network neurons need to employ the SELU activation function described in \ref{selu}. A normal dropout method that during training sets random hidden layer's weights to zero with a certain probability (usually 50\%) to reduce overfitting interfers with mean and variance of the output and is therefore not suitable for the idea of self-normalisation.  
+ The authors conclude that this is because, contrary to ReLU, the low variance limit of SELU is not zero. Therefore they subsequently introduce a modified technique which they have named "$\alpha$-dropout" where the weight of a dropped out neuron is instead set to $-\lambda\alpha$.
+
 
 
 % Can maybe be expanded to page 35
