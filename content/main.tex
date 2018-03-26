@@ -701,6 +701,9 @@ It is necessary to point out that the sliding window intentionally creates overl
 
  This does not constitute a potential for error, as long as 
   slices from the same source are not diverted across training and validation set. The authors provide for that by splitting the data into 10 distinct folds intended for k-fold cross validation as a means of model verification.
+  
+  The files are provided in the losless .wav format. Parameters such as the sampling rate vary as they have not been changed from the original recordings.
+
 
 %TODO: Overlap -> overfit
 %[wtd explain advantages of this dataset, explain pitfalls, discuss other datasets and attempt to collect youtube horn dataset].
@@ -724,24 +727,35 @@ dog_bark & 1000 \\children_playing & 1000 \\car_horn & 429 \\air_conditioner 
 \par
 \end{table}
 
-The relatively low amount of car horns caused a problem, since the detection of various car horns was one of the AgeLab's main motivation.
+The relatively low amount of car horns caused a problem, since the detection of various car horns was one of the AgeLab's main motivation. 
 
 %TODO; Solution,Focus shift
 
 \section{Creation of an own Car Horn Dataset}
 
-Youtube Downloader
+That is why I have attempted to create an own dataset using recordings that are publicly available on youtube. The first step was to download traffic related videos; for reasons of applicability to other future tasks they were limited to the greater Boston area using YouTube's GeoSearch\footnote{A demo GUI is available at: \url{https://youtube.github.io/geo-search-tool/search.html}}.
 
-Traffic
+\begin{wrapfigure}{r}{0.55\textwidth}
+    \centering
+	\includegraphics[width=.6\textwidth]{./images/illustrations/label}
+    \caption{Index page of video search and labelling tool}
+	\label{fig:label}
+\end{wrapfigure}
 
-labeler created using python and flask
 
-detection of lound noises
+To decide whether a video was useable I first had to build an annotation tool. This was implemented as a web application using the WSGI microframework Flask\footnote{\url{http://flask.pocoo.org/}} and the database abstraction layer SQLAlchemy\footnote{\url{https://www.sqlalchemy.org/}}. It provides a frontend for the YouTube search API which also logs each query to ease the search for specific keywords and geographical coordinates as well as to prevent redundant work. Later the videos can be previewed where the user votes whether each video is usable or not. In total the AgeLab team evaluated 800 videos during this step. What caught my eye was the high number of traffic video blogs (vlogs) that we uncovered, most with less than 100 views. After a CSV export all videos were downloaded and converted to wav using the youtube-dl\footnote{\url{https://rg3.github.io/youtube-dl/}} python api.
 
-800 samples
+\begin{figure}[h]
+    \centering
+	\includegraphics[width=.85\textwidth]{./images/illustrations/subt}
+    \caption{Labelling car horns using Aegisub}
+    \label{fig:subt}
+\end{figure}
 
-Often driver's VLOG polluted by noise
 
+In the next step the team listened to and manually annotated 9 hours of traffic noise using the open source Aegisub software, which is normally used to add subtitles to movies and tv shows. Different car horns were classified primary (foreground), secondary (background) or ignore (unusable, e.g. ambiguous or overlapping with other more prominent noise). That way the labels were encoded in the SubStation Alpha video subtitle format.
+
+ The tags were later transformed into a single csv file with a python script. The result could be used to generate 1137 distinct audio clips through ffmpeg in 8 different folds which did not overlap files. While this method worked well there are two problem sources: the heavy editing of the vlogs, where voiceover often hushed the traffic sounds and the compression done by youtube. 
 
 
 \section{Google's AudioSet}
