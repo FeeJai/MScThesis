@@ -743,7 +743,10 @@ That is why I have attempted to create an own dataset using recordings that are 
 \end{wrapfigure}
 
 
-To decide whether a video was useable I first had to build an annotation tool. This was implemented as a web application using the WSGI microframework Flask\footnote{\url{http://flask.pocoo.org/}} and the database abstraction layer SQLAlchemy\footnote{\url{https://www.sqlalchemy.org/}}. It provides a frontend for the YouTube search API which also logs each query to ease the search for specific keywords and geographical coordinates as well as to prevent redundant work. Later the videos can be previewed where the user votes whether each video is usable or not. In total the AgeLab team evaluated 800 videos during this step. What caught my eye was the high number of traffic video blogs (vlogs) that we uncovered, most with less than 100 views. After a CSV export all videos were downloaded and converted to wav using the youtube-dl\footnote{\url{https://rg3.github.io/youtube-dl/}} python api.
+To decide whether a video was useable I first had to build an annotation tool. This was implemented as a web application using the WSGI microframework Flask\footnote{\url{http://flask.pocoo.org/}} and the database abstraction layer SQLAlchemy\footnote{\url{https://www.sqlalchemy.org/}}. It provides a frontend for the YouTube search API which also logs each query to ease the search for specific keywords and geographical coordinates as well as to prevent redundant work. Later the videos can be previewed where the user votes whether each video is usable or not. In total the AgeLab team evaluated 800 videos during this step. What caught my eye was the high number of traffic video blogs (vlogs) that we uncovered, most with less than 100 views. 
+
+After a CSV export all videos were downloaded and converted to wav using the youtube-dl\footnote{\url{https://rg3.github.io/youtube-dl/}} python api. In the next step the team listened to and manually annotated 9 hours of traffic noise using the open source Aegisub software, which is normally used to add subtitles to movies and tv shows. Different car horns were classified primary (foreground), secondary (background) or ignore (unusable, e.g. ambiguous or overlapping with other more prominent noise). That way the labels were encoded in the SubStation Alpha video subtitle format.
+
 
 \begin{figure}[h]
     \centering
@@ -753,58 +756,53 @@ To decide whether a video was useable I first had to build an annotation tool. T
 \end{figure}
 
 
-In the next step the team listened to and manually annotated 9 hours of traffic noise using the open source Aegisub software, which is normally used to add subtitles to movies and tv shows. Different car horns were classified primary (foreground), secondary (background) or ignore (unusable, e.g. ambiguous or overlapping with other more prominent noise). That way the labels were encoded in the SubStation Alpha video subtitle format.
 
- The tags were later transformed into a single csv file with a python script. The result could be used to generate 1137 distinct audio clips through ffmpeg in 8 different folds which did not overlap files. While this method worked well there are two problem sources: the heavy editing of the vlogs, where voiceover often hushed the traffic sounds and the compression done by youtube. 
+ The tags were later transformed into a single csv file with a python script. The result could be used to generate 1137 distinct audio clips through ffmpeg in 8 different folds which did not overlap files. While this method worked well there are two problem sources: the heavy editing of the vlogs, where voiceover often hushed the traffic sounds and the lossy audio compression done by youtube which is optimized for the human ear and might have removed information that could have been useful for our task.
 
 
 \section{Google's AudioSet}
 
-" large-scale dataset of manually-annotated audio events that endeavors to bridge the gap in data availability between image and audio research"
-
-youtube
-
-635 audio classes
-
-lack of computing power in feature extraction
-
-detailed explanation of creation and labeling, baseline
-
-fully connected feed forward network 
+While I was working on this thesis the Machine Perception research team at Google published an own, versatile, audio dataset on March 5th, 2017 with the intent "to bridge the gap in data availability between image and audio research" \cite{45857}. It is simply named "Audio Set" and consists of 2'084'320 annotated video files totalling about 5.8 thousand hours of audio. Similar to my approach the content was extracted from youtube, however by owning YouTube Google was able to make heavy use of metadata, user behaviour, and context related searches results to ease classification.
 
 
-google precision score 31,4 \%
+\begin{wrapfigure}{r}{0.5\textwidth}
+    \centering
+    \vspace{-10pt}
+	\includegraphics[width=.45\textwidth]{./images/illustrations/audioset}
+    \caption{The top layers of the ontology introduced by \cite{45857}}
+	\label{fig:audioset}
+\end{wrapfigure}
 
 
-Paper: CNN architectures for large-scale audio classification
+While approximately half of the collection consists of music the amount of urban and indoor sounds is still at least two orders of magnitude higher than any previous dataset. As the dataset is no longer limited to a specific domain (such as urban sound) it required a new classification ontology which was introduced with \cite{45857} as well. This classification consists of 632 distinct categories that are hierarchically arranged up to a depth of 6 levels. The first two layers totalling 50 meta-classes are shown in figure \ref{fig:audioset} as displayed in the original publication. Eventually only 485 categories were released as some were ambiguous or did not contain more than 100 independent events.
 
-Source code is available and used in \ref{vggish}
+The paper also introduced a simple neural network classification system which the authors describe as baseline. It is a fully-connected feed-forward network and achieves an average precision score of 31.4\% on 1 second frames. It is not stated which features are extracted or how the data is preprocessed. Another classifier from the same research group using CNNs and released as open source is described in chapter \ref{vggish}.
 
-e Fourier transform applying 25 ms
-windows every 10 ms. The resulting spectrogram is integrated into
-64 mel-spaced frequency bins, and the magnitude of each bin is logtransformed
-after adding a small offset to avoid numerical issues.
-This gives log-mel spectrogram patches of 96 × 64 bins that form
-the input to all classifiers. During training we fetch mini-batches of
-128 input examples by randomly sampling from all patches.
 
-Batch normalization 
+%lack of computing power in feature extraction
 
-Adam optimizer
+%detailed explanation of creation and labeling, baseline
 
-@inproceedings{45857,
-title = {Audio Set: An ontology and human-labeled dataset for audio events},
-author  = {Jort F. Gemmeke and Daniel P. W. Ellis and Dylan Freedman and Aren Jansen and Wade Lawrence and R. Channing Moore and Manoj Plakal and Marvin Ritter},
-year  = {2017},
-booktitle = {Proc. IEEE ICASSP 2017},
-address = {New Orleans, LA}
-}
+%Paper: CNN architectures for large-scale audio classification
 
+%e Fourier transform applying 25 ms
+%windows every 10 ms. The resulting spectrogram is integrated into
+%64 mel-spaced frequency bins, and the magnitude of each bin is logtransformed
+%after adding a small offset to avoid numerical issues.
+%This gives log-mel spectrogram patches of 96 × 64 bins that form
+%the input to all classifiers. During training we fetch mini-batches of
+%128 input examples by randomly sampling from all patches.
+
+%Batch normalization 
+
+%Adam optimizer
+
+\newpage
 
 
 \section{Feature Extraction}
 
-As mentioned in the introduction, a raw audio signal consists of a high-dimensionality huge amount of data and is therefor not suitable as input for a learning algorithm without previous feature extraction.
+As mentioned in the introduction, a raw audio signal consists of a high-dimensionality huge amount of data and is therefore not suitable as input for a learning algorithm without previous feature extraction.
 
 This chapter contains visualisations of different features. It can be seen, that there is a distinct pattern per sound class that can easily be recognized by humans. It therefor is logical, that common image recognition networks should easily be able to lear these characteristics and be able to classify the audio files correctly along these characteristics.
 
