@@ -695,6 +695,7 @@ Even more recently, work has been done in the area of self-normalising networks
 The UrbanSounds8K dataset used for this research was published in 2014 with \cite{Salamon:UrbanSound:ACMMM:14}. It contains audio recording from the Freesound API, initially comprised 1302 recordings with the total length of 27 hours of audio and was manually labelled according to the Urban Sound Taxonomy created and introduced with the same paper. Labels span over 10 low-level classes in this taxonomy and offer an additional salience (foreground or background) classification.
 
 \subsection{Creation}
+\label{us8kc}
 
 The final audio samples have been provided by the authors publicly in the form of slices up to 4s long. Those were created by a 4s sliding window algorithm with a hop size of 2s and a limit of maximum 1000 slices per class. This results in a total of 8732 labeled slices or 8.75 hours of audio.
 
@@ -857,10 +858,19 @@ The chroma feature seems to be useful for only a limited subset of classes. Due 
 
 
 
-\subsection{Quality Improvements}
+\section{Quality Improvements}
 While usually not being successful with neural networks, there has been moderate success in the classification of bird songs and acoustic scenes using more traditional classification methods like the (usually unsupervised) k-means algorithm in the past. To improve classification accuracy, \cite{Coates2012} has shown that dimensionality reduction with PCA whitening over scaled features (log mel spectrograms in that case) has significantly increased accuracy. 
 
 This indicates that extracted features are still heavily correlated, containing high amounts of redundancy. To reduce dimensions python's machine learning library scikit-learn come with a decomposition module fitted for this purpose. As this is the most used feature in literature, I have focussed on Principal component analysis (PCA) and its derivative SparsePCA.
+
+
+\begin{figure}[h]
+    \centering
+	\includegraphics[width=.8\textwidth]{./images/illustrations/whitening2}
+    \caption{Whitening explained by example.\newline Source: Stanford University CS231N; License: MIT}
+    \label{fig:whitening}
+\end{figure}
+
 
 The goals of whitening are to make features less correlated, reduce the amount of input data and normalise the variance among all features to ease processing in the following classification algorithms.
 
@@ -879,9 +889,41 @@ This led to a reduction of confusion in certain classes by up to 45\% when PCA w
 
 %[wtd describe what features were extracted by the SONYC team]
 
+
+
+
+
 \chapter{Audio Classification Using GRUs and Attention Mechanisms}
 
-[wtd discuss implementation]
+Before I began experiments with my own implementations I researched for open source implementations on urban sound learning available online. One of the first results is a series of articles\footnote{Link: \url{http://aqibsaeed.github.io/2016-09-03-urban-sound-classification-part-1/}} on the Applied Machine Learning blog by Aaqib Saeed who works at the University of Twente.
+
+
+\begin{wrapfigure}{r}{0.55\textwidth}
+    \centering
+	\includegraphics[width=.5\textwidth]{./images/illustrations/urban-sound-nn-cost}
+    \caption{Training cost function in the original source code}
+    \label{fig:aqibsaeed}
+\end{wrapfigure}
+
+
+In his posts, designated as a tutorial, he first describes a feature extraction using librosa extracting not only mfcc and a mel spectrogram, but also the rarely used features chorma-stft, spectral_contrast, and tonnetz. What is not described but only available from the source code is that for each feature he calculates the mean value over the x-axis, removing the temporal component and creating an all-encompassing 190-dimensional feature vector per file. After training a simple feed-forward neural network consistsing of an input layer with the the same dimensions as the feature vector, two hidden layers, containing 280 and 300 units repectively, and an output layer with 10 classes (as per the dataset) which is trained by a gradient descent the author achieves an f-score of 0.71.
+
+\begin{wrapfigure}{r}{0.55\textwidth}
+    \centering
+	\includegraphics[width=.5\textwidth]{./images/illustrations/aquibsaeed-optimized}
+    \caption{Training and f-score after optimising the blog post's source code}
+    \label{fig:aqibsaeed}
+\end{wrapfigure}
+
+
+After a series of optimisations that included replacing the optimiser with Adam's and adding the standard deviation as a different statistical property to the feature vector the f-score jumps to 0.912 as illustrated in figure \ref{fig:aqibsaeed}. This seems rather surprising as the dataset's authors never exceeded an accuracy of 0.82 in their publication \cite{DBLP:journals/corr/SalamonB16} which uses a highly customised CNN. This strongly indicates overfitting.
+
+The cause becomes apparent when reviewing the dataset's characteristics as done in chapter \ref{us8kc}. The author only uses fold1 and fold2 for training in his initial blog post while using fold3 as test set and thereby ignoring 70\% of the dataset. Later commits in his GitHub repository use all a random selection of 30\% of the files over all folds. As files in the same fold are not stochastically independent since they often are derived from the same initial source file.
+
+
+After implementing 10-fold cross validation as intended by the dataset's authors the accuracy drops suddenly to a range between 0.493 and 0.623, with an arithmetic mean of 0.554.
+
+
 
 \section{Feature Engineering}
 
