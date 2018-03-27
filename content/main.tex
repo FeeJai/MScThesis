@@ -93,6 +93,7 @@ As an example, the well-known MP3 compression specifically removes content that 
 
 
 \section{Machine Learning for Audio Through Feature Extraction}
+\label{mlfatefe}
 
 
 %[wtd list and describe various audio processing task such as sound classification and speech recognition]
@@ -762,8 +763,7 @@ After a CSV export all videos were downloaded and converted to wav using the you
 
 \section{Google's AudioSet}
 
-While I was working on this thesis the Machine Perception research team at Google published an own, versatile, audio dataset on March 5th, 2017 with the intent "to bridge the gap in data availability between image and audio research" \cite{45857}. It is simply named "Audio Set" and consists of 2'084'320 annotated video files totalling about 5.8 thousand hours of audio. Similar to my approach the content was extracted from youtube, however by owning YouTube Google was able to make heavy use of metadata, user behaviour, and context related searches results to ease classification.
-
+While I was working on this thesis the Machine Perception research team at Google published an own, versatile, audio dataset on March 5th, 2017 with the intent "to bridge the gap in data availability between image and audio research" \cite{45857}. It is simply named "Audio Set" and consists of 2'084'320 annotated video files totalling about 5.8 thousand hours of audio. Similar to my approach the content was extracted from youtube, however by owning YouTube Google was able to make heavy use of metadata, user behaviour, and context related searches results to ease classification and automatically assign the labels. This method however has introduced some inaccuracies as acknowledged by the authors in \cite{45611}.
 
 \begin{wrapfigure}{r}{0.5\textwidth}
     \centering
@@ -776,7 +776,7 @@ While I was working on this thesis the Machine Perception research team at Googl
 
 While approximately half of the collection consists of music the amount of urban and indoor sounds is still at least two orders of magnitude higher than any previous dataset. As the dataset is no longer limited to a specific domain (such as urban sound) it required a new classification ontology which was introduced with \cite{45857} as well. This classification consists of 632 distinct categories that are hierarchically arranged up to a depth of 6 levels. The first two layers totalling 50 meta-classes are shown in figure \ref{fig:audioset} as displayed in the original publication. Eventually only 485 categories were released as some were ambiguous or did not contain more than 100 independent events.
 
-The paper also introduced a simple neural network classification system which the authors describe as baseline. It is a fully-connected feed-forward network and achieves an average precision score of 31.4\% on 1 second frames. It is not stated which features are extracted or how the data is preprocessed. Another classifier from the same research group using CNNs and released as open source is described in chapter \ref{vggish}.
+The paper also introduced a simple neural network classification system which the authors describe as baseline. It is a fully-connected feed-forward network and achieves an average precision score of 31.4\% on 1 second frames. It is not stated which features are extracted or how the data is preprocessed. It is however likely that the same method as in \cite{45611} was used, which is a detailed report on another classifier from the same research group which is described in detail in chapter \ref{vggish}. This classifier uses CNNs and released as open source, which allows easy reproducibility experiments.
 
 
 %lack of computing power in feature extraction
@@ -797,24 +797,29 @@ The paper also introduced a simple neural network classification system which th
 
 %Adam optimizer
 
-\newpage
-
-
 \section{Feature Extraction}
 
 As mentioned in the introduction, a raw audio signal consists of a high-dimensionality huge amount of data and is therefore not suitable as input for a learning algorithm without previous feature extraction.
 
-This chapter contains visualisations of different features. It can be seen, that there is a distinct pattern per sound class that can easily be recognized by humans. It therefor is logical, that common image recognition networks should easily be able to lear these characteristics and be able to classify the audio files correctly along these characteristics.
+This chapter contains visualisations of different features. For each class I have randomly selected and processed three example files from the UrbanSound8K dataset with the condition of each file being from a different fold. 
 
-statistical characteristics
+The selection of features is not always trivial and normalization and regularization are major challenges as the input data already comes at very different levels (audible as the sound volume).
 
-show visulaisation among averages
+Nevertheless it can be seen that there are some distinct patterns in most sound classes that can easily be recognised by humans. It therefore seems likely that common image recognition networks should be able to learn these characteristics and be able to classify the audio files correctly along these characteristics.
+
+%statistical characteristics
+
+%show visulaisation among averages
 
 % As noted in [13], the raw audio signal is not suitable as direct input to a classifier due to its extremely high dimensionality and the fact that it would be unlikely for perceptually similar sounds to be neighbours in vector space
 
-% Thus, a popular approach for feature learning from audio is to convert the signal into a time-frequency representation, a common choice being the mel-spectrogram. We extract log-scaled mel-spectrograms with 40 components (bands) covering the audible frequency range (0-22050 Hz), using a window size of 23 ms (1024 samples at 44.1 kHz) and a hop size of the same duration. We alsoexperimented with a larger numbers of bands (128), but this did not improve performance and hence we stuck to the lower (and faster to process) resolution of 40 bands. To extract the mel-spectrograms we use the Essentia audio analysis library [20] via its Python bindings. Whilst we could use the resulting log-mel-spectrograms directly as input for the feature learning, it has been shown that the learned features can be significantly improved by decorrelating the input dimensions using e.g. ZCA or PCA whitening [18].
+% Thus, a popular approach for feature learning from audio is to convert the signal into a time-frequency representation, a common choice being the mel-spectrogram. We extract log-scaled mel-spectrograms with 40 components (bands) covering the audible frequency range (0-22050 Hz), using a window size of 23 ms (1024 samples at 44.1 kHz) and a hop size of the same duration. We also experimented with a larger numbers of bands (128), but this did not improve performance and hence we stuck to the lower (and faster to process) resolution of 40 bands. To extract the mel-spectrograms we use the Essentia audio analysis library [20] via its Python bindings. Whilst we could use the resulting log-mel-spectrograms directly as input for the feature learning, it has been shown that the learned features can be significantly improved by decorrelating the input dimensions using e.g. ZCA or PCA whitening [18].
+
+\newpage
 
 \subsection{Spectrogram}
+
+A standard spectrogram as described in \ref{mlfatefe} using 255 different bands extracted with librosa and visualized with matplotlib. The representation is intuitive, e.g. the wailing sound of an american police siren is displayed in a wave-form.
 
 \begin{figure}[H]
     \centering
@@ -826,10 +831,11 @@ show visulaisation among averages
 
 \subsection{MFCC}
 
+Recognising a pattern among the mel frequency cepstral coefficients is harder, although possible. The dog bark has very characteristic repetitive modulations while, for example, the car horn has an extremly intense and monotonic structure.
 
 \begin{figure}[H]
     \centering
-	\includegraphics[width=.9\textwidth]{./images/features/mfcc-25}
+	\includegraphics[width=.8\textwidth]{./images/features/mfcc-25}
     \caption{Visualisation of 25 Mel Frequency Cepstral Coefficients}
     \label{fig:mfcc}
 \end{figure}
@@ -838,19 +844,21 @@ show visulaisation among averages
 
 \subsection{Chroma}
 
+The chroma feature seems to be useful for only a limited subset of classes. Due to the ordered composition of music the street music class has distinct peaks that change frequently. The oscillating vibrations of an idling engine also seem to be strictly aligned along the harmonics and always in a similar band (this might be because most car engines idle around 800 rpm). Aside from these two classes (and maybe the police siren) it however shows little coherence.
+
+
+
 \begin{figure}[H]
     \centering
-	\includegraphics[width=.9\textwidth]{./images/features/chroma}
-    \caption{Chromagram of different audio classes}
+	\includegraphics[width=.7\textwidth]{./images/features/chroma}
+    \caption{Chromatogram of different audio classes}
     \label{fig:chroma}
 \end{figure}
 
 
-Chroma shows little coherence, except for the classes engine_idling and siren.
-
 
 \subsection{Quality Improvements}
-While usually not being succesful with neural networks, there has been moderate success in the classification of bird songs and acoustic scenes using more traditional classification methods like the spherical k-means algorithm in the past. To improve classification accuracy, \cite{Coates2012} has shown that dimensionality reduction with PCA whitening over scaled features has significatnly increased accuracy. 
+While usually not being successful with neural networks, there has been moderate success in the classification of bird songs and acoustic scenes using more traditional classification methods like the spherical k-means algorithm in the past. To improve classification accuracy, \cite{Coates2012} has shown that dimensionality reduction with PCA whitening over scaled features has significantly increased accuracy. 
 This indicates that extracted features of a mel spectrogram are still heavily correlated.
 
 wtd noise
