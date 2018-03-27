@@ -1,7 +1,7 @@
 \chapter{Introduction}
 \label{Introduction}
 
-Audio processing, more precisely named audio signal processing, has been of interest since radio broadcasting and telephone systems capable of sound transmission started to replace the morse code \cite{spanias2006audio}. In it's simplest form, as used in the original telegraph, morse code is created by repeatedly opening an electrical circuit manually with a switch so that a visualisation device like a light bulb or an electric bell is turned on and off intermittedly. 
+Audio processing, more precisely named audio signal processing, has been of interest since radio broadcasting and telephone systems capable of sound transmission started to replace the morse code \cite{spanias2006audio}. In it's simplest form, as used in the original telegraph, morse code is created by repeatedly opening an electrical circuit manually with a switch so that a visualisation device like a light bulb or an electric bell is turned on and off intermittently. 
 
 
 \begin{figure}[H]
@@ -11,7 +11,7 @@ Audio processing, more precisely named audio signal processing, has been of inte
     \label{fig:morse}
 \end{figure}
 
-This discrete signal is transmitted over distance by extending the electrical circuit with long wires to a different physical location, so that the switch operator can transmit a message by morse encoding to the recipient who will have to use the same codebook for decoding.
+This discrete signal is transmitted over distance by extending the electrical circuit with long wires to a different physical location so that the switch operator can send a message by morse encoding to the recipient who will have to use the same codebook for decoding.
 
 The same purpose can be achieved wirelessly by repeatedly turning a radio transmitter on and off, which can be considered the simplest form of HF-modulation. However, things are more complex for the real- or near-time transmission of speech without manual encoding and decoding. Since most harmonics of the human voice occur in the range of 500 Hz to 2 kHz, according to the Nyquist–Shannon sampling theorem a sampling rate of at least 4 kHz is required for transmission\footnote{To verify this empirically I have downsampled a recording of both my voice and of the rather famous song Tom's Diner to 4kHz. While both the voice and the lyrics were still understandable, the melody perished and the sounds F and S were nearly indistiguishable. This is probably the reason why common speech encoding standards such as GSM's G.711 use a sampling rate of 8 kHz}. When radio transmission was invented in the late 19th century, it was not feasible to encode this information in a digital form (such as morse code). Instead different forms of analog modulation methods had to be developed, which was the birth of audio signal processing.
 
@@ -923,7 +923,7 @@ After a series of optimisations that included replacing the optimiser with Adam'
 The cause becomes apparent when reviewing the dataset's characteristics as done in chapter \ref{us8kc}. The author only uses fold1 and fold2 for training in his initial blog post while using fold3 as test set and thereby ignoring 70\% of the dataset. Later commits in his GitHub repository use all a random selection of 30\% of the files over all folds. As files in the same fold are not stochastically independent since they often are derived from the same initial source file.
 
 
-After implementing 10-fold cross validation as intended by the dataset's authors the accuracy drops suddenly to a range between 0.493 and 0.623, with an arithmetic mean of 0.554.
+After implementing 10-fold cross validation as intended by the dataset's authors the per-fold accuracy drops suddenly to a range between 0.493 and 0.623, with an arithmetic mean of 0.554.
 
 
 
@@ -946,24 +946,54 @@ After initial machine learning experiments I have added the log power spectrum a
 
 \section{Network Architectures}
 
+Initial attempts to get a baseline through a random forest classifier on the extracted data were unsuccessful and sometimes even resulted in crashes of the python interpreter. After dimensionality reduction by replacing the time component with the statistical properties of median, mean, variance, similar to the method in \cite{Salamon:UrbanSound:ACMMM:14}, a random forest classifier with 500 trees got to an accuracy of 0.61.
 
-Regression diagramm
+A first attempt was creating a simple feed-forward network with TensorFlow. It consisted of two hidden layers, each with 250 ReLU-neurons, and a softmax output layer. This produced rather mediocre results and was not able to outperform the baseline. When experimenting with the aggregated data generated for the random forest instead (and thereby significantly reducing the size of input layer) the classification surprisingly improved to an f-score of 0.64.
 
-First attempt Random Forest
 
-Convolution matrix
+Subsequently I built an initial convolutional neural network with a single convolution layer.  The kernel size was 45 and the depth was 30. I kept a single fully-connected layer with 250 neurons and did not change the softmax output layer. After training with the Adam's optimizer the result was slightly worse than the initial attempt. The next experiment with a deeper model with two convolutional layers, interleaved with a single pooling and two fully connected layers in the end resulted in an f-score of 0.69 with the jackhammer being the best-predicted class with an accuracy of 0.84. 
 
-accuracy: 69\%
+With the inital focus of this thesis in mind I went on building an RNN with keras using the TensorFlow backend. I constructed a sequential model with two GRU layers (64 units each), a dense core layer, a dropout layer (p=0.5) and the final softmax output layer.
+
+\section{Training}
+
+The models were trained with a batch size of 50 over 2000 iterations.
+
+I have evaluated training across several optimisers including stochastic gradient descent with momentum, Adam, and RMSProp. As expected SGD was the least and Adam the most efficient.
+
+The Hardware of my personal MacBookPro11,3 equipped with a 2,3 GHz Intel Core i7 (TensorFlow does no longer support GPU Acceleration on MacOS) reached it's limits and training of the RNN took multiple hours which hindered experimentation. That is why I managed to borrow a quad-core processor machine with an NVIDIA 1080 Ti graphics processor from a friend free of charge. On this machine training only took a total of 4m 56s.
+
+
+\section{Results}
+
+Overall, I was not able to achieve better than previously publsihed results on the SONYC urban sound classification dataset using RNNs. Replacing the GRUs with LSTMs did not make a significant difference and attempts to add an attention mechanism failed.
+
+On top of that, a major methodological issue is that the UrbanSound8K dataset does not come with a validation set to tune the hyperparameters which rules out too many steps of experimentation before drawing conclusions. All results included in this chapter hence have been determined after a maximum of three iterations.
+
+The classification accuracy of the final network is display in figure \ref{fig:cfcnn}.
+
+\begin{figure}[h]
+    \centering
+    \vspace{15pt}
+	\includegraphics[width=.8\textwidth]{./images/illustrations/confusion-cnn}
+    \caption{Confusion matrix of the GRU network}
+    \label{fig:cfcnn}
+\end{figure}
+
+[wtd discuss pitfalls]
+
 
 SVM 72\%
 
+
+
 accuracy diagram split by classes
 
+After receiving rather mediocre results on the SONYC dataset with my own network I have attempted to improve my own undestanding by recreating the papers published by the same team that provided the SONYC dataset.
 
 
-[wtd discuss exact nature of the architecture such as the layer, etc. include a graph, describe loss function]
 
-Keras 
+%[wtd discuss exact nature of the architecture such as the layer, etc. include a graph, describe loss function]
 
 Attempt1: Feed Forward, recreation of Paper
 
@@ -979,55 +1009,7 @@ Unclear results -> If a CNN or a RNN is the better example remains open to debat
 Lower Accuracy in attempts 2 and 3: DATASET PROBABLY TOO SMALL FOR ANYTHING BESIDES FEED FORWARD
 
 
-\newpage
 
-\section{Training}
-
-[wtd discuss batch sizes, number of epochs]
-
-[wtd discuss train/test split, cross valdiation 10 fold?]
-
-I have evaluated training across several optimizers including SGD + momentum, Adam, and RMSProp.  Results for each optimizer are included in figure [wtd link to figure showing training times and loss]
-
-For training and modeling the neural network, we used Python with the Tensorflow and Keras libraries [wtd include Keras/tensorflow citations].
-
-After the Hardware of my personal MacBookPro11,3 equiped with a 2,3 GHz Intel Core i7 (TensorFlow does no longer support GPU Acceleration on MacOS) reached it's limits, I managed to borrow a quad-core processor machine with an NVIDIA 1080 Ti graphics processor for network training from a friend free of charge.
-
-Overall, training took a total of 4m 56s on this machine.
-
-\subsection{The Problem of Overfitting}
-
-Other approach: https://github.com/aqibsaeed/Urban-Sound-Classification
-
-When I used his code and
-
-Overfit, broke test/train folds, 
-
-\newpage
-
-\subsection{k-fold Validation}
-
-
-SCORE Matrix
-
-
-\newpage
-
-\section{Results}
-
-[wtd results table]
-
-Overall, I was not able to achieve better than previously publsihed results on the SONYC urban sound classification dataset using LSTMs with attention mechanism.
-
-
-\begin{figure}[h]
-    \centering
-	\includegraphics[width=.7\textwidth]{./images/illustrations/confusion-cnn}
-    \caption{Confusion matrix after 10-fold cross validation}
-    \label{fig:cfcnn}
-\end{figure}
-
-[wtd discuss pitfalls]
 
 \chapter{Other Approaches to Audio Recognition}
 
@@ -1150,7 +1132,7 @@ dataset too small?
 
 \chapter{Conclusion}
 
-While many stunning breakthroughs in artificial intelligence have occured during the past ten years, there is a chance that we might be progressing towards another AI winter. Recent tragedies, such as the fatality with 
+While many stunning breakthroughs in artificial intelligence have occured during the past ten years, there is a chance that we might be progressing towards another AI winter. Recent tragedies such as the pedestrian fatality after a collision with an autonomous uber vehicle\footnote{\url{https://www.nytimes.com/2018/03/19/technology/uber-driverless-fatality.html}} might weaken public trust in AI technologies. AgeLab's research scientist Bryan Reimer responded to the accident in an interview with the statement that "it is possible [that] the video [of the accident] represents what's called an 'edge case,' a rare situation the autonomous system was never trained to handle." Even though this technology's safety record might already be better than a human driver's, it is questionable how many edge cases will eventually occur during public testing and operation, and whether the political support required for operating these vehicles on public roads can be sustained.
 
 [wtd include results table of approaches to this dataset]
 
