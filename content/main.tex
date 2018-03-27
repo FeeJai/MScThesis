@@ -664,7 +664,7 @@ This seems counterintuitive as a human would not translate sentences of variable
 
 \subsection{Deep Learning}
 
-One of the primary advances in neural networks in the past several years has been the advent of deep learning.  Existing conceptually since the inception of neural networks, deep learning refers to network architectures with more than one hidden layer.  Conventionally speaking, a deep network is a network with many hidden layers, sometimes in the hundreds or thousans in \cite{DBLP:journals/corr/HeZRS15}. The discovery of adding more layers to a neural network to increase performance, however, has its own pitfalls.
+One of the primary advances in neural networks in the past several years has been the advent of deep learning.  Existing conceptually since the inception of neural networks, deep learning refers to network architectures with more than one hidden layer.  Conventionally speaking, a deep network is a network with many hidden layers, sometimes in the hundreds or thousands in \cite{DBLP:journals/corr/HeZRS15}. The discovery of adding more layers to a neural network to increase performance, however, has its own pitfalls.
 
 For example, deep neural networks suffer from the problem of vanishing gradients \cite{Hochreiter:01book} and training time.  While previous approaches to conquering this problem have been somewhat successful \cite{DBLP:journals/corr/abs-1206-5533}, more advanced approaches have shown even greater success, for example normalization and regularization techniques, explained below.  Novel architectures such as deep residual networks \cite{DBLP:journals/corr/HeZRS15} have shown promise in this area as well.  Furthermore, the growing collection of larger annotated datasets and cheap, available processing power (such as GPUs and cloud computing), and the availability of open-source neural network toolkits have had major contributions to the success of neural networks as well \cite{tensorflow2015-whitepaper}, \cite{DBLP:journals/corr/SynnaeveNACLLRU16}. %TODO: cite open source dataset papers
 
@@ -1016,7 +1016,22 @@ As a conclusion drawn from these outcomes with own networks I decided to shift f
 
 \chapter{Other Approaches to Audio Recognition}
 
-As is currently the case with many areas of machine learning there are researchers attempting to apply the possibilities gained by recent advancements in technology to a better comprehension of audio processing and classification. This chapter is about understanding the current trends as well as replicating state of the art research.
+
+%As is currently the case with many areas of machine learning there are researchers attempting to apply the possibilities gained by recent advancements in technology to a better comprehension of audio processing and classification. This chapter is about understanding the current trends as well as replicating state of the art research.
+
+Research groups all around the world are applying recent technological advances in the hope of reaching a better comprehension of audio processing and classification. This chapter is about understanding the current trends as well as trying to replicate state of the art research. 
+
+\begin{wrapfigure}{r}{0.55\textwidth}
+    \centering
+	\includegraphics[width=.45\textwidth]{./images/illustrations/ai-chart}
+    \caption{Distribution of available data in 400 major AI papers as presented in \cite{Hutson2018}}
+    \label{fig:ai-papers}
+\end{wrapfigure}
+
+However, we will see that a significant amount of research is opaque and rudimentary documented. Replication of results is not just tidious, but in some cases was not possible to be accomplished at all.
+These problems do not seem unique to me, in fact they recently seem to have been accounted by multiple renowned experts in the field. In Science Magazine \cite{Hutson2018} even proclaimed an "AI replication cris", with the area of speech recognition being declared the primary example.
+
+
 
 \section{VGGish model}
 \label{vggish}
@@ -1024,23 +1039,28 @@ As is currently the case with many areas of machine learning there are researche
 
 As described in chapter \ref{google-audioset} \cite{45611} introduced a CNN based classifier for use on the Google AudioSet with the source code being freely available in the TensorFlow repository on GitHub\footnote{Direct link to the model: \url{https://github.com/tensorflow/models/tree/master/research/audioset}}.
 
-The paper however first evaluated other approaches based on proven and effective image classification networks. These included the famous AlexNet \cite{AlexNet} (cf. chapter \ref{CNN}), University of Oxford's Visual Geometry Group ConvNet \cite{DBLP:journals/corr/SimonyanZ14a}
+The paper however first evaluated other approaches based on proven and effective image classification networks. These included the famous AlexNet \cite{AlexNet} (cf. chapter \ref{CNN}), University of Oxford's Visual Geometry Group ConvNet \cite{DBLP:journals/corr/SimonyanZ14a}, the inception network \cite{DBLP:journals/corr/SzegedyVISW15}, and ResNet which is up to 152 layers deep \cite{DBLP:journals/corr/HeZRS15}.
+
+Evaluating these networks took the authors at Google more than 8000 hours of processing time on accelerated multi-GPU hardware. This is in addition to the feature extraction in 20 billion audio files, each in the length of 960ms. The only feature used by the authors was a log-mel spectrogram with 64 bands spaced according to the mel scale and computed over 25ms wide frames with an overlap of 15ms. 
+
+ While a replication is deemed outside the capabilities of this thesis, the detailed description as well as the availability of both the dataset as well as the complete source code increased confidence that the researach can be replicated if sufficient hardware is available.
+ 
+ 
 
 
-\section{Comparing Gradient Boosting to GRUs and Attention}
+%\section{Comparing Gradient Boosting to GRUs and Attention}
 
-In addition to the deep neural network approach, an attempt to use gradient boosted trees, using the xgboost library \cite{DBLP:journals/corr/ChenG16} to achieve similar results.  As mentioned, gradient boosting has been very successful in classification tasks involving a small input dimensionality.
+%In addition to the deep neural network approach, an attempt to use gradient boosted trees, using the xgboost library \cite{DBLP:journals/corr/ChenG16} to achieve similar results.  As mentioned, gradient boosting has been very successful in classification tasks involving a small input dimensionality.
 
-\newpage
+%\newpage
 
 
 
 \section{Attempted Recreation of NYU Papers}
 
-After receiving rather mediocre results on the SONYC dataset with my own network I have attempted to improve my own undestanding by recreating the papers published by the same team that provided the SONYC dataset.
+
 
 There has been a community of amateurs on GitHub that have attempted to build projects on the UrbanSound8K dataset. https://github.com/aqibsaeed/Urban-Sound-Classification
-
 
 
 For each experiment we report the average accuracy across all 10 folds.
