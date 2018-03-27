@@ -1028,8 +1028,8 @@ Research groups all around the world are applying recent technological advances 
     \label{fig:ai-papers}
 \end{wrapfigure}
 
-However, we will see that a significant amount of research is opaque and rudimentary documented. Replication of results is not just tidious, but in some cases was not possible to be accomplished at all.
-These problems do not seem unique to me, in fact they recently seem to have been accounted by multiple renowned experts in the field. In Science Magazine \cite{Hutson2018} even proclaimed an "AI replication cris", with the area of speech recognition being declared the primary example.
+However, I encountered a problem typical to newly emerging fields (which I consider deep learning to be): a significant amount of research is opaque and rudimentarily documented. Replication of results is not just tidious, but in some cases was not possible to be accomplished at all.
+Unfortunately this issue seem to be all to common, and has been accounted by multiple renowned experts in the field. In an article for Science Magazine \cite{Hutson2018} even proclaimed an "AI replication cris", with the area of speech recognition being named the primary example.
 
 
 
@@ -1037,15 +1037,15 @@ These problems do not seem unique to me, in fact they recently seem to have been
 \label{vggish}
 
 
-As described in chapter \ref{google-audioset} \cite{45611} introduced a CNN based classifier for use on the Google AudioSet with the source code being freely available in the TensorFlow repository on GitHub\footnote{Direct link to the model: \url{https://github.com/tensorflow/models/tree/master/research/audioset}}.
+As described in chapter \ref{google-audioset} \cite{45611} introduced a CNN based classifier for use on the Google AudioSet with the source code being freely available in the TensorFlow repository on GitHub\footnote{Direct link to the model: \url{https://github.com/tensorflow/models/tree/master/research/audioset}}. It is a reimplementation of ConvNet, developed by University of Oxford's Visual Geometry Group and published in \cite{DBLP:journals/corr/SimonyanZ14a} with minor modifications to the final layer and replacing LRN by batch normalisation.
 
-The paper however first evaluated other approaches based on proven and effective image classification networks. These included the famous AlexNet \cite{AlexNet} (cf. chapter \ref{CNN}), University of Oxford's Visual Geometry Group ConvNet \cite{DBLP:journals/corr/SimonyanZ14a}, the inception network \cite{DBLP:journals/corr/SzegedyVISW15}, and ResNet which is up to 152 layers deep \cite{DBLP:journals/corr/HeZRS15}.
+The paper however first evaluated compared multiple approaches based on proven and effective image classification networks. These additionally included the famous AlexNet \cite{AlexNet} (cf. chapter \ref{CNN}), the inception network \cite{DBLP:journals/corr/SzegedyVISW15}, and ResNet which is up to 152 layers deep \cite{DBLP:journals/corr/HeZRS15}.
 
 Evaluating these networks took the authors at Google more than 8000 hours of processing time on accelerated multi-GPU hardware. This is in addition to the feature extraction in 20 billion audio files, each in the length of 960ms. The only feature used by the authors was a log-mel spectrogram with 64 bands spaced according to the mel scale and computed over 25ms wide frames with an overlap of 15ms. 
 
  While a replication is deemed outside the capabilities of this thesis, the detailed description as well as the availability of both the dataset as well as the complete source code increased confidence that the researach can be replicated if sufficient hardware is available.
  
- 
+As an experiment I have attempted to train the VGGish model on the UrbanSound8k dataset using folds 1-8 for training and folds 9 and 10 for testing. While this worked on my hardware due to the smaller dataset the accuracy remained below 0.2.
 
 
 %\section{Comparing Gradient Boosting to GRUs and Attention}
@@ -1059,8 +1059,11 @@ Evaluating these networks took the authors at Google more than 8000 hours of pro
 \section{Attempted Recreation of NYU Papers}
 
 
+Due to UrbanSound8K being the most extensive dataset between its publication in 2014 to the release of Audio Set in 2017 it held a quasi-standard status for a while. This has created a small community of interested individuals on GitHub that have attempted to build projects around the dataset.
 
-There has been a community of amateurs on GitHub that have attempted to build projects on the UrbanSound8K dataset. https://github.com/aqibsaeed/Urban-Sound-Classification
+One example is \texttt{cyrta/UrbanSounds}\footnote{\url{https://github.com/cyrta/UrbanSounds}} which is a "(r)epository to recreate methods and results of SONYC project" according to its description. The project however seems to have stalled early on; when I contacted the author who self-describes as an "Audio Researcher and Data Scientist" he replied that there were some difficulties in the first paper which he did not mange to overcome and that this caused him to lose interest more than two years ago.
+
+ https://github.com/aqibsaeed/Urban-Sound-Classification
 
 
 For each experiment we report the average accuracy across all 10 folds.
