@@ -858,12 +858,18 @@ The chroma feature seems to be useful for only a limited subset of classes. Due 
 
 
 \subsection{Quality Improvements}
-While usually not being successful with neural networks, there has been moderate success in the classification of bird songs and acoustic scenes using more traditional classification methods like the spherical k-means algorithm in the past. To improve classification accuracy, \cite{Coates2012} has shown that dimensionality reduction with PCA whitening over scaled features has significantly increased accuracy. 
-This indicates that extracted features of a mel spectrogram are still heavily correlated.
+While usually not being successful with neural networks, there has been moderate success in the classification of bird songs and acoustic scenes using more traditional classification methods like the (usually unsupervised) k-means algorithm in the past. To improve classification accuracy, \cite{Coates2012} has shown that dimensionality reduction with PCA whitening over scaled features (log mel spectrograms in that case) has significantly increased accuracy. 
 
-wtd noise
+This indicates that extracted features are still heavily correlated, containing high amounts of redundancy. To reduce dimensions python's machine learning library scikit-learn come with a decomposition module fitted for this purpose. As this is the most used feature in literature, I have focussed on Principal component analysis (PCA) and its derivative SparsePCA.
 
-wtd temporal distortion
+The goals of whitening are to make features less correlated, reduce the amount of input data and normalise the variance among all features to ease processing in the following classification algorithms.
+
+This led to a reduction of confusion in certain classes by up to 45\% when PCA whitening with a variance factor of 0.99 was employed in \cite{7177954}. Unfortunately, I was unable to replicate these finding during this thesis (see chapter \ref{7177954}).
+
+
+%wtd noise
+
+%wtd temporal distortion
 
 
 %[wtd describe what features are typically used in audio classification task]
@@ -1036,6 +1042,7 @@ I have tried to recreate the results of these two classifiers through Python's s
 A source of error in my approach might be that the feature extraction in the original paper was done using the ESSENTIA library \cite{bogdanov:Essentia:ACMMULTIMEDIA13} while I attempted a recreation using librosa for compatibility reasons. 
 
 \subsection{Unsupervised Feature Learning for Urban Sound Classification}
+\label{7177954}
 
 The subsequent paper \cite{7177954} is not focussed on the dataset anymore but on tradition machine learning approaches on the data. 
 
