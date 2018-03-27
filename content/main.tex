@@ -488,6 +488,7 @@ The reference paper has shown tremendous success on common machine learning chal
 
 
 \subsection{Convolutional Neural Networks}
+\label{CNN}
 
 %One of the more recent improvements in the reserach of Neural Networks has been the invetion of convolutional layers, where the same form of connections between each cell of two neighouring layers is established, like a filter in a traditional programming. 
 
@@ -509,7 +510,7 @@ Instead of having weighted connections between all the neurons in neighbouring l
 The connectivity pattern of sharing the same connectivity weights between all neurons in neighbouring layers is inspired by the visual cortex in the mammalian brain.
 Mathematically, the operation can be approximated by a convolution operation, which gave the network architecture its name. 
 
-While the name CNNs implies that all layers work with kernels the high level reasoning or classification task has to be done by at least one fully connected layer at the end of the network as shown in \ref{fig:typical-cnn}:
+While the name CNNs implies that all layers work with kernels the high-level reasoning or classification task has to be done by at least one fully connected layer at the end of the network as shown in \ref{fig:typical-cnn}:
 
 
 \begin{figure}[h]
@@ -874,7 +875,7 @@ This indicates that extracted features are still heavily correlated, containing 
 \end{figure}
 
 
-The goals of whitening are to make features less correlated, reduce the amount of input data and normalise the variance among all features to ease processing in the following classification algorithms.
+The goal of whitening is to make features less correlated, reduce the amount of input data and normalise the variance among all features to ease processing in the following classification algorithms.
 
 This led to a reduction of confusion in certain classes by up to 45\% when PCA whitening with a variance factor of 0.99 was employed in \cite{7177954}. Unfortunately, I was unable to replicate these finding during this thesis (see chapter \ref{7177954}).
 
@@ -966,9 +967,9 @@ The Hardware of my personal MacBookPro11,3 equipped with a 2,3 GHz Intel Core i7
 
 \section{Results}
 
-Overall, I was not able to achieve better than previously publsihed results on the SONYC urban sound classification dataset using RNNs. Replacing the GRUs with LSTMs did not make a significant difference and attempts to add an attention mechanism failed.
+Overall, I was not able to achieve better than previously published results on the SONYC UrbanSound8K classification dataset using RNNs. Replacing the GRUs with LSTMs did not make a significant difference.
 
-On top of that, a major methodological issue is that the UrbanSound8K dataset does not come with a validation set to tune the hyperparameters which rules out too many steps of experimentation before drawing conclusions. All results included in this chapter hence have been determined after a maximum of three iterations.
+On top of that, a major methodological issue is that the UrbanSound8K dataset does not come with a validation set to tune the hyper-parameters which rules out too many steps of experimentation before drawing conclusions. All results included in this chapter hence have been determined after a maximum of three iterations.
 
 The classification accuracy of the final network is display in figure \ref{fig:cfcnn}.
 
@@ -978,40 +979,44 @@ The classification accuracy of the final network is display in figure \ref{fig:c
 	\includegraphics[width=.8\textwidth]{./images/illustrations/confusion-cnn}
     \caption{Confusion matrix of the GRU network}
     \label{fig:cfcnn}
+    \vspace{10pt}
 \end{figure}
 
-[wtd discuss pitfalls]
+%[wtd discuss pitfalls]
 
 
-SVM 72\%
+%SVM 72\%
 
+These results are rather disappointing. Counterintuitively, the simpler CNNs also seemed to fare better than my RNN implementations.
 
+Further experiments showed that deeper networks generally worsened the classification results in most cases, while there were some outliers. This dynamic could hint at the dataset size being too small for my approach. For this reason I refrained from applying above mentioned attention mechanism which would have increased complexity further.
 
-accuracy diagram split by classes
+In \cite{DBLP:journals/corr/SalamonB16} the authors seemed to have encountered the same issue when working with networks which they have attempted to solve with rather extensive augmentation, including time stretching and pitch shifting. The deformations added to the audio files were applied using the open source MUDA library \cite{mcfee2015-augmentation} and the annotation files published on GitHub\footnote{\url{https://github.com/justinsalamon/UrbanSound8K-JAMS}}.
 
-After receiving rather mediocre results on the SONYC dataset with my own network I have attempted to improve my own undestanding by recreating the papers published by the same team that provided the SONYC dataset.
-
+As a conclusion drawn from these outcomes with own networks I decided to shift focus and replicate current papers in the same area of research. The results and learnings can be found in the following chapter.
 
 
 %[wtd discuss exact nature of the architecture such as the layer, etc. include a graph, describe loss function]
 
-Attempt1: Feed Forward, recreation of Paper
+%Attempt1: Feed Forward, recreation of Paper
 
-Attempt2: CNN
+%Attempt2: CNN
 
-Attempt3: RNN, GRU
+%Attempt3: RNN, GRU
 
-adding attention
+%adding attention
 
 
-Unclear results -> If a CNN or a RNN is the better example remains open to debate.
+%Unclear results -> If a CNN or a RNN is the better example remains open to debate.
 
-Lower Accuracy in attempts 2 and 3: DATASET PROBABLY TOO SMALL FOR ANYTHING BESIDES FEED FORWARD
+%Lower Accuracy in attempts 2 and 3: DATASET PROBABLY TOO SMALL FOR ANYTHING BESIDES FEED FORWARD
 
 
 
 
 \chapter{Other Approaches to Audio Recognition}
+
+As is currently the case with many areas of machine learning there are researchers attempting to apply the possibilities gained by recent advancements in technology to a better comprehension of audio processing and classification. This chapter is about understanding the current trends as well as replicating state of the art research.
 
 \section{VGGish model}
 \label{vggish}
@@ -1019,8 +1024,7 @@ Lower Accuracy in attempts 2 and 3: DATASET PROBABLY TOO SMALL FOR ANYTHING BESI
 
 As described in chapter \ref{google-audioset} \cite{45611} introduced a CNN based classifier for use on the Google AudioSet with the source code being freely available in the TensorFlow repository on GitHub\footnote{Direct link to the model: \url{https://github.com/tensorflow/models/tree/master/research/audioset}}.
 
-The paper however first evaluated other approaches based on proven and effective image classification networks.
-
+The paper however first evaluated other approaches based on proven and effective image classification networks. These included the famous AlexNet \cite{AlexNet} (cf. chapter \ref{CNN}), University of Oxford's Visual Geometry Group ConvNet \cite{DBLP:journals/corr/SimonyanZ14a}
 
 
 \section{Comparing Gradient Boosting to GRUs and Attention}
