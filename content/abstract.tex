@@ -5,14 +5,13 @@
 \setlength{\parskip}{.5\baselineskip}
 
 
-Gathering data from audio recordings currently relies primarily on hand-crafted and fine-tuned signal processing methods.
-A common example is the Mel Frequency Cepstral Coefficients \cite{1168654}, a voice pitch independent representation of the time variant properties in the speech spectrum \cite{Hanson1996}.
+Gathering data from audio recordings relies primarily on hand-crafted and fine-tuned signal processing methods. In state of the art applications the output is then used with machine learning algorithms. Most widespread is speech recognition (e.g. Siri) while other applications such as understanding the background noise environment are currently underrepresented. That is surprising as this information could lead to significantly improved situational awareness in stressful situations and thereby might improve traffic safety.
 
-A lot of research has been done in the past on how to combine these feature extraction methods with common machine learning algorithms for the purpose of speech recognition.
-However, literature on the detection, recognition, and classification of other sounds like urban noise is a lot more rare.
+%A common example is the Mel Frequency Cepstral Coefficients \cite{1168654}, a voice pitch independent representation of the time variant properties in the speech spectrum \cite{Hanson1996}.
 
-The purpose of this thesis is to explore how these methods can be transferred onto sounds others than speech and how this can be used to improve traffic safety.
-
+In this thesis I have evaluated current developments in machine learning (deep neural networks) and researched their applicability for urban sound classification. Most literature in this field has been published by the 'Sounds of New York City' project and Google's Machine Perception research team with an overview given in chapter \ref{chap:dataset}.
+ 
+When testing novel neural network architectures I however encountered the latest (unfortunate) trend: a lot of AI research publications cannot easily be replicated. This is why chapter \ref{chap:other} is about testing assumptions and discusses reasons as well as possible solutions.
 
 \end{minipage}
 \end{center}

@@ -691,6 +691,7 @@ Even more recently, work has been done in the area of self-normalising networks
 % Can maybe be expanded to page 35
 
 \chapter{Public Urban Sounds Datasets}
+\label{chap:dataset}
 
 \section{Urban Sound 8K}
 The UrbanSounds8K dataset used for this research was published in 2014 with \cite{Salamon:UrbanSound:ACMMM:14}. It contains audio recording from the Freesound API, initially comprised 1302 recordings with the total length of 27 hours of audio and was manually labelled according to the Urban Sound Taxonomy created and introduced with the same paper. Labels span over 10 low-level classes in this taxonomy and offer an additional salience (foreground or background) classification.
@@ -929,6 +930,7 @@ After implementing 10-fold cross validation as intended by the dataset's authors
 
 
 \section{Feature Engineering}
+\label{chap:feature-eng}
 
 My initial approaches at feature extraction were similar. As \cite{DBLP:journals/corr/SalamonB16} indicated that, even though designed primarily for speech, MFCC would be the most reliable feature I decided to focus on this first. What also encouraged me to research this direction was the fact that the feature's imitation of the human ear might make it more resistant to compression artefacts.
 
@@ -1015,6 +1017,7 @@ As a conclusion drawn from these outcomes with own networks I decided to shift f
 
 
 \chapter{Other Approaches to Audio Recognition}
+\label{chap:other}
 
 
 %As is currently the case with many areas of machine learning there are researchers attempting to apply the possibilities gained by recent advancements in technology to a better comprehension of audio processing and classification. This chapter is about understanding the current trends as well as replicating state of the art research.
@@ -1028,8 +1031,8 @@ Research groups all around the world are applying recent technological advances 
     \label{fig:ai-papers}
 \end{wrapfigure}
 
-However, I encountered a problem typical to newly emerging fields (which I consider deep learning to be): a significant amount of research is opaque and rudimentarily documented. Replication of results is not just tidious, but in some cases was not possible to be accomplished at all.
-Unfortunately this issue seem to be all to common, and has been accounted by multiple renowned experts in the field. In an article for Science Magazine \cite{Hutson2018} even proclaimed an "AI replication cris", with the area of speech recognition being named the primary example.
+However, I encountered a problem typical to newly emerging fields (which I consider deep learning to be): a significant amount of research is opaque and rudimentarily documented. Replication of results is often not just tedious but in some cases was not possible to be accomplished at all.
+Unfortunately this issue seem to be all to common, and has been encountered by multiple renowned experts in the field. In an article for Science Magazine \cite{Hutson2018} even proclaimed an "AI replication cris", with the area of speech recognition being named the primary example.
 
 
 
@@ -1037,15 +1040,15 @@ Unfortunately this issue seem to be all to common, and has been accounted by mul
 \label{vggish}
 
 
-As described in chapter \ref{google-audioset} \cite{45611} introduced a CNN based classifier for use on the Google AudioSet with the source code being freely available in the TensorFlow repository on GitHub\footnote{Direct link to the model: \url{https://github.com/tensorflow/models/tree/master/research/audioset}}. It is a reimplementation of ConvNet, developed by University of Oxford's Visual Geometry Group and published in \cite{DBLP:journals/corr/SimonyanZ14a} with minor modifications to the final layer and replacing LRN by batch normalisation.
+As described in chapter \ref{google-audioset} \cite{45611} introduced a CNN based classifier for use on the Google AudioSet with the source code being freely available in the TensorFlow repository on GitHub\footnote{Direct link to the model: \url{https://github.com/tensorflow/models/tree/master/research/audioset}}. It is a reimplementation of ConvNet, developed by University of Oxford's Visual Geometry Group and published in \cite{DBLP:journals/corr/SimonyanZ14a} with minor modifications to the final layer and local response normalisation being replaced with batch normalisation.
 
-The paper however first evaluated compared multiple approaches based on proven and effective image classification networks. These additionally included the famous AlexNet \cite{AlexNet} (cf. chapter \ref{CNN}), the inception network \cite{DBLP:journals/corr/SzegedyVISW15}, and ResNet which is up to 152 layers deep \cite{DBLP:journals/corr/HeZRS15}.
+The paper however first compared multiple approaches based on proven and effective image classification networks. These additionally included the famous AlexNet \cite{AlexNet} (cf. chapter \ref{CNN}), the inception network \cite{DBLP:journals/corr/SzegedyVISW15}, and ResNet which is up to 152 layers deep \cite{DBLP:journals/corr/HeZRS15}.
 
-Evaluating these networks took the authors at Google more than 8000 hours of processing time on accelerated multi-GPU hardware. This is in addition to the feature extraction in 20 billion audio files, each in the length of 960ms. The only feature used by the authors was a log-mel spectrogram with 64 bands spaced according to the mel scale and computed over 25ms wide frames with an overlap of 15ms. 
+Evaluating these networks took the authors at Google more than 800 hours of processing time on accelerated multi-GPU hardware. This is in addition to the preprocessing done on 20 billion audio files, each in the length of 960ms. The extracted feature used by the authors is a variant of the log-mel spectrogram with 64 bands spaced according to the mel-scale and computed over 25ms wide frames with a 15ms overlap. 
 
- While a replication is deemed outside the capabilities of this thesis, the detailed description as well as the availability of both the dataset as well as the complete source code increased confidence that the researach can be replicated if sufficient hardware is available.
+ While a replication is deemed outside the capabilities of this thesis, the detailed description as well as the availability of both the dataset as well as the entire python implementation increased confidence that the results can be reproduced if sufficient hardware is available.
  
-As an experiment I have attempted to train the VGGish model on the UrbanSound8k dataset using folds 1-8 for training and folds 9 and 10 for testing. While this worked on my hardware due to the smaller dataset the accuracy remained below 0.2.
+As an experiment I have attempted to train the VGGish model on the UrbanSound8K dataset using folds 1-8 for training and folds 9 and 10 for testing. While this was narrowly feasible on my hardware because of the comparably small dataset the experiment was unsuccessful as the accuracy remained below 0.2.
 
 
 %\section{Comparing Gradient Boosting to GRUs and Attention}
@@ -1063,42 +1066,36 @@ Due to UrbanSound8K being the most extensive dataset between its publication in 
 
 One example is \texttt{cyrta/UrbanSounds}\footnote{\url{https://github.com/cyrta/UrbanSounds}} which is a "(r)epository to recreate methods and results of SONYC project" according to its description. The project however seems to have stalled early on; when I contacted the author who self-describes as an "Audio Researcher and Data Scientist" he replied that there were some difficulties in the first paper which he did not mange to overcome and that this caused him to lose interest more than two years ago.
 
- https://github.com/aqibsaeed/Urban-Sound-Classification
 
+%ReScience Project
 
-For each experiment we report the average accuracy across all 10 folds.
+An interesting development in response to the problems described in this chapter's introduction is the ReScience project, a open-access, peer-reviewed, online journal with the explicit goal of replicating already published research that was founded in 2015. At the time of writing it hosts 17 AI related publications but none in regards to audio in general or urban sounds specifically.
 
-[wtd differences in audio libraries and sklearn]
+As there seems to be no published research on the replicability of UrbanSound classification, I have decided to attempt reproduction of the three papers most influential to this thesis.
 
-[wtd why were most results no reproducable]
+%[wtd differences in audio libraries and sklearn]
 
-Differences in Essentia and LibRosa, reference Chapter 2
+%Differences in Essentia and LibRosa, reference Chapter 2
 
 %Scattering
 
+%Others have given up early or made significant mistakes
 
-ScienceMag Publication: Missing data hinder replication of artificial intelligence studies
-
-Other user's attempt to replicate: https://github.com/cyrta/UrbanSounds
-
-Speech and Music Technology Researcher Pawel Cyrta (ex Samsung)
-
-Others have given up early or made significant mistakes
-
-ReScience Project
-
+\newpage
 
 \subsection{A Dataset and Taxonomy for Urban Sound Research}
 
-In this paper \cite{Salamon:UrbanSound:ACMMM:14} the UrbanSound8K dataset is initially introduced. The authors in detail explain the creation (section three) and their proposed taxonomy (section two). At this point  our interest is focused on chapter four where an experimental setup for feature extraction and classification is discussed. It is also highlighted that this was about a baseline approach not aimed at an optimal configuration.
+In the paper \cite{Salamon:UrbanSound:ACMMM:14} the UrbanSound8K dataset is initially introduced. The authors explain the creation (section three) and their proposed taxonomy (section two) in detail. At this point  our interest is focused on chapter four where an experimental setup for feature extraction and classification is discussed. It is also highlighted that this attempt was about getting a baseline and not aimed at an optimal configuration.
 
-The features used for training are 25 Mel-Frequency Cepstral Coefficients (see \ref{MFCC}) computed on slices in the length of 23.2 ms with 50\% overlap. While the calculation is done using 40 Mel bands up to 22.05 kHz only the first 25 coefficients are actually used. As the length of each sound file is up to 4s, the results are transformed into a constant feature vector of dimension 225 by extracting 9 different statistical values per coefficient over time such as minimum, maximum and mean.
+The features used for training are 25 Mel-Frequency Cepstral Coefficients (see \ref{MFCC}) computed on slices in the length of 23.2 ms with 50\% overlap. While the calculation is done using 40 Mel bands up to 22.05 kHz only the first 25 coefficients are actually used. A reason why 40 bands are calculated and not only 25 with a cap at a lower frequency is not given in the paper.
 
-The feature vector is used to train different machine learning algorithms: decision tree (J48), k-NN (k = 5), random forest (500 trees), support vector machine (radial basis function kernel), and a baseline majority vote classifier (ZeroR). Unfortunately no further details on the hyperparameters are given. The authors conclude that there is a tie between the classifiers SVM and random forest at an accuracy of approximately 0.7.
+ As the length of each sound file is up to 4s, the results are transformed into a constant feature vector of dimension 225 by extracting 9 different statistical values per coefficient over time such as minimum, maximum and mean.
 
-I have tried to recreate the results of these two classifiers through Python's scikit-learn \cite{scikit-learn}. Unfortunately the attempt was rather unsuccessful. Even after experimental tuning, which included the reduction of \texttt{n_estimators} to 85 and increasing the \texttt{min_samples_leaf} to two or four in the random forest and excessive experimentation with the gamma value and different kernels for the SVM the accuracy never exceeded .64. These results are already questionable as these optimisations were done using the same k-fold validation technique used to measure the accuracy and there was no separate data set for hyperparameter tuning.
+The feature vector is used to train different machine learning algorithms: decision tree (J48), k-NN (k = 5), random forest (500 trees), a support vector machine (with aradial basis function kernel), and a baseline majority vote classifier (ZeroR). Unfortunately no further details on the hyperparameters are given. The authors conclude that there is a tie between the classifiers SVM and random forest at an accuracy of approximately 0.7.
+
+I have tried to recreate the results of these two classifiers through Python's scikit-learn \cite{scikit-learn}. The attempt was rather unsuccessful. Even after experimental tuning, which included the reduction of \texttt{n_estimators} to 85 and increasing the \texttt{min_samples_leaf} to two or four in the random forest and excessive experimentation with the gamma value and different kernels for the SVM the accuracy never exceeded .64. These results are already questionable as these optimisations were done using the same k-fold validation technique used to measure the accuracy and there was no separate data set for hyperparameter tuning.
  
-A source of error in my approach might be that the feature extraction in the original paper was done using the ESSENTIA library \cite{bogdanov:Essentia:ACMMULTIMEDIA13} while I attempted a recreation using librosa for compatibility reasons. 
+The main hurdle to reproduction is the lack of detailed hyperparameters (which could have been optimised on an unpublished validation set). Another source of error in my approach might be that the feature extraction in the original paper was done using the ESSENTIA library \cite{bogdanov:Essentia:ACMMULTIMEDIA13}, while I attempted a recreation using librosa for compatibility reasons (for the effect cf. chapter \ref{chap:feature-eng}).
 
 \subsection{Unsupervised Feature Learning for Urban Sound Classification}
 \label{7177954}
