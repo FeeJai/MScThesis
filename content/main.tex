@@ -969,6 +969,7 @@ The Hardware of my personal MacBookPro11,3 equipped with a 2,3 GHz Intel Core i7
 
 
 \section{Results}
+\label{results}
 
 Overall, I was not able to achieve better than previously published results on the SONYC UrbanSound8K classification dataset using RNNs. Replacing the GRUs with LSTMs did not make a significant difference.
 
@@ -1117,29 +1118,41 @@ Unfortunately I was not able to implement an executable version of this algorith
 Augmentation for Environmental Sound
 Classification}
 
-no validation set
+The first paper from the Sounds of New York City Project using neural networks is \cite{DBLP:journals/corr/SalamonB16}. It does not only contain information on their progress with this novel classification technology but also introduces augmentation on the UrbanSound8K dataset for the first time (This has already been briefly mentioned in chapter \ref{results}).
 
+Similar to the previous papers, the pipeline begins with a feature extraction process. To maximise the usability of the dataset, only a three second interval is chosen from a random positon in time within each audio file whenever possible (length is up to four seconds, but may be shorter). This is further divided into 128 time-frequency patches through a windowing function with a hop size of 23ms. Just like above the extracted feature is the log-mel spectrogram, this time divided into 128 frequency bands resulting in a $128*128$ sized feature vector per file. A reason why these values were chosen is not given and it is neither explained whether other feature extraction methods have been tried with the same neural network architecture.
 
-recreated network architecture exactly as described
+The resulting matrix is directly used for training the network without statistical pooling. The network architecture itself is rather simple (compared to VGGish and other deep image classification networks) consisting of three convolutional layers with a receptive field of $5*5$, followed by a fully connected ReLU layer consisting of 64 units and the final softmax output layer. To reduce overfitting the last two layers apply dropout with the common probability of 0.5.
 
+Training is done with a the stochastic gradient descent optimiser on batches consisting of 100 patches each. Learning rate, the number of epochs and the penalty in the loss function are also described. Furthermore, it is stated that the authors have used a validation set to tune the network to these parameters, but further details on the nature of this set remains unknown. 
 
-methodological error: hyperparameters tuned on test set
+To enlarge the available training dataset, the MUDA audio processing library is used for deformations purposes. The methods that have been used are time stretching by four different factors, pitch shifting in two different variants, dynamic range compression with multiple scene parameters, and the addition of background noise in multiple scenes. The annotation files used to control the augmentation process have been released on GitHub in order to allow reproduction. It is explained that each augmentation was hand-picked based on class and the scene content.
 
-dataset too small?
+I have attempted a recreation using the Keras framework on top of the TensorFlow backend. This is different from the original implementation based on the rather uncommon Lasagne framework.
 
+Fortunately this was the most successful replication attempt in this thesis. The resulting accuracy did never  achieve the published 0.78, but multiple runs came within a deviation of 0.04 a surprisingly high fluctuation between each run. This might be due to the non-deterministic selection of applicable timeframes for training interacting with the random initialisation of the network.
 
+Nevertheless many question remain open with the origin and content of the validation dataset being the biggest ambiguity. There I unfortunately cannot exclude the possibility of these results being due to overfitting, whether this might have happened in the network architecture, the hand-crafted augmentation or in the design of the feature extraction process.
 
 
 
 \chapter{Conclusion}
 
-While many stunning breakthroughs in artificial intelligence have occured during the past ten years, there is a chance that we might be progressing towards another AI winter. Recent tragedies such as the pedestrian fatality after a collision with an autonomous uber vehicle\footnote{\url{https://www.nytimes.com/2018/03/19/technology/uber-driverless-fatality.html}} might weaken public trust in AI technologies. AgeLab's research scientist Bryan Reimer responded to the accident in an interview with the statement that "it is possible [that] the video [of the accident] represents what's called an 'edge case,' a rare situation the autonomous system was never trained to handle." Even though this technology's safety record might already be better than a human driver's, it is questionable how many edge cases will eventually occur during public testing and operation, and whether the political support required for operating these vehicles on public roads can be sustained.
+While many stunning breakthroughs in artificial intelligence have occurred during the past ten years, there is a chance that we might be progressing towards another AI winter. Recent tragedies such as the pedestrian fatality after a collision with an autonomous uber vehicle\footnote{\url{https://www.nytimes.com/2018/03/19/technology/uber-driverless-fatality.html}} might weaken public trust in AI technologies. AgeLab's research scientist Bryan Reimer responded to the accident in an interview with the statement that "it is possible [that] the video [of the accident] represents what's called an 'edge case,' a rare situation the autonomous system was never trained to handle." Even though this technology's safety record might already be better than a human driver's, it is questionable how many edge cases will eventually occur during public testing and operation, and whether the political support required for operating these vehicles on public roads can be sustained.
 
-[wtd include results table of approaches to this dataset]
+Compared to computer vision the area of audio recognition still seems to be in its infancy. This might be due to unavailability of comparable datasets - the ImageNet visual database contains 14 million hand-annotated pictures while the UrbanSound8K dataset only consists of 8732 files. As in past machine learning tasks bigger datasets usually have outperformed more sophisticated algorithms it seems most likely the primary reasons audio classification is such a difficult task is due to the lack of available data.
 
-[wtd explain possible explanations for the results of our approach]
+The work of Google's research teams with their open source and open data approach thereby is a reason for optimism. What is however cause for concern are the 	exaggerated expectations about the current possibilities of artificial intelligence technology by laypeople. This has sparked unwarranted fears of an imminent AI takeover or at least massive job losses.
 
-[wtd discuss problem with audio classification task]
+Only time can tell whether the positive news will outweigh the tragedies in the long run and how much AI can improve human people's lives. It is much to be hoped that further progress will be for the benefit of mankind and not bring it closer to self-destruction.
 
-It has been shown that most likely one of the primary reasons audio classification is such a difficult task is due to the lack of available data.  Therefore, as the amount of labeled audio classification datasets increases (such as in genre classification [wtd cite stanford audio classification paper]), it is likely predict there will be an increase in performance in this area.
+
+%Therefore, as the amount of labeled audio classification datasets increases (such as in genre classification [wtd cite stanford audio classification paper]), it is likely predict there will be an increase in performance in this area.
+
+%.74 vs .9
+%[wtd include results table of approaches to this dataset]
+
+%[wtd explain possible explanations for the results of our approach]
+
+%[wtd discuss problem with audio classification task]
 
