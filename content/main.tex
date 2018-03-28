@@ -863,6 +863,7 @@ The chroma feature seems to be useful for only a limited subset of classes. Due 
 
 
 \section{Quality Improvements}
+\label{chap:quality}
 While usually not being successful with neural networks, there has been moderate success in the classification of bird songs and acoustic scenes using more traditional classification methods like the (usually unsupervised) k-means algorithm in the past. To improve classification accuracy, \cite{Coates2012} has shown that dimensionality reduction with PCA whitening over scaled features (log mel spectrograms in that case) has significantly increased accuracy. 
 
 This indicates that extracted features are still heavily correlated, containing high amounts of redundancy. To reduce dimensions python's machine learning library scikit-learn come with a decomposition module fitted for this purpose. As this is the most used feature in literature, I have focussed on Principal component analysis (PCA) and its derivative SparsePCA.
@@ -1100,40 +1101,16 @@ The main hurdle to reproduction is the lack of detailed hyperparameters (which c
 \subsection{Unsupervised Feature Learning for Urban Sound Classification}
 \label{7177954}
 
-The subsequent paper \cite{7177954} is not focussed on the dataset anymore but on tradition machine learning approaches on the data. 
-
-Essentia via Python Binding
-
-40 MFCC
-
-temporal dynamics
-
-The data is decorrelated by using prinicpal component analysis (PCA) whithening. This feature is available in sklearn.
-
-n_components = 0.99
-
-svd solver unknown
+The subsequent paper \cite{7177954} is not focussed on the dataset anymore but on traditional machine learning approaches on the data. The method however seems rather unusual as not just one but two machine learning algorithms are used sequentially. The authors cite \cite{Coates2012} that introduced a similar procedure.
 
 
+Just like above the first step is the feature extraction with ESSENTIA via its Python bindings. Instead of MFCC a log-scaled mel-spectrogram with 40 bands is generated. To improve classification the result is post-processed with PCA whitening as described in chapter \ref{chap:quality} configured to retain 99\% of the initial variance.
 
-Multi step approach:
+The next step is dimensionality reduction with an unsupervised algorithm to create a codebook. The authors use the k-means clustering algorithm in its spherical variant on each timeframe. They hereby experiment with 500, 1000 or 2000 clustering centroids. The result is pooled over time by calculating the statistical properties mean and standard deviation.
 
-Spherical k-means per audio file
+In the final step classification is done with a random forest classifier with 500 trees over the different codebooks per class.
 
-1000 centroids
-
-Pooling
-
-Random forest
-
-
-
-version of k-means not in sklearn. spherecluster? pip package
-
-UNABLE TO IMPLEMENT
-
-
-\newpage
+Unfortunately I was not able to implement an executable version of this algorithm with the given information. A major hurdle was that contrary to the widely used k-means clustering algorithm the spherical k-means variant is not available in sk-learn and the used implementation remains unclear. An internet search points to the pip package "spherecluster" but there is insufficent documentation regarding maintenance and compatibility. Also many questions regarding the data representation, the library used for whitening and encoding the data remain unanswered.
 
 
 \subsection{Deep Convolutional Neural Networks and Data
